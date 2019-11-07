@@ -1,6 +1,7 @@
 <?php
 namespace concepture\yii2handbook\models;
 
+use concepture\yii2handbook\models\traits\DomainTrait;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 
@@ -19,6 +20,7 @@ use concepture\yii2logic\models\ActiveRecord;
  */
 class Settings extends ActiveRecord
 {
+    use DomainTrait;
     /**
      * {@inheritdoc}
      */
