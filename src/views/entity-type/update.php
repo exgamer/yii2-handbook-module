@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model concepture\user\models\User */
 
 $this->title = Yii::t('backend', 'Редактировать настройку: {name}', [
-    'name' => $originModel->name,
+    'name' => $originModel->table_name,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Настройки'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'сущности'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $originModel->id, 'url' => ['view', 'id' => $originModel->id]];
 $this->params['breadcrumbs'][] = Yii::t('user', 'Редактировать');
 ?>
