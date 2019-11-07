@@ -22,4 +22,14 @@ class DomainSearch extends Domain
             [['domain'], 'safe'],
         ];
     }
+
+    public static function getListSearchKeyAttribute()
+    {
+        return 'id';
+    }
+
+    public static function getListSearchAttribute()
+    {
+        return 'domain';
+    }
 }
