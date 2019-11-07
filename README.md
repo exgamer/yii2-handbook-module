@@ -27,3 +27,7 @@
 
 
 Получить id текущего домена из таблицы Yii::$app->domainService->getCurrentDomainId();
+
+Получить массив языков Yii::$app->localeService->catalog();
+
+Получить массив доменов Yii::$app->domainService->catalog();
