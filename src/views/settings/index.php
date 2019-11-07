@@ -32,14 +32,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'value',
             [
                 'attribute'=>'locale',
-                'filter'=> Yii::$app->localeService->getAllList('id', 'locale'),
+                'filter'=> Yii::$app->localeService->catalog(),
                 'value'=>function($data) {
                     return LocaleConverter::value($data->locale);
                 }
             ],
             [
                 'attribute'=>'domain_id',
-                'filter'=> Yii::$app->domainService->getAllList('id', 'domain'),
+                'filter'=> Yii::$app->domainService->catalog(),
                 'value'=>function($data) {
                     return $data->getDomainName();
                 }
