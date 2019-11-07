@@ -1,5 +1,5 @@
 <?php
-namespace concepture\yii2locale\converters;
+namespace concepture\yii2handbook\converters;
 
 use concepture\yii2logic\converters\Converter;
 use Yii;
@@ -8,7 +8,7 @@ use Yii;
  * Класс для конвертации локали из таблицы
  *
  * Class LocaleConverter
- * @package concepture\yii2locale\converters
+ * @package concepture\yii2handbook\converters
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
 class LocaleConverter extends Converter

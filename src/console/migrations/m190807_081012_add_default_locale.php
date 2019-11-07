@@ -1,7 +1,7 @@
 <?php
 use Yii;
 use yii\db\Migration;
-use concepture\yii2locale\forms\LocaleForm;
+use concepture\yii2handbook\forms\LocaleForm;
 
 
 /**

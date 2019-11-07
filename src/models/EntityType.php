@@ -5,25 +5,25 @@ use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 
 /**
- * Post model
+ * EntityType model
  *
  * @property integer $id
- * @property integer $sort
- * @property string $locale
+ * @property string $table_name
+ * @property string $caption
  * @property integer $status
  * @property datetime $created_at
  * @property datetime $updated_at
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class Locale extends ActiveRecord
+class EntityType extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{locale}}';
+        return '{{entity_type}}';
     }
 
     /**
@@ -34,17 +34,16 @@ class Locale extends ActiveRecord
         return [
             [
                 [
-                    'status',
-                    'sort',
+                    'status'
                 ],
                 'integer'
             ],
             [
                 [
-                    'locale'
+                    'table_name',
+                    'caption',
                 ],
-                'string',
-                'max'=>2
+                'string'
             ]
         ];
     }
@@ -53,9 +52,9 @@ class Locale extends ActiveRecord
     {
         return [
             'id' => Yii::t('locale','#'),
-            'sort' => Yii::t('locale','Позиция сортировки'),
+            'table_name' => Yii::t('locale','Наименование таблицы'),
             'status' => Yii::t('locale','Статус'),
-            'locale' => Yii::t('locale','Язык'),
+            'caption' => Yii::t('locale','Метка'),
             'created_at' => Yii::t('locale','Дата создания'),
             'updated_at' => Yii::t('locale','Дата обновления'),
         ];

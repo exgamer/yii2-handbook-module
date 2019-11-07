@@ -1,8 +1,8 @@
 <?php
 
-namespace concepture\yii2locale\search;
+namespace concepture\yii2handbook\search;
 
-use concepture\yii2locale\models\Locale;
+use concepture\yii2handbook\models\Locale;
 
 class LocaleSearch extends Locale
 {
