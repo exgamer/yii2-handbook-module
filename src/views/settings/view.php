@@ -7,8 +7,8 @@ use concepture\yii2handbook\converters\LocaleConverter;
 /* @var $this yii\web\View */
 /* @var $model concepture\user\models\User */
 
-$this->title = $model->username;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Yfcnhjqrb'), 'url' => ['index']];
+$this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Настройки'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
