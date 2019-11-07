@@ -5,7 +5,7 @@ use concepture\yii2logic\console\migrations\Migration;
 /**
  * Class m191107_114223__comment_entity_types_table_create
  */
-class m191107_114223___entity_types_table_create extends Migration
+class m191107_114223__entity_types_table_create extends Migration
 {
     function getTableName()
     {
