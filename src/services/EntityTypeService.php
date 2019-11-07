@@ -11,4 +11,5 @@ use concepture\yii2logic\services\Service;
 class EntityTypeService extends Service
 {
 
+
 }

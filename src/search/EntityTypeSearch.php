@@ -22,4 +22,14 @@ class EntityTypeSearch extends EntityType
             [['table_name'], 'safe'],
         ];
     }
+
+    public static function getListSearchKeyAttribute()
+    {
+        return 'id';
+    }
+
+    public static function getListSearchAttribute()
+    {
+        return 'table_name';
+    }
 }

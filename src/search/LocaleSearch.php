@@ -17,4 +17,14 @@ class LocaleSearch extends Locale
             [['locale'], 'safe'],
         ];
     }
+
+    public static function getListSearchKeyAttribute()
+    {
+        return 'id';
+    }
+
+    public static function getListSearchAttribute()
+    {
+        return 'locale';
+    }
 }

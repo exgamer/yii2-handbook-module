@@ -1,6 +1,7 @@
 <?php
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\services\Service;
 
 /**

@@ -47,4 +47,14 @@ class SettingsSearch extends Settings
             $this->name
         ]);
     }
+
+    public static function getListSearchKeyAttribute()
+    {
+        return 'name';
+    }
+
+    public static function getListSearchAttribute()
+    {
+        return 'values';
+    }
 }
