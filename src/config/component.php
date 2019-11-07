@@ -10,5 +10,8 @@ return [
     'entityTypeService' => [
         'class' => '\concepture\yii2handbook\services\EntityTypeService'
     ],
+    'settingsService' => [
+        'class' => '\concepture\yii2handbook\services\SettingsService'
+    ]
 ];
 

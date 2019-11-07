@@ -52,12 +52,12 @@ class Locale extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('locale','#'),
-            'sort' => Yii::t('locale','Позиция сортировки'),
-            'status' => Yii::t('locale','Статус'),
-            'locale' => Yii::t('locale','Язык'),
-            'created_at' => Yii::t('locale','Дата создания'),
-            'updated_at' => Yii::t('locale','Дата обновления'),
+            'id' => Yii::t('handbook','#'),
+            'sort' => Yii::t('handbook','Позиция сортировки'),
+            'status' => Yii::t('handbook','Статус'),
+            'locale' => Yii::t('handbook','Язык'),
+            'created_at' => Yii::t('handbook','Дата создания'),
+            'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
     }
 }

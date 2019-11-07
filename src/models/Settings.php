@@ -5,25 +5,26 @@ use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 
 /**
- * EntityType model
+ * Settings model
  *
  * @property integer $id
- * @property string $table_name
- * @property string $caption
- * @property integer $status
+ * @property integer $domain_id
+ * @property string $locale
+ * @property integer $name
+ * @property integer $value
  * @property datetime $created_at
  * @property datetime $updated_at
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class EntityType extends ActiveRecord
+class Settings extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{entity_type}}';
+        return '{{settings}}';
     }
 
     /**
@@ -34,14 +35,15 @@ class EntityType extends ActiveRecord
         return [
             [
                 [
-                    'status'
+                    'domain_id',
+                    'locale',
                 ],
                 'integer'
             ],
             [
                 [
-                    'table_name',
-                    'caption',
+                    'name',
+                    'value',
                 ],
                 'string'
             ]
@@ -52,9 +54,10 @@ class EntityType extends ActiveRecord
     {
         return [
             'id' => Yii::t('handbook','#'),
-            'table_name' => Yii::t('handbook','Наименование таблицы'),
-            'status' => Yii::t('handbook','Статус'),
-            'caption' => Yii::t('handbook','Метка'),
+            'domain_id' => Yii::t('handbook','Домен'),
+            'locale' => Yii::t('handbook','Язык'),
+            'name' => Yii::t('handbook','Название'),
+            'value' => Yii::t('handbook','Значение'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
