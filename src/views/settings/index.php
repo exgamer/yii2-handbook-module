@@ -32,8 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'value',
             [
                 'attribute'=>'locale',
+                'filter'=> Yii::$app->localeService->getAllList('id', 'locale'),
                 'value'=>function($data) {
-
                     return LocaleConverter::value($data->locale);
                 }
             ],
