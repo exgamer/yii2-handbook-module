@@ -17,7 +17,7 @@
 Подключение модуля для админки
 
      'modules' => [
-         'domain' => [
+         'handbook' => [
              'class' => 'concepture\yii2handbook\Module'
          ],
      ],
