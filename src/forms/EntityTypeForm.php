@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\forms;
 
 use Yii;
 use concepture\yii2logic\forms\Form;
+use concepture\yii2logic\enum\StatusEnum;
 
 /**
  * Class EntityTypeForm
@@ -14,7 +15,7 @@ class EntityTypeForm extends Form
 {
     public $table_name;
     public $caption;
-    public $status;
+    public $status = StatusEnum::INACTIVE;
 
     /**
      * @see CForm::formRules()
