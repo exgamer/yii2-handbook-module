@@ -18,6 +18,19 @@ class LocaleSearch extends Locale
         ];
     }
 
+    protected function extendQuery(ActiveQuery $query)
+    {
+        $query->andFilterWhere([
+            'id' => $this->id
+        ]);
+
+        $query->andFilterWhere([
+            'like',
+            'locale',
+            $this->locale
+        ]);
+    }
+
     public static function getListSearchKeyAttribute()
     {
         return 'id';
