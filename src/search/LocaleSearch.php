@@ -3,7 +3,13 @@
 namespace concepture\yii2handbook\search;
 
 use concepture\yii2handbook\models\Locale;
+use yii\db\ActiveQuery;
 
+/**
+ * Class LocaleSearch
+ * @package concepture\yii2handbook\search
+ * @author Olzhas Kulzhambekov <exgamer@live.ru>
+ */
 class LocaleSearch extends Locale
 {
     /**
