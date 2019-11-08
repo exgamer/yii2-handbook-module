@@ -6,7 +6,6 @@ use concepture\yii2handbook\models\Locale;
 
 class LocaleSearch extends Locale
 {
-
     /**
      * {@inheritdoc}
      */
