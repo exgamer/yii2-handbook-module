@@ -15,7 +15,7 @@ class EntityTypeForm extends Form
 {
     public $table_name;
     public $caption;
-    public $status = StatusEnum::INACTIVE;
+    public $status = StatusEnum::ACTIVE;
 
     /**
      * @see CForm::formRules()
