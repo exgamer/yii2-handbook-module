@@ -3,6 +3,7 @@
 namespace concepture\yii2handbook\enum;
 
 use Yii;
+use concepture\yii2logic\enum\Enum;
 
 /**
  * Класс перечисления для значений аттрибута target html ссылки
