@@ -21,7 +21,7 @@ class m191107_121704__settings_table_create extends Migration
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
             'domain_id' => $this->bigInteger(),
-            'locale' => $this->integer(),
+            'locale' => $this->bigInteger(),
             'name' => $this->string(1024),
             'value' => $this->string(1024),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
