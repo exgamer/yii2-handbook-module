@@ -15,7 +15,7 @@ class m191106_101926__init_domain_table extends Migration
     public function up()
     {
         $this->addTable([
-            'id' => $this->primaryKey(),
+            'id' => $this->bigPrimaryKey(),
             'domain' => $this->string(255)->notNull(),
             'sort' => $this->integer()->defaultValue(0),
             'status' => $this->smallInteger()->defaultValue(0),

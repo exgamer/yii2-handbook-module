@@ -15,7 +15,7 @@ class m190807_080146_init_locales_table extends Migration
     public function up()
     {
         $this->addTable([
-            'id' => $this->primaryKey(),
+            'id' => $this->bigPrimaryKey(),
             'locale' => $this->string(2)->notNull(),
             'sort' => $this->integer()->defaultValue(0),
             'status' => $this->smallInteger()->defaultValue(0),

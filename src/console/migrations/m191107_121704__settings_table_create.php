@@ -19,8 +19,8 @@ class m191107_121704__settings_table_create extends Migration
     public function safeUp()
     {
         $this->addTable([
-            'id' => $this->primaryKey(),
-            'domain_id' => $this->integer(),
+            'id' => $this->bigPrimaryKey(),
+            'domain_id' => $this->bigInteger(),
             'locale' => $this->integer(),
             'name' => $this->string(1024),
             'value' => $this->string(1024),

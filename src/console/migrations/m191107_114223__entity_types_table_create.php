@@ -18,7 +18,7 @@ class m191107_114223__entity_types_table_create extends Migration
     public function safeUp()
     {
         $this->addTable([
-            'id' => $this->primaryKey(),
+            'id' => $this->bigPrimaryKey(),
             'table_name' =>$this->string(1024)->notNull(),
             'caption' => $this->string(1024)->notNull(),
             'status' => $this->smallInteger()->defaultValue(0),
