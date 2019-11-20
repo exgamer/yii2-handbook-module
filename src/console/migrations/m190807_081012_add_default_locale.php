@@ -20,6 +20,12 @@ class m190807_081012_add_default_locale extends Migration
         $form->status = 1;
         $form->sort = 0;
         Yii::$app->localeService->create($form);
+        $form = new LocaleForm();
+        $form->locale = "en";
+        $form->caption = "English";
+        $form->status = 0;
+        $form->sort = 0;
+        Yii::$app->localeService->create($form);
     }
 
     /**
