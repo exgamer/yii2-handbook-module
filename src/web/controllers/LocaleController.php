@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\web\controllers;
 
+use concepture\yii2user\enum\UserRoleEnum;
 use concepture\yii2logic\actions\web\StatusChangeAction;
 /**
  * Class LocaleController
