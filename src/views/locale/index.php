@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             'locale',
+            'caption',
             'sort',
             'created_at',
             'updated_at',

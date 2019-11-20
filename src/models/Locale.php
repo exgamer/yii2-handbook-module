@@ -10,6 +10,7 @@ use concepture\yii2logic\models\ActiveRecord;
  * @property integer $id
  * @property integer $sort
  * @property string $locale
+ * @property string $caption
  * @property integer $status
  * @property datetime $created_at
  * @property datetime $updated_at
@@ -45,6 +46,13 @@ class Locale extends ActiveRecord
                 ],
                 'string',
                 'max'=>2
+            ],
+            [
+                [
+                    'caption'
+                ],
+                'string',
+                'max'=>100
             ]
         ];
     }
@@ -56,6 +64,7 @@ class Locale extends ActiveRecord
             'sort' => Yii::t('handbook','Позиция сортировки'),
             'status' => Yii::t('handbook','Статус'),
             'locale' => Yii::t('handbook','Язык'),
+            'caption' => Yii::t('handbook','Метка'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];

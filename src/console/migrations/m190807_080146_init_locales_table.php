@@ -17,6 +17,7 @@ class m190807_080146_init_locales_table extends Migration
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
             'locale' => $this->string(2)->notNull(),
+            'caption' => $this->string(100)->notNull(),
             'sort' => $this->integer()->defaultValue(0),
             'status' => $this->smallInteger()->defaultValue(0),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
