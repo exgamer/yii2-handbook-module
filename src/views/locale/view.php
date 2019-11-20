@@ -18,13 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('user', 'Редактировать'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('user', 'Удалить'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('user', 'Вы уверены, что хотите удалить ?'),
-                'method' => 'post',
-            ],
-        ]) ?>
     </p>
 
     <?= DetailView::widget([
@@ -34,6 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'locale',
             'caption',
             'sort',
+            [
+                'attribute'=>'status',
+                'value'=>function($data) {
+                    return $data->statusLabel();
+                }
+            ],
             'created_at',
             'updated_at',
         ],

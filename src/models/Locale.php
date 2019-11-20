@@ -3,6 +3,7 @@ namespace concepture\yii2handbook\models;
 
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
+use concepture\yii2logic\models\traits\StatusTrait;
 
 /**
  * Post model
@@ -19,6 +20,8 @@ use concepture\yii2logic\models\ActiveRecord;
  */
 class Locale extends ActiveRecord
 {
+    use StatusTrait;
+
     /**
      * {@inheritdoc}
      */

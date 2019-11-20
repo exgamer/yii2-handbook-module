@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-use concepture\yii2handbook\converters\LocaleConverter;
+use concepture\yii2logic\enum\StatusEnum;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\search\UserSearch */
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('user', 'Добавить язык'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('handbook', 'Добавить язык'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -31,10 +31,54 @@ $this->params['breadcrumbs'][] = $this->title;
             'locale',
             'caption',
             'sort',
+            [
+                'attribute'=>'status',
+                'filter'=> StatusEnum::arrayList(),
+                'value'=>function($data) {
+                    return $data->statusLabel();
+                }
+            ],
             'created_at',
             'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class'=>'yii\grid\ActionColumn',
+                'template'=>'{view} {update} {activate} {deactivate}',
+                'buttons'=>[
+                    'activate'=> function ($url, $model) {
+
+                        if ($model['status'] == StatusEnum::ACTIVE){
+                            return '';
+                        }
+
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-ok"></span>',
+                            ['status-change', 'id' => $model['id'], 'status' => StatusEnum::ACTIVE],
+                            [
+                                'title' => Yii::t('handbook', 'Активировать'),
+                                'data-confirm' => Yii::t('handbook', 'Активировать ?'),
+                                'data-method' => 'post',
+                            ]
+                        );
+                    },
+                    'deactivate'=> function ($url, $model) {
+
+                        if ($model['status'] == StatusEnum::INACTIVE){
+                            return '';
+                        }
+
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-remove"></span>',
+                            ['status-change', 'id' => $model['id'], 'status' => StatusEnum::INACTIVE],
+                            [
+                                'title' => Yii::t('handbook', 'Деактивировать'),
+                                'data-confirm' => Yii::t('handbook', 'Деактивировать ?'),
+                                'data-method' => 'post',
+                            ]
+                        );
+                    }
+                ]
+            ],
         ],
     ]); ?>
 
