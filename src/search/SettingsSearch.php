@@ -55,6 +55,6 @@ class SettingsSearch extends Settings
 
     public static function getListSearchAttribute()
     {
-        return 'values';
+        return 'value';
     }
 }

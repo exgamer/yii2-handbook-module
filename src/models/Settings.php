@@ -13,6 +13,7 @@ use concepture\yii2logic\models\ActiveRecord;
  * @property string $locale
  * @property integer $name
  * @property integer $value
+ * @property integer $description
  * @property datetime $created_at
  * @property datetime $updated_at
  *
@@ -48,7 +49,14 @@ class Settings extends ActiveRecord
                     'value',
                 ],
                 'string'
-            ]
+            ],
+            [
+                [
+                    'description'
+                ],
+                'string',
+                'max'=>1024
+            ],
         ];
     }
 
@@ -58,6 +66,7 @@ class Settings extends ActiveRecord
             'id' => Yii::t('handbook','#'),
             'domain_id' => Yii::t('handbook','Домен'),
             'locale' => Yii::t('handbook','Язык'),
+            'description' => Yii::t('handbook','Описание'),
             'name' => Yii::t('handbook','Название'),
             'value' => Yii::t('handbook','Значение'),
             'created_at' => Yii::t('handbook','Дата создания'),

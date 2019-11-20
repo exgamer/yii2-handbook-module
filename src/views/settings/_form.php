@@ -14,6 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'value')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'locale')->dropDownList(
         Yii::$app->localeService->catalog(),
         [

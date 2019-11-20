@@ -15,6 +15,7 @@ class DomainForm extends Form
     public $sort;
     public $status;
     public $domain;
+    public $description;
 
     /**
      * @see CForm::formRules()

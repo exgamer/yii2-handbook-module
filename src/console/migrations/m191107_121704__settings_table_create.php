@@ -24,6 +24,7 @@ class m191107_121704__settings_table_create extends Migration
             'locale' => $this->bigInteger(),
             'name' => $this->string(1024),
             'value' => $this->string(1024),
+            'description' => $this->string(1024),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
             'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
         ]);

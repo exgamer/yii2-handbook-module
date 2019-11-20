@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'value',
+            'description',
             [
                 'attribute'=>'locale',
                 'value'=>function($data) {

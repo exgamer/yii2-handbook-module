@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'value',
+            'description',
             [
                 'attribute'=>'locale',
                 'filter'=> Yii::$app->localeService->catalog(),

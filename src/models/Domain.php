@@ -10,6 +10,7 @@ use concepture\yii2logic\models\ActiveRecord;
  * @property integer $id
  * @property integer $sort
  * @property string $domain
+ * @property string $description
  * @property integer $status
  * @property datetime $created_at
  * @property datetime $updated_at
@@ -39,6 +40,13 @@ class Domain extends ActiveRecord
                 ],
                 'integer'
             ],
+            [
+                [
+                    'description'
+                ],
+                'string',
+                'max'=>1024
+            ],
             ['domain', 'url', 'defaultScheme' => 'https']
         ];
     }
@@ -50,6 +58,7 @@ class Domain extends ActiveRecord
             'sort' => Yii::t('domain','Позиция сортировки'),
             'status' => Yii::t('domain','Статус'),
             'domain' => Yii::t('domain','Домен'),
+            'description' => Yii::t('domain','Описание'),
             'created_at' => Yii::t('domain','Дата создания'),
             'updated_at' => Yii::t('domain','Дата обновления'),
         ];
