@@ -16,6 +16,7 @@ class m190807_081012_add_default_locale extends Migration
     {
         $form = new LocaleForm();
         $form->locale = "ru";
+        $form->caption = "Русский";
         $form->status = 1;
         $form->sort = 0;
         Yii::$app->localeService->create($form);
