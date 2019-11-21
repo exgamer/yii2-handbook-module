@@ -31,6 +31,7 @@ class m191121_034605__seo_table_init extends Migration
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
             'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
         ]);
+        
         $this->addIndex(['locale']);
         $this->addIndex(['url']);
         $this->addIndex(['domain_id']);
