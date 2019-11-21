@@ -23,10 +23,10 @@ class SettingsService extends Service
     public function extendCatalogTraitQuery(ActiveQuery $query)
     {
         $domainId = Yii::$app->domainService->getCurrentDomainId();
-        $sql = "(domain_id = :domain_id OR domain_id IS NULL)";
+        $sql = "domain_id = :domain_id OR domain_id IS NULL";
         $query->andWhere($sql, [':domain_id' => $domainId]);
         $locale = LocaleConverter::key(Yii::$app->language);
-        $sql = "(locale = :locale OR locale IS NULL)";
+        $sql = "locale = :locale OR locale IS NULL";
         $query->andWhere($sql, [':locale' => $locale]);
     }
 }
