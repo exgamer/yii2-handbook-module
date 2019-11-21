@@ -45,7 +45,13 @@ class Settings extends ActiveRecord
             ],
             [
                 [
-                    'name',
+                    'name'
+                ],
+                'string',
+                'max'=>100
+            ],
+            [
+                [
                     'value',
                 ],
                 'string'

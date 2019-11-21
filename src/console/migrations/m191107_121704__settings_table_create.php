@@ -22,7 +22,7 @@ class m191107_121704__settings_table_create extends Migration
             'id' => $this->bigPrimaryKey(),
             'domain_id' => $this->bigInteger(),
             'locale' => $this->bigInteger(),
-            'name' => $this->string(1024),
+            'name' => $this->string(100),
             'value' => $this->string(1024),
             'description' => $this->string(1024),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
@@ -30,7 +30,7 @@ class m191107_121704__settings_table_create extends Migration
         ]);
         $this->addIndex(['domain_id']);
         $this->addIndex(['locale']);
-        $this->addUniqueIndex(['domain_id', 'locale', 'name'], 'uni_d_l_n');
+        $this->addUniqueIndex(['domain_id', 'locale', 'name']);
     }
 
     /**
