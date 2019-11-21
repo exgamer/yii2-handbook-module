@@ -26,7 +26,7 @@ class m191107_114223__entity_types_table_create extends Migration
             'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
         ]);
         $this->addIndex(['status']);
-        $this->addIndex(['table_name'], true);
+        $this->addUniqueIndex(['table_name']);
     }
 
     /**

@@ -34,7 +34,7 @@ class m191121_034605__seo_table_init extends Migration
         $this->addIndex(['locale']);
         $this->addIndex(['url']);
         $this->addIndex(['domain_id']);
-        $this->addIndex(['url_md5_hash', 'locale'], true);
+        $this->addUniqueIndex(['url_md5_hash', 'locale']);
         $this->execute("ALTER TABLE seo_settings
             ADD INDEX ss_url_md5_hash_index
             USING HASH (url_md5_hash);");

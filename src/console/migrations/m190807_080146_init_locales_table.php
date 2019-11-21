@@ -25,6 +25,6 @@ class m190807_080146_init_locales_table extends Migration
         ]);
         $this->addIndex(['sort']);
         $this->addIndex(['status']);
-        $this->addIndex(['locale'], true);
+        $this->addUniqueIndex(['locale']);
     }
 }

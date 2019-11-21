@@ -30,7 +30,7 @@ class m191107_121704__settings_table_create extends Migration
         ]);
         $this->addIndex(['domain_id']);
         $this->addIndex(['locale']);
-        $this->addIndex(['domain_id', 'locale', 'name'], true);
+        $this->addUniqueIndex(['domain_id', 'locale', 'name']);
     }
 
     /**
