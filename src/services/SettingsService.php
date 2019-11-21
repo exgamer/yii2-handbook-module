@@ -18,6 +18,7 @@ class SettingsService extends Service
     /**
      * Для расширения запроса для вывода каталога и списка для выпадашек
      *
+     * @see \concepture\yii2logic\services\traits\CatalogTrait::extendCatalogTraitQuery
      * @param ActiveQuery $query
      */
     public function extendCatalogTraitQuery(ActiveQuery $query)
