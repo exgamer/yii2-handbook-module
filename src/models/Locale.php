@@ -56,6 +56,12 @@ class Locale extends ActiveRecord
                 ],
                 'string',
                 'max'=>100
+            ],
+            [
+                [
+                    'locale'
+                ],
+                'unique'
             ]
         ];
     }

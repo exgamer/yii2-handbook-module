@@ -44,6 +44,12 @@ class EntityType extends ActiveRecord
                     'caption',
                 ],
                 'string'
+            ],
+            [
+                [
+                    'table_name'
+                ],
+                'unique'
             ]
         ];
     }
