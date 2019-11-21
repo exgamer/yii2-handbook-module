@@ -32,7 +32,7 @@
 
 Получить массив доменов Yii::$app->domainService->catalog();
 
-Получить настройку по ключу Yii::$app->seoSettingsService->catalogValue($key);
+Получить настройку по ключу Yii::$app->settingsService->catalogValue($key);
 
 
 SEO
