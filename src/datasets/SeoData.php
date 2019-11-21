@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\datasets;
 
 use yii\base\BaseObject;
 
+
 /**
  * Class SeoData
  * @package concepture\yii2handbook\datasets
