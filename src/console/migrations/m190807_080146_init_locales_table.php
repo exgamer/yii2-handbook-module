@@ -23,7 +23,6 @@ class m190807_080146_init_locales_table extends Migration
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
             'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
         ]);
-        $this->addIndex(['locale']);
         $this->addIndex(['sort']);
         $this->addIndex(['status']);
         $this->addIndex(['locale'], true);
