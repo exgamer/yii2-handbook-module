@@ -2,12 +2,14 @@
 
 namespace concepture\yii2handbook\web\controllers;
 
+
+
 /**
- * Class SettingsController
+ * Class SeoSettingsController
  * @package concepture\yii2handbook\web\controllers
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SettingsController extends Controller
+class SeoSettingsController extends Controller
 {
 
 }

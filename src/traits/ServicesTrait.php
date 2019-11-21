@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\traits;
 use concepture\yii2handbook\services\DomainService;
 use concepture\yii2handbook\services\EntityTypeService;
 use concepture\yii2handbook\services\LocaleService;
+use concepture\yii2handbook\services\SeoSettingsService;
 use concepture\yii2handbook\services\SettingsService;
 use Yii;
 
@@ -44,6 +45,14 @@ trait ServicesTrait
     public function settingsService()
     {
         return Yii::$app->settingsService;
+    }
+
+    /**
+     * @return SeoSettingsService
+     */
+    public function seoSettingsService()
+    {
+        return Yii::$app->seoSettingsService;
     }
 }
 
