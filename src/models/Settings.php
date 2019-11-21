@@ -57,6 +57,15 @@ class Settings extends ActiveRecord
                 'string',
                 'max'=>1024
             ],
+            [
+                [
+                    'domain_id',
+                    'locale',
+                    'name'
+                ],
+                'unique',
+                'targetAttribute' => ['domain_id', 'locale', 'name']
+            ]
         ];
     }
 
