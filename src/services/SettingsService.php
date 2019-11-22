@@ -21,7 +21,7 @@ class SettingsService extends Service
      * @see \concepture\yii2logic\services\traits\CatalogTrait::extendCatalogTraitQuery
      * @param ActiveQuery $query
      */
-    public function extendCatalogTraitQuery(ActiveQuery $query)
+    protected function extendCatalogTraitQuery(ActiveQuery $query)
     {
         $domainId = Yii::$app->domainService->getCurrentDomainId();
         $sql = "domain_id = :domain_id OR domain_id IS NULL";
