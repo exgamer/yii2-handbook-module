@@ -34,7 +34,7 @@ trait TagsTrait
 
         return $this->hasMany(
             Tags::className(),
-            ['id'=>'tag_id'])
+            ['id'=>'tag_id'])->select(['id','caption'])
             ->viaTable($tagsModelClass::tableName(),[$tagsModelClass::getEntityLinkField() =>'id'], function ($query) {
 //                $query->select(['id', 'caption']);
 //                $query->andWhere(['important' => 1])
@@ -42,4 +42,3 @@ trait TagsTrait
             });
     }
 }
-
