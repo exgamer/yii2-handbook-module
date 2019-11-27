@@ -17,7 +17,7 @@ class m191125_101549_tags extends Migration
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
             'user_id' => $this->bigInteger()->notNull(),
-            'locale' => $this->bigInteger()->notNull(),
+            'locale' => $this->bigInteger(),
             'domain_id' => $this->bigInteger(),
             'type' => $this->smallInteger()->defaultValue(0),
             'caption' => $this->string(100)->notNull(),
