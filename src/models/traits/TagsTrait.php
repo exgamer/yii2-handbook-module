@@ -53,5 +53,16 @@ trait TagsTrait
 
         return null;
     }
+
+    public function getSelectedTagsIds()
+    {
+        if (isset($this->tags)){
+            $tags = ArrayHelper::map($this->tags , 'id', 'id');
+
+            return array_keys($tags);
+        }
+
+        return [];
+    }
 }
 
