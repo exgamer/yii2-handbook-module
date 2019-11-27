@@ -13,6 +13,7 @@ use concepture\yii2logic\forms\Form;
 class TagsForm extends Form
 {
     public $domain_id;
+    public $user_id;
     public $locale;
     public $caption;
     public $type;

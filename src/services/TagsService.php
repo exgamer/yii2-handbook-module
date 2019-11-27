@@ -1,6 +1,7 @@
 <?php
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2logic\forms\Model;
 use concepture\yii2handbook\converters\LocaleConverter;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\services\Service;
@@ -14,6 +15,11 @@ use Yii;
  */
 class TagsService extends Service
 {
+    protected function beforeCreate(Model $form)
+    {
+        $form->user_id = Yii::$app->user->identity->id;
+    }
+
     /**
      * Для расширения запроса для вывода каталога и списка для выпадашек
      *
