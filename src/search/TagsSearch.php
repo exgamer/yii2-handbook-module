@@ -52,7 +52,7 @@ class TagsSearch extends Tags
         $query->andFilterWhere([
             'like',
             'caption',
-            $this->name
+            $this->caption
         ]);
     }
 
