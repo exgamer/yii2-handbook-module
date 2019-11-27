@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\models\traits;
 
 use concepture\yii2handbook\models\Tags;
 use concepture\yii2logic\helpers\ClassHelper;
+use yii\helpers\ArrayHelper;
 
 /**
  * Trait TagsTrait
@@ -41,4 +42,16 @@ trait TagsTrait
 //                    ->orderBy(['sort' => SORT_DESC]);
             });
     }
+
+    public function getTagsLabel()
+    {
+        if (isset($this->tags)){
+            $tags = ArrayHelper::map($this->tags , 'caption', 'caption');
+
+            return implode(",", array_keys($tags));
+        }
+
+        return null;
+    }
 }
+
