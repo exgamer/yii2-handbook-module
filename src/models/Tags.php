@@ -59,7 +59,9 @@ class Tags extends ActiveRecord
             ],
             [
                 [
-                    'caption'
+                    'caption',
+                    'locale',
+                    'domain_id'
                 ],
                 'unique'
             ]
