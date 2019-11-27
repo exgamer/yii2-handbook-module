@@ -7,6 +7,8 @@ use Yii;
 use yii\db\ActiveQuery;
 
 /**
+ * Треит подключается к таблицам связкам сущнсотей с тегами
+ *
  * Trait TagsTrait
  * @package concepture\yii2handbook\services\traits
  */
