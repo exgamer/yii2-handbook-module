@@ -56,6 +56,12 @@ class Tags extends ActiveRecord
                 ],
                 'string',
                 'max'=>255
+            ],
+            [
+                [
+                    'caption'
+                ],
+                'unique'
             ]
         ];
     }
