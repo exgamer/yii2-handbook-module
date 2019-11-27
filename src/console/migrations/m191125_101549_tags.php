@@ -31,6 +31,7 @@ class m191125_101549_tags extends Migration
         $this->addIndex(['locale']);
         $this->addIndex(['type']);
         $this->addIndex(['is_deleted']);
+        $this->addUniqueIndex(['caption']);
         $this->addForeign('user_id', 'user','id');
         $this->addForeign('domain_id', 'domain','id');
         $this->addForeign('locale', 'locale','id');
