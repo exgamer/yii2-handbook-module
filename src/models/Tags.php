@@ -78,6 +78,7 @@ class Tags extends ActiveRecord
             'caption' => Yii::t('handbook','Название'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
+            'is_deleted' => Yii::t('handbook','Удален'),
         ];
     }
 
