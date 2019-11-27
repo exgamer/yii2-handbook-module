@@ -15,5 +15,8 @@ return [
     ],
     'seoSettingsService' => [
         'class' => '\concepture\yii2handbook\services\SeoSettingsService'
+    ],
+    'tagsService' => [
+        'class' => '\concepture\yii2handbook\services\TagsService'
     ]
 ];

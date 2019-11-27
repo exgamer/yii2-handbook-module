@@ -6,6 +6,7 @@ use concepture\yii2handbook\services\EntityTypeService;
 use concepture\yii2handbook\services\LocaleService;
 use concepture\yii2handbook\services\SeoSettingsService;
 use concepture\yii2handbook\services\SettingsService;
+use concepture\yii2handbook\services\TagsService;
 use Yii;
 
 /**
@@ -45,6 +46,14 @@ trait ServicesTrait
     public function settingsService()
     {
         return Yii::$app->settingsService;
+    }
+
+    /**
+     * @return TagsService
+     */
+    public function tagsService()
+    {
+        return Yii::$app->tagsService;
     }
 
     /**
