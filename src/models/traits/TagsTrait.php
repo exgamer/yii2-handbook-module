@@ -36,7 +36,7 @@ trait TagsTrait
             Tags::className(),
             ['id'=>'tag_id'])
             ->viaTable($tagsModelClass::tableName(),[$tagsModelClass::getEntityLinkField() =>'id'], function ($query) {
-                $query->select(['id', 'caption']);
+//                $query->select(['id', 'caption']);
 //                $query->andWhere(['important' => 1])
 //                    ->orderBy(['sort' => SORT_DESC]);
             });
