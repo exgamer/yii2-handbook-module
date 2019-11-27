@@ -56,15 +56,6 @@ class Tags extends ActiveRecord
                 ],
                 'string',
                 'max'=>255
-            ],
-            [
-                [
-                    'domain_id',
-                    'locale',
-                    'name'
-                ],
-                'unique',
-                'targetAttribute' => ['domain_id', 'locale', 'name']
             ]
         ];
     }
