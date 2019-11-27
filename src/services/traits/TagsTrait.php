@@ -1,7 +1,6 @@
 <?php
 namespace concepture\yii2handbook\services\traits;
 
-use concepture\yii2article\models\PostTagsLink;
 use concepture\yii2handbook\enum\TagTypeEnum;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use Yii;
