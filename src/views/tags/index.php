@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use concepture\yii2handbook\converters\LocaleConverter;
+use concepture\yii2logic\enum\IsDeletedEnum;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\search\UserSearch */
@@ -60,10 +61,44 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'created_at',
             'updated_at',
-
+            [
+                'attribute'=>'is_deleted',
+                'filter'=> IsDeletedEnum::arrayList(),
+                'value'=>function($data) {
+                    return $data->isDeletedLabel();
+                }
+            ],
             [
                 'class'=>'yii\grid\ActionColumn',
-                'template'=>'{view} {update}',
+                'template'=>'{view} {update} {delete}' ,
+                'buttons'=>[
+                    'update'=> function ($url, $model) {
+                        if ($model['is_deleted'] == IsDeletedEnum::DELETED){
+                            return '';
+                        }
+
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-pencil"></span>',
+                            ['update', 'id' => $model['id']],
+                            ['data-pjax' => '0']
+                        );
+                    },
+                    'delete'=> function ($url, $model) {
+                        if ($model['is_deleted'] == IsDeletedEnum::DELETED){
+                            return '';
+                        }
+
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-trash"></span>',
+                            ['delete', 'id' => $model['id']],
+                            [
+                                'title' => Yii::t('user', 'Удалить'),
+                                'data-confirm' => Yii::t('handbook', 'Удалить ?'),
+                                'data-method' => 'post',
+                            ]
+                        );
+                    }
+                ]
             ],
         ],
     ]); ?>

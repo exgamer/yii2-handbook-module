@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use concepture\yii2handbook\converters\LocaleConverter;
+use concepture\yii2logic\enum\IsDeletedEnum;
 
 /* @var $this yii\web\View */
 /* @var $model concepture\user\models\User */
@@ -51,6 +52,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'created_at',
             'updated_at',
+            [
+                'attribute'=>'is_deleted',
+                'filter'=> IsDeletedEnum::arrayList(),
+                'value'=>function($data) {
+                    return $data->isDeletedLabel();
+                }
+            ],
         ],
     ]) ?>
 
