@@ -73,6 +73,7 @@ class Tags extends ActiveRecord
     {
         return [
             'id' => Yii::t('handbook','#'),
+            'type' => Yii::t('handbook','Тип'),
             'domain_id' => Yii::t('handbook','Домен'),
             'user_id' => Yii::t('handbook','Пользователь'),
             'locale' => Yii::t('handbook','Язык'),
