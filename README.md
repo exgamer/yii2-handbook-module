@@ -25,6 +25,7 @@
 
 
 
+Получить id текущей локали из таблицы  Yii::$app->localeService->getCurrentLocaleId()
 
 Получить id текущего домена из таблицы Yii::$app->domainService->getCurrentDomainId();
 

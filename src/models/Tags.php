@@ -60,7 +60,8 @@ class Tags extends ActiveRecord
             [
                 [
                     'caption',
-                    'locale'
+                    'locale',
+                    'domain_id',
                 ],
                 'unique'
             ]

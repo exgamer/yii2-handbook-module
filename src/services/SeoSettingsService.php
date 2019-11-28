@@ -1,13 +1,13 @@
 <?php
 namespace concepture\yii2handbook\services;
 
-use concepture\yii2handbook\converters\LocaleConverter;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
 use concepture\yii2logic\services\Service;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use Yii;
+use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 
 /**
  * Class SeoSettingsService
@@ -16,6 +16,8 @@ use Yii;
  */
 class SeoSettingsService extends Service
 {
+    use HandbookServices;
+
     /**
      * Возвращает настройки SEO для текущей страницы
      *
@@ -72,7 +74,7 @@ class SeoSettingsService extends Service
             );
             $query->andWhere("locale = :locale",
                 [
-                    ':locale' => LocaleConverter::key(Yii::$app->language)
+                    ':locale' => $this->localeService()->getCurrentLocaleId()
                 ]
             );
             $query->orderBy('url');
