@@ -35,7 +35,8 @@ class DomainService extends Service
     public function getCurrentDomain()
     {
         $currentDomain = Url::base(true);
-
+        $parsed = parse_url($currentDomain);
+        $currentDomain = $parsed['scheme'] . "://" . $parsed['host'];
         $domain = $this->getOneByCondition(['domain' => $currentDomain]);
 
         return $domain;
