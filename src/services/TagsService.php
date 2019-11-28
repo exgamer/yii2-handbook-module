@@ -2,11 +2,11 @@
 namespace concepture\yii2handbook\services;
 
 use concepture\yii2logic\forms\Model;
-use concepture\yii2handbook\converters\LocaleConverter;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\services\Service;
 use yii\db\ActiveQuery;
 use Yii;
+use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 
 /**
  * Class TagsService
@@ -15,6 +15,8 @@ use Yii;
  */
 class TagsService extends Service
 {
+    use HandbookServices;
+
     protected function beforeCreate(Model $form)
     {
         $form->user_id = Yii::$app->user->identity->id;
@@ -28,9 +30,10 @@ class TagsService extends Service
      */
     protected function extendCatalogTraitQuery(ActiveQuery $query)
     {
-        $domainId = Yii::$app->domainService->getCurrentDomainId();
         $sql = "domain_id = :domain_id OR domain_id IS NULL";
-        $query->andWhere($sql, [':domain_id' => $domainId]);
+        $query->andWhere($sql, [':domain_id' => $this->domainService()->getCurrentDomainId()]);
+        $sql = "locale = :locale OR locale IS NULL";
+        $query->andWhere($sql, [':locale' => $this->localeService()->getCurrentLocaleId()]);
         $query->andWhere(['is_deleted' => IsDeletedEnum::NOT_DELETED]);
     }
 }

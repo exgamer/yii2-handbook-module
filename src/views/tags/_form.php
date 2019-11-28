@@ -17,6 +17,12 @@ use yii\widgets\ActiveForm;
     );?>
     <?= $form->field($model, 'caption')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'locale')->dropDownList(
+        Yii::$app->localeService->catalog(),
+        [
+            'prompt' => Yii::t('backend', 'Выберите язык')
+        ]
+    );?>
     <?= $form->field($model, 'domain_id')->dropDownList(
         Yii::$app->domainService->catalog(),
         [

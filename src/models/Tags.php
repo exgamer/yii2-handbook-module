@@ -38,6 +38,7 @@ class Tags extends ActiveRecord
             [
                 [
                     'domain_id',
+                    'locale',
                     'user_id',
                 ],
                 'integer'
@@ -59,7 +60,7 @@ class Tags extends ActiveRecord
             [
                 [
                     'caption',
-                    'domain_id'
+                    'locale'
                 ],
                 'unique'
             ]
@@ -73,6 +74,7 @@ class Tags extends ActiveRecord
             'type' => Yii::t('handbook','Тип'),
             'domain_id' => Yii::t('handbook','Домен'),
             'user_id' => Yii::t('handbook','Пользователь'),
+            'locale' => Yii::t('handbook','Язык'),
             'description' => Yii::t('handbook','Описание'),
             'caption' => Yii::t('handbook','Название'),
             'created_at' => Yii::t('handbook','Дата создания'),

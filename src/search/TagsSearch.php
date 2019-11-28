@@ -22,6 +22,7 @@ class TagsSearch extends Tags
                 [
                     'id',
                     'domain_id',
+                    'locale',
                     'type',
                     'user_id',
                 ],
@@ -38,6 +39,9 @@ class TagsSearch extends Tags
         ]);
         $query->andFilterWhere([
             'domain_id' => $this->domain_id
+        ]);
+        $query->andFilterWhere([
+            'locale' => $this->locale
         ]);
         $query->andFilterWhere([
             'type' => $this->type

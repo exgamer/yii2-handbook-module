@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use concepture\yii2handbook\converters\LocaleConverter;
 use concepture\yii2logic\enum\IsDeletedEnum;
 
 /* @var $this yii\web\View */
@@ -29,7 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             'caption',
-            'description',
+            [
+                'attribute'=>'locale',
+                'filter'=> Yii::$app->localeService->catalog(),
+                'value'=>function($data) {
+                    return LocaleConverter::value($data->locale);
+                }
+            ],
             [
                 'attribute'=>'domain_id',
                 'filter'=> Yii::$app->domainService->catalog(),

@@ -17,6 +17,7 @@ class m191125_101549_tags extends Migration
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
             'user_id' => $this->bigInteger()->notNull(),
+            'locale' => $this->bigInteger(),
             'domain_id' => $this->bigInteger(),
             'type' => $this->smallInteger()->defaultValue(0),
             'caption' => $this->string(100)->notNull(),
@@ -27,10 +28,11 @@ class m191125_101549_tags extends Migration
         ]);
         $this->addIndex(['user_id']);
         $this->addIndex(['domain_id']);
+        $this->addIndex(['locale']);
         $this->addIndex(['type']);
         $this->addIndex(['is_deleted']);
-        $this->addUniqueIndex(['caption', 'domain_id']);
         $this->addForeign('user_id', 'user','id');
         $this->addForeign('domain_id', 'domain','id');
+        $this->addForeign('locale', 'locale','id');
     }
 }
