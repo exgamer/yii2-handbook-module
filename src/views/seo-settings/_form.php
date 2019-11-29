@@ -10,13 +10,6 @@ use mihaildev\ckeditor\CKEditor;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'locale')->dropDownList(
-        Yii::$app->localeService->catalog(),
-        [
-            'prompt' => Yii::t('backend', 'Выберите язык')
-        ]
-    );?>
-
     <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'seo_h1')->textInput(['maxlength' => true]) ?>
@@ -35,12 +28,6 @@ use mihaildev\ckeditor\CKEditor;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'domain_id')->dropDownList(
-        Yii::$app->domainService->catalog(),
-        [
-            'prompt' => Yii::t('backend', 'Выберите домен')
-        ]
-    );?>
     <div class="form-group">
         <?= Html::submitButton(Yii::t('user', 'Сохранить'), ['class' => 'btn btn-success']) ?>
     </div>
