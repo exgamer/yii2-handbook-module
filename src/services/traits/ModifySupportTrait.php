@@ -16,7 +16,7 @@ trait ModifySupportTrait
      */
     protected function setCurrentDomain(Model $model)
     {
-        $model->domain_id = $this->domainService()->getCurrentDomainId();
+        $model->domain_id = Yii::$app->domainService->getCurrentDomainId();
     }
 
     /**
@@ -25,7 +25,7 @@ trait ModifySupportTrait
      */
     protected function setCurrentLocale(Model $model)
     {
-        $model->locale = $this->localeService()->getCurrentLocaleId();
+        $model->locale = Yii::$app->localeService->getCurrentLocaleId();
     }
 }
 
