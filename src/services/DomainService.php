@@ -15,30 +15,48 @@ class DomainService extends Service
     /**
      * Возвращает id текущего домена
      *
+     * @param bool $reset
+     *
      * @return int|null
      */
-    public function getCurrentDomainId()
+    public function getCurrentDomainId($reset = false)
     {
-        $domain = $this->getCurrentDomain();
-        if ($domain){
-            return $domain->id;
+        static $result;
+
+        if($result && ! $reset) {
+            return $result;
         }
 
-        return null;
+        $domain = $this->getCurrentDomain();
+        if(! $domain) {
+            return null;
+        }
+
+        $result = $domain->id;
+
+        return $result;
     }
 
     /**
      * Возвращает запись текущего домена
      *
+     * @param bool $reset
+     *
      * @return Domain
      */
-    public function getCurrentDomain()
+    public function getCurrentDomain($reset = false)
     {
+        static $result;
+
+        if($result && ! $reset) {
+            return $result;
+        }
+
         $currentDomain = Url::base(true);
         $parsed = parse_url($currentDomain);
         $currentDomain = $parsed['scheme'] . "://" . $parsed['host'];
-        $domain = $this->getOneByCondition(['domain' => $currentDomain]);
+        $result = $this->getOneByCondition(['domain' => $currentDomain]);
 
-        return $domain;
+        return $result;
     }
 }
