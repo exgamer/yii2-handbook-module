@@ -2,7 +2,6 @@
 namespace concepture\yii2handbook\services\traits;
 
 use Yii;
-use concepture\yii2handbook\traits\ServicesTrait;
 use concepture\yii2logic\forms\Model;
 
 /**
@@ -11,8 +10,6 @@ use concepture\yii2logic\forms\Model;
  */
 trait ModifySupportTrait
 {
-    use ServicesTrait;
-
     /**
      * Устанавливает текущий домен
      * @param Model $model

@@ -2,7 +2,6 @@
 namespace concepture\yii2handbook\services\traits;
 
 use Yii;
-use concepture\yii2handbook\traits\ServicesTrait;
 use yii\db\ActiveQuery;
 use concepture\yii2logic\enum\IsDeletedEnum;
 
@@ -12,8 +11,6 @@ use concepture\yii2logic\enum\IsDeletedEnum;
  */
 trait ReadSupportTrait
 {
-    use ServicesTrait;
-
     /**
      * Добавялет в запрос условие выборки где domain_id текущий или null
      *
