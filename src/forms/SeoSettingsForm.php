@@ -30,7 +30,6 @@ class SeoSettingsForm extends Form
         return [
             [
                 [
-                    'locale',
                     'seo_h1',
                     'seo_title',
                     'seo_description'
