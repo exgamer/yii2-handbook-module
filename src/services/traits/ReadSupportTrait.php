@@ -30,15 +30,5 @@ trait ReadSupportTrait
     {
         $query->andWhere("locale = :locale", [':locale' => $this->localeService()->getCurrentLocaleId()]);
     }
-
-    /**
-     * Добавялет в запрос условие выборки где запись не удалена
-     *
-     * @param ActiveQuery $query
-     */
-    protected function applyNotDeleted(ActiveQuery $query)
-    {
-        $query->andWhere(['is_deleted' => IsDeletedEnum::NOT_DELETED]);
-    }
 }
 
