@@ -18,16 +18,14 @@ class SettingsService extends Service
     use HandbookServices;
 
     /**
-     * Для расширения запроса для вывода каталога и списка для выпадашек
-     *
-     * @see \concepture\yii2logic\services\traits\CatalogTrait::extendCatalogTraitQuery
-     * @param ActiveQuery $query
+     * @see \concepture\yii2logic\services\Service::extendFindCondition()
+     * @return array
      */
-    protected function extendCatalogTraitQuery(ActiveQuery $query)
+    protected function extendFindCondition()
     {
-        $sql = "domain_id = :domain_id OR domain_id IS NULL";
-        $query->andWhere($sql, [':domain_id' => $this->domainService()->getCurrentDomainId()]);
-        $sql = "locale = :locale OR locale IS NULL";
-        $query->andWhere($sql, [':locale' => $this->localeService()->getCurrentLocaleId()]);
+        return [
+            ["domain_id = :domain_id OR domain_id IS NULL", [':domain_id' => $this->domainService()->getCurrentDomainId()]],
+            ["locale = :locale OR locale IS NULL", [':domain_id' => $this->localeService()->getCurrentLocaleId()]],
+        ];
     }
 }
