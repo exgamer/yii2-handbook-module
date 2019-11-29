@@ -7,6 +7,8 @@ use concepture\yii2logic\services\Service;
 use yii\db\ActiveQuery;
 use Yii;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
+use concepture\yii2handbook\services\traits\ReadSupportTrait;
+use concepture\yii2handbook\services\traits\ModifySupportTrait;
 
 /**
  * Class TagsService
@@ -16,10 +18,14 @@ use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 class TagsService extends Service
 {
     use HandbookServices;
+    use ReadSupportTrait;
+    use ModifySupportTrait;
 
     protected function beforeCreate(Model $form)
     {
         $form->user_id = Yii::$app->user->identity->id;
+        $this->setCurrentDomain($form);
+        $this->setCurrentLocale($form);
     }
 
     /**
@@ -30,10 +36,19 @@ class TagsService extends Service
      */
     protected function extendCatalogTraitQuery(ActiveQuery $query)
     {
-        $sql = "domain_id = :domain_id OR domain_id IS NULL";
-        $query->andWhere($sql, [':domain_id' => $this->domainService()->getCurrentDomainId()]);
-        $sql = "locale = :locale OR locale IS NULL";
-        $query->andWhere($sql, [':locale' => $this->localeService()->getCurrentLocaleId()]);
-        $query->andWhere(['is_deleted' => IsDeletedEnum::NOT_DELETED]);
+        $this->applyNotDeleted($query);
+    }
+
+    /**
+     * Метод для расширения find()
+     * !! ВНимание эти данные будут поставлены в find по умолчанию все всех случаях
+     *
+     * @param ActiveQuery $query
+     * @see \concepture\yii2logic\services\Service::extendFindCondition()
+     */
+    protected function extendQuery(ActiveQuery $query)
+    {
+        $this->applyDomain($query);
+        $this->applyLocale($query);
     }
 }

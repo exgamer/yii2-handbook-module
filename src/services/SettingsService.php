@@ -7,6 +7,8 @@ use concepture\yii2logic\services\Service;
 use yii\db\ActiveQuery;
 use Yii;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
+use concepture\yii2handbook\services\traits\ReadSupportTrait;
+use concepture\yii2handbook\services\traits\ModifySupportTrait;
 
 /**
  * Class SettingsService
@@ -16,16 +18,36 @@ use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 class SettingsService extends Service
 {
     use HandbookServices;
+    use ReadSupportTrait;
+    use ModifySupportTrait;
+
+    protected function beforeCreate(Model $form)
+    {
+        $this->setCurrentDomain($form);
+        $this->setCurrentLocale($form);
+    }
 
     /**
-     * @see \concepture\yii2logic\services\Service::extendFindCondition()
-     * @return array
+     * Для расширения запроса для вывода каталога и списка для выпадашек
+     *
+     * @see \concepture\yii2logic\services\traits\CatalogTrait::extendCatalogTraitQuery
+     * @param ActiveQuery $query
      */
-    protected function extendFindCondition()
+    protected function extendCatalogTraitQuery(ActiveQuery $query)
     {
-        return [
-            ["domain_id = :domain_id OR domain_id IS NULL", [':domain_id' => $this->domainService()->getCurrentDomainId()]],
-            ["locale = :locale OR locale IS NULL", [':domain_id' => $this->localeService()->getCurrentLocaleId()]],
-        ];
+        $this->applyNotDeleted($query);
+    }
+
+    /**
+     * Метод для расширения find()
+     * !! ВНимание эти данные будут поставлены в find по умолчанию все всех случаях
+     *
+     * @param ActiveQuery $query
+     * @see \concepture\yii2logic\services\Service::extendFindCondition()
+     */
+    protected function extendQuery(ActiveQuery $query)
+    {
+        $this->applyDomain($query);
+        $this->applyLocale($query);
     }
 }

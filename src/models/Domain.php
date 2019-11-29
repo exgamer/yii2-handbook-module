@@ -1,6 +1,7 @@
 <?php
 namespace concepture\yii2handbook\models;
 
+use concepture\yii2logic\validators\TranslitValidator;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 
@@ -10,6 +11,8 @@ use concepture\yii2logic\models\ActiveRecord;
  * @property integer $id
  * @property integer $sort
  * @property string $domain
+ * @property string $caption
+ * @property string $alias
  * @property string $description
  * @property integer $status
  * @property datetime $created_at
@@ -47,6 +50,21 @@ class Domain extends ActiveRecord
                 'string',
                 'max'=>1024
             ],
+            [
+                [
+                    'caption',
+                    'alias',
+                ],
+                'string',
+                'max'=>100
+            ],
+            [
+                [
+                    'alias',
+                ],
+                TranslitValidator::className(),
+                'source' => 'caption'
+            ],
             ['domain', 'url', 'defaultScheme' => 'https']
         ];
     }
@@ -58,6 +76,8 @@ class Domain extends ActiveRecord
             'sort' => Yii::t('domain','Позиция сортировки'),
             'status' => Yii::t('domain','Статус'),
             'domain' => Yii::t('domain','Домен'),
+            'caption' => Yii::t('domain','Название'),
+            'alias' => Yii::t('domain','Альяс'),
             'description' => Yii::t('domain','Описание'),
             'created_at' => Yii::t('domain','Дата создания'),
             'updated_at' => Yii::t('domain','Дата обновления'),

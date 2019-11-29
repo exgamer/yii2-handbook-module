@@ -8,6 +8,8 @@ use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use Yii;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
+use concepture\yii2handbook\services\traits\ReadSupportTrait;
+use concepture\yii2handbook\services\traits\ModifySupportTrait;
 
 /**
  * Class SeoSettingsService
@@ -17,6 +19,27 @@ use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 class SeoSettingsService extends Service
 {
     use HandbookServices;
+    use ReadSupportTrait;
+    use ModifySupportTrait;
+
+    protected function beforeCreate(Model $form)
+    {
+        $this->setCurrentDomain($form);
+        $this->setCurrentLocale($form);
+    }
+
+    /**
+     * Метод для расширения find()
+     * !! ВНимание эти данные будут поставлены в find по умолчанию все всех случаях
+     *
+     * @param ActiveQuery $query
+     * @see \concepture\yii2logic\services\Service::extendFindCondition()
+     */
+    protected function extendQuery(ActiveQuery $query)
+    {
+        $this->applyDomain($query);
+        $this->applyLocale($query);
+    }
 
     /**
      * Возвращает настройки SEO для текущей страницы
@@ -70,11 +93,6 @@ class SeoSettingsService extends Service
             $query->andWhere("url_md5_hash = :url_md5_hash OR url_md5_hash IS NULL",
                 [
                     ':url_md5_hash' => $md5
-                ]
-            );
-            $query->andWhere("locale = :locale",
-                [
-                    ':locale' => $this->localeService()->getCurrentLocaleId()
                 ]
             );
             $query->orderBy('url');

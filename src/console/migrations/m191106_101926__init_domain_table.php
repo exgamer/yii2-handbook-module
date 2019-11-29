@@ -17,6 +17,8 @@ class m191106_101926__init_domain_table extends Migration
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
             'domain' => $this->string(255)->notNull(),
+            'caption' => $this->string(100)->notNull(),
+            'alias' => $this->string(100),
             'description' => $this->string(1024),
             'sort' => $this->integer()->defaultValue(0),
             'status' => $this->smallInteger()->defaultValue(0),
