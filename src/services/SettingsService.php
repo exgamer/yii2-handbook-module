@@ -9,6 +9,7 @@ use Yii;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
+use concepture\yii2logic\forms\Model;
 
 /**
  * Class SettingsService
