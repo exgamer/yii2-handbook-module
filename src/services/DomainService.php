@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\services;
 use concepture\yii2handbook\models\Domain;
 use concepture\yii2logic\services\Service;
 use yii\helpers\Url;
+use Yii;
 
 /**
  * Class DomainService
@@ -51,8 +52,10 @@ class DomainService extends Service
         if($result && ! $reset) {
             return $result;
         }
-
-        $currentDomain = Url::base(true);
+        $currentDomain = null;
+        if (Yii::$app instanceof \yii\web\Application) {
+            $currentDomain = Url::base(true);
+        }
         $parsed = parse_url($currentDomain);
         $currentDomain = $parsed['scheme'] . "://" . $parsed['host'];
         $result = $this->getOneByCondition(['domain' => $currentDomain]);
