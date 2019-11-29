@@ -28,17 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'caption',
             'description',
             [
-                'attribute'=>'locale',
-                'value'=>function($data) {
-
-                    return LocaleConverter::value($data->locale);
-                }
-            ],
-            [
-                'attribute'=>'domain_id',
-                'value'=>$model->getDomainName(),
-            ],
-            [
                 'attribute'=>'user_id',
                 'value'=>function($data) {
                     return $data->getUserName();

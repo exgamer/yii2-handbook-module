@@ -27,17 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'seo_title',
             'seo_description',
             'seo_keywords',
-            [
-                'attribute'=>'locale',
-                'value'=>function($data) {
-
-                    return LocaleConverter::value($data->locale);
-                }
-            ],
-            [
-                'attribute'=>'domain_id',
-                'value'=>$model->getDomainName(),
-            ],
             'created_at',
             'updated_at',
         ],
