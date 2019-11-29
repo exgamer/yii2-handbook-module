@@ -31,20 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'caption',
             [
-                'attribute'=>'locale',
-                'filter'=> Yii::$app->localeService->catalog(),
-                'value'=>function($data) {
-                    return LocaleConverter::value($data->locale);
-                }
-            ],
-            [
-                'attribute'=>'domain_id',
-                'filter'=> Yii::$app->domainService->catalog(),
-                'value'=>function($data) {
-                    return $data->getDomainName();
-                }
-            ],
-            [
                 'attribute'=>'user_id',
                 'filter'=> Yii::$app->userService->catalog(),
                 'value'=>function($data) {

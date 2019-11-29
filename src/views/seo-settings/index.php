@@ -29,20 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'seo_title',
             'seo_description',
             'seo_keywords',
-            [
-                'attribute'=>'locale',
-                'filter'=> Yii::$app->localeService->catalog(),
-                'value'=>function($data) {
-                    return LocaleConverter::value($data->locale);
-                }
-            ],
-            [
-                'attribute'=>'domain_id',
-                'filter'=> Yii::$app->domainService->catalog(),
-                'value'=>function($data) {
-                    return $data->getDomainName();
-                }
-            ],
             'created_at',
             'updated_at',
 
