@@ -20,10 +20,19 @@ class LocaleService extends Service
     /**
      * Возвращает ID текущей локали приложения
      *
+     * @param bool $reset
      * @return int
      */
-    public function getCurrentLocaleId()
+    public function getCurrentLocaleId($reset = false)
     {
-        return LocaleConverter::key(Yii::$app->language);
+        static $result;
+
+        if($result && ! $reset) {
+            return $result;
+        }
+
+        $result =  LocaleConverter::key(Yii::$app->language);
+
+        return $result;
     }
 }

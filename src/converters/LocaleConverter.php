@@ -15,7 +15,7 @@ class LocaleConverter extends Converter
 {
     public static function key($value)
     {
-        $locales = Yii::$app->localeService->getAllList('id', 'locale');
+        $locales = Yii::$app->localeService->catalog('id', 'locale');
         $locales = array_flip($locales);
         if (isset($locales[$value])){
             return $locales[$value];
@@ -26,7 +26,7 @@ class LocaleConverter extends Converter
 
     public static function value($key)
     {
-        $locales = Yii::$app->localeService->getAllList('id', 'locale');
+        $locales = Yii::$app->localeService->catalog();
         if (isset($locales[$key])){
             return $locales[$key];
         }
