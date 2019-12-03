@@ -1,23 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-
-/* @var $this yii\web\View */
-/* @var $model concepture\user\models\User */
-
-$this->title = Yii::t('backend', 'Редактировать язык: {name}', [
-    'name' => $originModel->locale,
-]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Языки'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $originModel->id, 'url' => ['view', 'id' => $originModel->id]];
-$this->params['breadcrumbs'][] = Yii::t('user', 'Редактировать');
+$this->setTitle(Yii::t('yii2admin', 'Редактирование'));
+$this->pushBreadcrumbs(['label' => Yii::t('yii2admin', 'Языки'), 'url' => ['index']]);
+$this->pushBreadcrumbs($this->title);
+$this->viewHelper()->pushPageHeader();
+$this->viewHelper()->pushPageHeader(['view', 'id' => $originModel->id], Yii::t('yii2admin', 'Просмотр'),'icon-file-eye2');
+$this->viewHelper()->pushPageHeader(['index'], Yii::t('yii2admin', 'Языки'),'icon-list');
 ?>
-<div class="user-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<?= $this->render('_form', [
+    'model' => $model,
+]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>

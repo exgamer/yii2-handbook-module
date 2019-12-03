@@ -1,20 +1,11 @@
 <?php
 
-use yii\helpers\Html;
-
-/* @var $this yii\web\View */
-/* @var $model concepture\user\models\User */
-
-$this->title = Yii::t('backend', 'Добавить язык');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Языки'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->setTitle(Yii::t('yii2admin', 'Новая запись'));
+$this->pushBreadcrumbs(['label' => Yii::t('yii2admin', 'Языки'), 'url' => ['index']]);
+$this->pushBreadcrumbs($this->title);
+$this->viewHelper()->pushPageHeader(['index'], Yii::t('yii2admin', 'Языки'),'icon-list');
 ?>
-<div class="user-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+<?= $this->render('_form', [
+    'model' => $model,
+]) ?>
