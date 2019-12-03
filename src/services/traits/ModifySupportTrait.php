@@ -13,18 +13,28 @@ trait ModifySupportTrait
     /**
      * Устанавливает текущий домен
      * @param Model $model
+     * @param bool $ignoreSetted
      */
-    protected function setCurrentDomain(Model $model)
+    protected function setCurrentDomain(Model $model, $ignoreSetted = true)
     {
+        if (! $ignoreSetted){
+            return;
+        }
+
         $model->domain_id = Yii::$app->domainService->getCurrentDomainId();
     }
 
     /**
      * Устанавливает текущую локаль
      * @param Model $model
+     * @param bool $ignoreSetted
      */
-    protected function setCurrentLocale(Model $model)
+    protected function setCurrentLocale(Model $model, $ignoreSetted = true)
     {
+        if (! $ignoreSetted){
+            return;
+        }
+
         $model->locale = Yii::$app->localeService->getCurrentLocaleId();
     }
 }
