@@ -6,7 +6,7 @@ use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use concepture\yii2handbook\converters\LocaleConverter;
 use concepture\yii2logic\enum\StatusEnum;
 
-$this->setTitle($model::label());
+$this->setTitle($searchModel::label());
 $this->pushBreadcrumbs($this->title);
 $this->viewHelper()->pushPageHeader();
 ?>
