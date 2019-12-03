@@ -15,9 +15,23 @@ class SeoSettings extends ActiveRecord
 {
     use DomainTrait;
 
+    /**
+     * @see \concepture\yii2logic\models\ActiveRecord:label()
+     *
+     * @return string
+     */
     public static function label()
     {
         return Yii::t('handbook', 'Настройки SEO');
+    }
+
+    /**
+     * @see \concepture\yii2logic\models\ActiveRecord:toString()
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->id;
     }
 
     /**

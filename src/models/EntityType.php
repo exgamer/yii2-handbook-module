@@ -18,9 +18,23 @@ use concepture\yii2logic\models\ActiveRecord;
  */
 class EntityType extends ActiveRecord
 {
+    /**
+     * @see \concepture\yii2logic\models\ActiveRecord:label()
+     *
+     * @return string
+     */
     public static function label()
     {
         return Yii::t('handbook', 'Сущности');
+    }
+
+    /**
+     * @see \concepture\yii2logic\models\ActiveRecord:toString()
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->table_name;
     }
 
     /**
