@@ -2,6 +2,7 @@
 namespace concepture\yii2handbook\forms;
 
 
+use concepture\yii2handbook\enum\SettingsTypeEnum;
 use Yii;
 use concepture\yii2logic\forms\Form;
 
@@ -14,7 +15,7 @@ class SettingsForm extends Form
 {
     public $domain_id;
     public $locale;
-    public $type;
+    public $type = SettingsTypeEnum::TEXT;
     public $name;
     public $value;
     public $description;
