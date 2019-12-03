@@ -6,9 +6,9 @@ use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
 ?>
 
-<?php Pjax::begin(['formSelector' => '#locale-form']); ?>
+<?php Pjax::begin(['formSelector' => '#seo-settings-form']); ?>
 
-<?php $form = ActiveForm::begin(['id' => 'locale-form']); ?>
+<?php $form = ActiveForm::begin(['id' => 'seo-settings-form']); ?>
 <div class="card">
     <div class="card-body text-right">
         <?=  Html::submitButton(

@@ -2,92 +2,90 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
-use concepture\yii2handbook\converters\LocaleConverter;
+use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
+use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\enum\IsDeletedEnum;
 
-/* @var $this yii\web\View */
-/* @var $searchModel backend\search\UserSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = Yii::t('backend', 'Теги');
-$this->params['breadcrumbs'][] = $this->title;
+$this->setTitle($searchModel::label());
+$this->pushBreadcrumbs($this->title);
+$this->viewHelper()->pushPageHeader();
 ?>
-<div class="user-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('user', 'Добавить тег'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            'id',
-            'caption',
-            [
-                'attribute'=>'user_id',
-                'filter'=> Yii::$app->userService->catalog(),
-                'value'=>function($data) {
-                    return $data->getUserName();
-                }
-            ],
-            [
-                'attribute'=>'type',
-                'filter'=> \concepture\yii2handbook\enum\TagTypeEnum::arrayList(),
-                'value'=>function($data) {
-                    return $data->getTypeLabel();
-                }
-            ],
-            'created_at',
-            'updated_at',
-            [
-                'attribute'=>'is_deleted',
-                'filter'=> IsDeletedEnum::arrayList(),
-                'value'=>function($data) {
-                    return $data->isDeletedLabel();
-                }
-            ],
-            [
-                'class'=>'yii\grid\ActionColumn',
-                'template'=>'{view} {update} {delete}' ,
-                'buttons'=>[
-                    'update'=> function ($url, $model) {
-                        if ($model['is_deleted'] == IsDeletedEnum::DELETED){
-                            return '';
-                        }
-
-                        return Html::a(
-                            '<span class="glyphicon glyphicon-pencil"></span>',
-                            ['update', 'id' => $model['id']],
-                            ['data-pjax' => '0']
-                        );
-                    },
-                    'delete'=> function ($url, $model) {
-                        if ($model['is_deleted'] == IsDeletedEnum::DELETED){
-                            return '';
-                        }
-
-                        return Html::a(
-                            '<span class="glyphicon glyphicon-trash"></span>',
-                            ['delete', 'id' => $model['id']],
-                            [
-                                'title' => Yii::t('user', 'Удалить'),
-                                'data-confirm' => Yii::t('handbook', 'Удалить ?'),
-                                'data-method' => 'post',
-                            ]
-                        );
-                    }
-                ]
-            ],
+<?php Pjax::begin(); ?>
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'searchVisible' => true,
+    'searchParams' => [
+        'model' => $searchModel
+    ],
+    'columns' => [
+        'id',
+        'caption',
+        [
+            'attribute'=>'user_id',
+            'filter'=> Yii::$app->userService->catalog(),
+            'value'=>function($data) {
+                return $data->getUserName();
+            }
         ],
-    ]); ?>
+        [
+            'attribute'=>'type',
+            'filter'=> \concepture\yii2handbook\enum\TagTypeEnum::arrayList(),
+            'value'=>function($data) {
+                return $data->getTypeLabel();
+            }
+        ],
+        'created_at',
+        'updated_at',
+        [
+            'attribute'=>'is_deleted',
+            'filter'=> IsDeletedEnum::arrayList(),
+            'value'=>function($data) {
+                return $data->isDeletedLabel();
+            }
+        ],
 
-    <?php Pjax::end(); ?>
+        [
+            'class'=>'yii\grid\ActionColumn',
+            'template'=>'{view} {update} {delete}',
+            'buttons'=>[
+                'update'=> function ($url, $model) {
+                    if ($model['is_deleted'] == IsDeletedEnum::DELETED){
+                        return '';
+                    }
 
-</div>
+                    return Html::a(
+                        '<i class="icon-pencil6"></i>'. Yii::t('yii2admin', 'Редактировать'),
+                        ['update', 'id' => $model['id']],
+                        [
+                            'class' => 'dropdown-item',
+                            'aria-label' => Yii::t('yii2admin', 'Редактировать'),
+                            'title' => Yii::t('yii2admin', 'Редактировать'),
+                            'data-pjax' => '0'
+                        ]
+                    );
+                },
+                'delete'=> function ($url, $model) {
+                    if ($model['is_deleted'] == IsDeletedEnum::DELETED){
+                        return '';
+                    }
+
+                    return Html::a(
+                        '<i class="icon-trash"></i>'. Yii::t('yii2admin', 'Удалить'),
+                        ['delete', 'id' => $model['id']],
+                        [
+                            'title' => Yii::t('yii2admin', 'Удалить'),
+                            'data-confirm' => Yii::t('yii2admin', 'Удалить ?'),
+                            'data-method' => 'post',
+                            'class' => 'dropdown-item',
+                            'aria-label' => Yii::t('yii2admin', 'Удалить'),
+                            'title' => Yii::t('yii2admin', 'Удалить'),
+                        ]
+                    );
+                }
+            ]
+        ],
+    ],
+]); ?>
+
+<?php Pjax::end(); ?>
+

@@ -5,9 +5,9 @@ use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 ?>
 
-<?php Pjax::begin(['formSelector' => '#locale-form']); ?>
+<?php Pjax::begin(['formSelector' => '#settings-form']); ?>
 
-<?php $form = ActiveForm::begin(['id' => 'locale-form']); ?>
+<?php $form = ActiveForm::begin(['id' => 'settings-form']); ?>
 <div class="card">
     <div class="card-body text-right">
         <?=  Html::submitButton(

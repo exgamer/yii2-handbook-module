@@ -1,20 +1,13 @@
 <?php
 
-use yii\helpers\Html;
-
-$this->title = Yii::t('backend', 'Редактировать: {name}', [
-    'name' => $originModel->caption,
-]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Теги'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $originModel->id, 'url' => ['view', 'id' => $originModel->id]];
-$this->params['breadcrumbs'][] = Yii::t('user', 'Редактировать');
+$this->setTitle(Yii::t('yii2admin', 'Редактирование'));
+$this->pushBreadcrumbs(['label' => $model::label(), 'url' => ['index']]);
+$this->pushBreadcrumbs($this->title);
+$this->viewHelper()->pushPageHeader();
+$this->viewHelper()->pushPageHeader(['view', 'id' => $originModel->id], Yii::t('yii2admin', 'Просмотр'),'icon-file-eye2');
+$this->viewHelper()->pushPageHeader(['index'], $model::label(),'icon-list');
 ?>
-<div class="user-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+<?= $this->render('_form', [
+    'model' => $model,
+]) ?>
