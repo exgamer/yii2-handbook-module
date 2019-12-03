@@ -18,6 +18,11 @@ use concepture\yii2logic\models\ActiveRecord;
  */
 class EntityType extends ActiveRecord
 {
+    public static function label()
+    {
+        return Yii::t('handbook', 'Сущности');
+    }
+
     /**
      * {@inheritdoc}
      */

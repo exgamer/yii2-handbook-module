@@ -6,7 +6,7 @@ use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\enum\IsDeletedEnum;
 
-$this->setTitle(Yii::t('user', 'Сущности'));
+$this->setTitle($searchModel::label());
 $this->pushBreadcrumbs($this->title);
 $this->viewHelper()->pushPageHeader();
 ?>

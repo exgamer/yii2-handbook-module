@@ -22,6 +22,11 @@ class Locale extends ActiveRecord
 {
     use StatusTrait;
 
+    public static function label()
+    {
+        return Yii::t('handbook', 'Языки');
+    }
+
     /**
      * {@inheritdoc}
      */

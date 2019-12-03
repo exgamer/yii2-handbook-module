@@ -24,6 +24,12 @@ use concepture\yii2logic\models\ActiveRecord;
 class Settings extends ActiveRecord
 {
     use DomainTrait;
+
+    public static function label()
+    {
+        return Yii::t('handbook', 'Настройки');
+    }
+
     /**
      * {@inheritdoc}
      */

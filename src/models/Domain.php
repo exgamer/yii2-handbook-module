@@ -22,6 +22,11 @@ use concepture\yii2logic\models\ActiveRecord;
  */
 class Domain extends ActiveRecord
 {
+    public static function label()
+    {
+        return Yii::t('handbook', 'Домены');
+    }
+
     /**
      * {@inheritdoc}
      */

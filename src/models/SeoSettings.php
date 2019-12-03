@@ -14,6 +14,12 @@ use concepture\yii2logic\validators\MD5Validator;
 class SeoSettings extends ActiveRecord
 {
     use DomainTrait;
+
+    public static function label()
+    {
+        return Yii::t('handbook', 'Настройки SEO');
+    }
+
     /**
      * {@inheritdoc}
      */

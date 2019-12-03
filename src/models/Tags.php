@@ -21,6 +21,11 @@ class Tags extends ActiveRecord
     use UserTrait;
     use IsDeletedTrait;
 
+    public static function label()
+    {
+        return Yii::t('handbook', 'Теги');
+    }
+
     /**
      * {@inheritdoc}
      */
