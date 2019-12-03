@@ -38,6 +38,7 @@ $this->viewHelper()->pushPageHeader(['index'], $model::label(),'icon-list');
                             ['update', 'id' => $model->id],
                             [
                                 'class' => 'admin-action dropdown-item',
+                                'data-pjax' => '0',
                                 'data-swal' => Yii::t('yii2admin' , 'Редактирование'),
                             ]
                         );?>
