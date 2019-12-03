@@ -2,34 +2,75 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use concepture\yii2handbook\converters\LocaleConverter;
+use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
+use yii\helpers\Url;
 
+$this->setTitle(Yii::t('yii2admin', 'Просмотр'));
+$this->pushBreadcrumbs(['label' => $model::label(), 'url' => ['index']]);
+$this->pushBreadcrumbs($this->title);
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Настройк SEOи'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+$this->viewHelper()->pushPageHeader();
+$this->viewHelper()->pushPageHeader(['update' ,'id' => $model->id], Yii::t('yii2admin','Редактировать'), 'icon-pencil6');
+$this->viewHelper()->pushPageHeader(['index'], $model::label(),'icon-list');
 ?>
-<div class="user-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('user', 'Редактировать'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'url',
-            'seo_h1',
-            'seo_title',
-            'seo_description',
-            'seo_keywords',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
-
-</div>
+<?php Pjax::begin();?>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-lg-9 col-md-8 col-sm-12">
+                    <h5 class="card-title">
+                        <?= $model->toString();?>
+                    </h5>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-12 text-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-labeled btn-labeled-left dropdown-toggle" data-toggle="dropdown">
+                            <b>
+                                <i class="icon-cog5"></i>
+                            </b>
+                            <?= Yii::t('yii2admin', 'Операции');?>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <?= Html::a(
+                                '<i class="icon-bin2"></i>' . Yii::t('yii2admin', 'Удалить'),
+                                ['delete', 'id' => $model->id],
+                                [
+                                    'class' => 'admin-action dropdown-item',
+                                    'data-pjax-id' => 'list-pjax',
+                                    'data-pjax-url' => Url::current([], true),
+                                    'data-swal' => Yii::t('yii2admin' , 'Удалить'),
+                                ]
+                            );?>
+                            <div class="dropdown-divider"></div>
+                            <?= Html::a(
+                                '<i class="icon-pencil6"></i>' . Yii::t('yii2admin', 'Редактирование'),
+                                ['update', 'id' => $model->id],
+                                [
+                                    'class' => 'admin-action dropdown-item',
+                                    'data-swal' => Yii::t('yii2admin' , 'Редактирование'),
+                                ]
+                            );?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    'id',
+                    'url',
+                    'seo_h1',
+                    'seo_title',
+                    'seo_description',
+                    'seo_keywords',
+                    'created_at',
+                    'updated_at',
+                ],
+            ]) ?>
+        </div>
+    </div>
+<?php Pjax::end(); ?>
