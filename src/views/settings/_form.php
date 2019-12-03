@@ -31,9 +31,6 @@ use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
             </div>
-            <?= $this->render('_form', [
-                'model' => $model,
-            ]) ?>
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
             </div>
