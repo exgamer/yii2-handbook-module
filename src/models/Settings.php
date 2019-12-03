@@ -1,6 +1,7 @@
 <?php
 namespace concepture\yii2handbook\models;
 
+use concepture\yii2handbook\enum\SettingsTypeEnum;
 use concepture\yii2handbook\models\traits\DomainTrait;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
@@ -45,6 +46,7 @@ class Settings extends ActiveRecord
                 ],
                 'integer'
             ],
+            ['type', 'in', 'range' => SettingsTypeEnum::all()],
             [
                 [
                     'name'

@@ -11,7 +11,10 @@ use yii\widgets\ActiveForm;
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <?= $form->field($model, 'type')->dropDownList(
+        \concepture\yii2handbook\enum\SettingsTypeEnum::arrayList(),
+        []
+    );?>
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'value')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
