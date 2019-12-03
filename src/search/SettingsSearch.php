@@ -23,6 +23,7 @@ class SettingsSearch extends Settings
                     'id',
                     'domain_id',
                     'locale',
+                    'type',
                 ],
                 'integer'
             ],
@@ -40,6 +41,9 @@ class SettingsSearch extends Settings
         ]);
         $query->andFilterWhere([
             'locale' => $this->locale
+        ]);
+        $query->andFilterWhere([
+            'type' => $this->type
         ]);
         $query->andFilterWhere([
             'like',

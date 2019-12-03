@@ -14,6 +14,7 @@ class SettingsForm extends Form
 {
     public $domain_id;
     public $locale;
+    public $type;
     public $name;
     public $value;
     public $description;
@@ -28,6 +29,7 @@ class SettingsForm extends Form
                 [
                     'name',
                     'value',
+                    'type',
                 ],
                 'required'
             ],

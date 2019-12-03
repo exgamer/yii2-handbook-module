@@ -13,6 +13,7 @@ use concepture\yii2logic\models\ActiveRecord;
  * @property string $locale
  * @property integer $name
  * @property integer $value
+ * @property integer $type
  * @property integer $description
  * @property datetime $created_at
  * @property datetime $updated_at
@@ -40,6 +41,7 @@ class Settings extends ActiveRecord
                 [
                     'domain_id',
                     'locale',
+                    'type',
                 ],
                 'integer'
             ],
@@ -82,6 +84,7 @@ class Settings extends ActiveRecord
             'domain_id' => Yii::t('handbook','Домен'),
             'locale' => Yii::t('handbook','Язык'),
             'description' => Yii::t('handbook','Описание'),
+            'type' => Yii::t('handbook','Тип'),
             'name' => Yii::t('handbook','Название'),
             'value' => Yii::t('handbook','Значение'),
             'created_at' => Yii::t('handbook','Дата создания'),
