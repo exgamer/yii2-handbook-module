@@ -4,14 +4,14 @@ namespace concepture\yii2handbook\forms;
 
 use concepture\yii2handbook\enum\SettingsTypeEnum;
 use Yii;
-use concepture\yii2logic\forms\Form;
+use kamaelkz\yii2admin\v1\forms\BaseForm;
 
 /**
  * Class SettingsForm
  * @package concepture\yii2handbook\forms
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SettingsForm extends Form
+class SettingsForm extends BaseForm
 {
     public $domain_id;
     public $locale;
