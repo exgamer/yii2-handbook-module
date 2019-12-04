@@ -44,7 +44,7 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
                     ->field($model, 'seo_text')
                     ->widget(FroalaEditor::class, [
                         'model' => $model,
-                        'attribute' => 'editor',
+                        'attribute' => 'seo_text',
                         'clientOptions' => [
                             'attribution' => false,
                             'heightMin' => 200,
