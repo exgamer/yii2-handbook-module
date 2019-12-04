@@ -15,7 +15,7 @@
         ->field($model, 'value')
         ->widget(FroalaEditor::class, [
             'model' => $model,
-            'attribute' => 'editor',
+            'attribute' => 'value',
             'clientOptions' => [
                 'attribution' => false,
                 'heightMin' => 200,
