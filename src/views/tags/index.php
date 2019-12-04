@@ -5,6 +5,7 @@ use yii\grid\GridView;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\enum\IsDeletedEnum;
+use yii\helpers\Url;
 
 $this->setTitle($searchModel::label());
 $this->pushBreadcrumbs($this->title);
@@ -73,12 +74,10 @@ $this->viewHelper()->pushPageHeader();
                         '<i class="icon-trash"></i>'. Yii::t('yii2admin', 'Удалить'),
                         ['delete', 'id' => $model['id']],
                         [
-                            'title' => Yii::t('yii2admin', 'Удалить'),
-                            'data-confirm' => Yii::t('yii2admin', 'Удалить ?'),
-                            'data-method' => 'post',
-                            'class' => 'dropdown-item',
-                            'aria-label' => Yii::t('yii2admin', 'Удалить'),
-                            'title' => Yii::t('yii2admin', 'Удалить'),
+                            'class' => 'admin-action dropdown-item',
+                            'data-pjax-id' => 'list-pjax',
+                            'data-pjax-url' => Url::current([], true),
+                            'data-swal' => Yii::t('yii2admin' , 'Удалить'),
                         ]
                     );
                 }

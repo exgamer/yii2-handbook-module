@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
-use concepture\yii2handbook\converters\LocaleConverter;
+use yii\helpers\Url;
 use concepture\yii2logic\enum\StatusEnum;
 
 $this->setTitle($searchModel::label());
@@ -45,11 +45,10 @@ $this->viewHelper()->pushPageHeader();
                         '<i class="icon-checkmark4"></i>'. Yii::t('yii2admin', 'Активировать'),
                         ['status-change', 'id' => $model['id'], 'status' => StatusEnum::ACTIVE],
                         [
-                            'class' => 'dropdown-item',
-                            'aria-label' => Yii::t('yii2admin', 'Активировать'),
-                            'title' => Yii::t('yii2admin', 'Активировать'),
-                            'data-confirm' => Yii::t('yii2admin', 'Активировать ?'),
-                            'data-method' => 'post',
+                            'class' => 'admin-action dropdown-item',
+                            'data-pjax-id' => 'list-pjax',
+                            'data-pjax-url' => Url::current([], true),
+                            'data-swal' => Yii::t('yii2admin' , 'Активировать'),
                         ]
                     );
                 },
@@ -62,11 +61,10 @@ $this->viewHelper()->pushPageHeader();
                         '<i class="icon-cross2"></i>'. Yii::t('yii2admin', 'Деактивировать'),
                         ['status-change', 'id' => $model['id'], 'status' => StatusEnum::INACTIVE],
                         [
-                            'class' => 'dropdown-item',
-                            'aria-label' => Yii::t('yii2admin', 'Деактивировать'),
-                            'title' => Yii::t('yii2admin', 'Деактивировать'),
-                            'data-confirm' => Yii::t('yii2admin', 'Деактивировать ?'),
-                            'data-method' => 'post',
+                            'class' => 'admin-action dropdown-item',
+                            'data-pjax-id' => 'list-pjax',
+                            'data-pjax-url' => Url::current([], true),
+                            'data-swal' => Yii::t('yii2admin' , 'Деактивировать'),
                         ]
                     );
                 }
