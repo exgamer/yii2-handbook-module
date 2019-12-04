@@ -70,6 +70,6 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
             ]
         ); ?>
     </div>
-    <?php ActiveForm::end(); ?>
 </div>
+<?php ActiveForm::end(); ?>
 <?php Pjax::end(); ?>
