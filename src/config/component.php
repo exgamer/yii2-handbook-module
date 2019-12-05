@@ -2,21 +2,21 @@
 
 return [
     'domainService' => [
-        'class' => '\concepture\yii2handbook\services\DomainService'
+        'class' => 'concepture\yii2handbook\services\DomainService'
     ],
     'localeService' => [
-        'class' => '\concepture\yii2handbook\services\LocaleService'
+        'class' => 'concepture\yii2handbook\services\LocaleService'
     ],
     'entityTypeService' => [
-        'class' => '\concepture\yii2handbook\services\EntityTypeService'
+        'class' => 'concepture\yii2handbook\services\EntityTypeService'
     ],
     'settingsService' => [
-        'class' => '\concepture\yii2handbook\services\SettingsService'
+        'class' => 'concepture\yii2handbook\services\SettingsService'
     ],
     'seoSettingsService' => [
-        'class' => '\concepture\yii2handbook\services\SeoSettingsService'
+        'class' => 'concepture\yii2handbook\services\SeoSettingsService'
     ],
     'tagsService' => [
-        'class' => '\concepture\yii2handbook\services\TagsService'
+        'class' => 'concepture\yii2handbook\services\TagsService'
     ]
 ];
