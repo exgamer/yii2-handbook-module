@@ -10,6 +10,12 @@ use concepture\yii2logic\services\Service;
  */
 class EntityTypeService extends Service
 {
-
+    /**
+     * @see \concepture\yii2logic\services\traits\CatalogTrait
+     */
+    public function catalogKeyPreAction($value, &$catalog)
+    {
+        return trim($value, '{}');
+    }
 
 }
