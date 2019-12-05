@@ -13,8 +13,8 @@ class EntityTypeService extends Service
     /**
      * @see \concepture\yii2logic\services\traits\CatalogTrait
      */
-    public function catalogKeyPreAction($value, &$catalog)
+    public function catalogKeyPreAction(&$value, &$catalog)
     {
-        return trim($value, '{}');
+        $value = trim($value, '{}');
     }
 }
