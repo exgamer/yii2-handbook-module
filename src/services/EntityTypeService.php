@@ -17,5 +17,4 @@ class EntityTypeService extends Service
     {
         return trim($value, '{}');
     }
-
 }
