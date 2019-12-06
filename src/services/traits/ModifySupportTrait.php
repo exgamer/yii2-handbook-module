@@ -21,6 +21,10 @@ trait ModifySupportTrait
             return;
         }
 
+        if (! $model->domain_id){
+            return;
+        }
+
         $model->domain_id = Yii::$app->domainService->getCurrentDomainId();
     }
 
@@ -32,6 +36,10 @@ trait ModifySupportTrait
     protected function setCurrentLocale(Model $model, $ignoreSetted = true)
     {
         if (! $ignoreSetted){
+            return;
+        }
+
+        if (! $model->locale){
             return;
         }
 
