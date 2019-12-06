@@ -21,7 +21,7 @@ trait ModifySupportTrait
             return;
         }
 
-        if (! $model->domain_id){
+        if ($model->domain_id){
             return;
         }
 
@@ -39,7 +39,7 @@ trait ModifySupportTrait
             return;
         }
 
-        if (! $model->locale){
+        if ($model->locale){
             return;
         }
 

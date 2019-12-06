@@ -10,6 +10,7 @@ use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
+use concepture\yii2user\services\traits\UserSupportTrait;
 
 /**
  * Class TagsService
@@ -22,10 +23,11 @@ class TagsService extends Service
     use ReadSupportTrait;
     use ModifySupportTrait;
     use CoreReadSupportTrait;
+    use UserSupportTrait;
 
     protected function beforeCreate(Model $form)
     {
-        $form->user_id = Yii::$app->user->identity->id;
+        $this->setCurrentUser($form);
         $this->setCurrentDomain($form);
         $this->setCurrentLocale($form);
     }
