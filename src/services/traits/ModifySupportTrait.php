@@ -15,7 +15,7 @@ trait ModifySupportTrait
      * @param Model $model
      * @param bool $ignoreSetted
      */
-    protected function setCurrentDomain(Model $model, $ignoreSetted = true)
+    protected function setCurrentDomain(Model $model, $ignoreSetted = false)
     {
         if ($ignoreSetted){
             return;
@@ -33,7 +33,7 @@ trait ModifySupportTrait
      * @param Model $model
      * @param bool $ignoreSetted
      */
-    protected function setCurrentLocale(Model $model, $ignoreSetted = true)
+    protected function setCurrentLocale(Model $model, $ignoreSetted = false)
     {
         if ($ignoreSetted){
             return;
