@@ -17,7 +17,7 @@ trait ModifySupportTrait
      */
     protected function setCurrentDomain(Model $model, $ignoreSetted = true)
     {
-        if (! $ignoreSetted){
+        if ($ignoreSetted){
             return;
         }
 
@@ -35,7 +35,7 @@ trait ModifySupportTrait
      */
     protected function setCurrentLocale(Model $model, $ignoreSetted = true)
     {
-        if (! $ignoreSetted){
+        if ($ignoreSetted){
             return;
         }
 
