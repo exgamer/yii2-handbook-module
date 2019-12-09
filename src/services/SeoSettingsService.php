@@ -90,6 +90,7 @@ class SeoSettingsService extends Service
     public function getSeoForCurrentUrl()
     {
         $current = Yii::$app->getRequest()->getPathInfo();
+        $current = trim($current, '/');
         $md5 = md5($current);
 
         return $this->getAllByCondition(function(ActiveQuery $query) use ($md5){
