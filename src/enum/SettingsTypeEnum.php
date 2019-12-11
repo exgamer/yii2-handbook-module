@@ -14,14 +14,14 @@ class SettingsTypeEnum extends Enum
 {
     const TEXT = 0;
     const TEXT_AREA = 1;
-    const FROALA = 2;
+    const TEXT_EDITOR = 2;
 
     public static function labels()
     {
         return [
             self::TEXT => Yii::t('handbook', "Текст"),
             self::TEXT_AREA => Yii::t('handbook', "Многострочный текст"),
-            self::FROALA => Yii::t('handbook', "Текстовый редактор"),
+            self::TEXT_EDITOR => Yii::t('handbook', "Текстовый редактор"),
         ];
     }
 }

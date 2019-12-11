@@ -10,7 +10,7 @@
     <?= $form->field($model, 'value')->textarea(); ?>
 <?php endif;?>
 
-<?php if ($model->type == SettingsTypeEnum::FROALA) : ?>
+<?php if ($model->type == SettingsTypeEnum::TEXT_EDITOR) : ?>
     <?= $form
         ->field($model, 'value')
         ->widget(FroalaEditor::class, [
