@@ -31,17 +31,6 @@ class SettingsService extends Service
     }
 
     /**
-     * Для расширения запроса для вывода каталога и списка для выпадашек
-     *
-     * @see \concepture\yii2logic\services\traits\CatalogTrait::extendCatalogTraitQuery
-     * @param ActiveQuery $query
-     */
-    protected function extendCatalogTraitQuery(ActiveQuery $query)
-    {
-        $this->applyNotDeleted($query);
-    }
-
-    /**
      * Метод для расширения find()
      * !! ВНимание эти данные будут поставлены в find по умолчанию все всех случаях
      *
