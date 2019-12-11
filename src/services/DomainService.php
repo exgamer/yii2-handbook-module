@@ -69,28 +69,24 @@ class DomainService extends Service
         return $result;
     }
 
-//    /**
-//     * Возвращает запись текущего домена
-//     *
-//     * @param bool $reset
-//     *
-//     * @return Domain
-//     */
-//    public function getCurrentDomain($reset = false)
-//    {
-//        static $result;
-//
-//        if($result && ! $reset) {
-//            return $result;
-//        }
-//        $currentDomain = null;
-//        if (Yii::$app instanceof \yii\web\Application) {
-//            $currentDomain = Url::base(true);
-//        }
-//        $parsed = parse_url($currentDomain);
-//        $currentDomain = $parsed['scheme'] . "://" . $parsed['host'];
-//        $result = $this->getOneByCondition(['domain' => $currentDomain]);
-//
-//        return $result;
-//    }
+    /**
+     * Возвращает запись текущего домена
+     *
+     * @param bool $reset
+     *
+     * @return Domain
+     */
+    public function getCurrentDomain($reset = false)
+    {
+        static $result;
+
+        if($result && ! $reset) {
+            return $result;
+        }
+
+        $currentDomain = $this->getCurrentHost();
+        $result = $this->getOneByCondition(['domain' => $currentDomain]);
+
+        return $result;
+    }
 }
