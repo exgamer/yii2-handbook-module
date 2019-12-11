@@ -38,15 +38,6 @@ class DomainService extends Service
         $domains = array_flip($domains);
 
         return $this->getCurrentDomainIdFromCatalog($host, $domains);
-
-//        if (! isset($domains[$host])){
-//
-//            return null;
-//        }
-//        d($domains);
-//        $result = $domains[$host];
-
-//        return $result;
     }
 
     /**
