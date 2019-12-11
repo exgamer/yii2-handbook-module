@@ -56,7 +56,7 @@ class DomainService extends Service
         }
 
         $domainAlias = $domainMap[$host];
-        $domains = $this->catalog();
+        $domains = $this->catalog(false);
         $domains = array_flip($domains);
         if (! isset($domains[$domainAlias])){
 
@@ -104,7 +104,7 @@ class DomainService extends Service
         }
 
         $currentDomainId = $this->getCurrentDomainId();
-        $result = $this->findById($currentDomainId);
+        $result = $this->getCatalogModel($currentDomainId);
 
         return $result;
     }
