@@ -28,38 +28,69 @@ class DomainService extends Service
             return $result;
         }
 
-        $domain = $this->getCurrentDomain();
-        if(! $domain) {
+        $host = $this->getCurrentHost();
+        if(! $host) {
             return null;
         }
 
-        $result = $domain->id;
+        $domains = $this->catalog();
+        $domains = array_flip($domains);
+        if (! isset($domains[$host])){
+
+            return null;
+        }
+
+        $result = $domains[$host];
 
         return $result;
     }
 
     /**
-     * Возвращает запись текущего домена
+     * Возвращает текущий хост
      *
-     * @param bool $reset
-     *
-     * @return Domain
+     * @return string
      */
-    public function getCurrentDomain($reset = false)
+    public function getCurrentHost()
     {
         static $result;
 
-        if($result && ! $reset) {
+        if($result) {
             return $result;
         }
+
         $currentDomain = null;
         if (Yii::$app instanceof \yii\web\Application) {
             $currentDomain = Url::base(true);
         }
         $parsed = parse_url($currentDomain);
-        $currentDomain = $parsed['scheme'] . "://" . $parsed['host'];
-        $result = $this->getOneByCondition(['domain' => $currentDomain]);
+
+        $result = $parsed['scheme'] . "://" . $parsed['host'];
 
         return $result;
     }
+
+//    /**
+//     * Возвращает запись текущего домена
+//     *
+//     * @param bool $reset
+//     *
+//     * @return Domain
+//     */
+//    public function getCurrentDomain($reset = false)
+//    {
+//        static $result;
+//
+//        if($result && ! $reset) {
+//            return $result;
+//        }
+//        $currentDomain = null;
+//        if (Yii::$app instanceof \yii\web\Application) {
+//            $currentDomain = Url::base(true);
+//        }
+//        $parsed = parse_url($currentDomain);
+//        $currentDomain = $parsed['scheme'] . "://" . $parsed['host'];
+//        $result = $this->getOneByCondition(['domain' => $currentDomain]);
+//
+//        return $result;
+//    }
 }
