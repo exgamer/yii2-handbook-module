@@ -19,7 +19,7 @@ class DomainSearch extends Domain
     {
         return [
             [['id'], 'integer'],
-            [['domain'], 'safe'],
+            [['alias'], 'safe'],
         ];
     }
 
@@ -30,6 +30,6 @@ class DomainSearch extends Domain
 
     public static function getListSearchAttribute()
     {
-        return 'domain';
+        return 'alias';
     }
 }

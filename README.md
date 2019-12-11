@@ -23,6 +23,25 @@
      ],
 
 
+Для работы с доменами в common/config/params-local.php добавить
+
+```php
+<?php
+
+return [
+    'yii2handbook' => [
+        'domainMap' => [
+            '1xbet.loc' => '1xbet',
+            'bet365.loc' => 'bet365',
+            'fonbet.loc' => 'fonbet',
+            'winline.loc' => 'winline',
+            'liga-stavok.loc' => 'ls',
+        ]
+    ]
+];
+```
+
+
 
 
 Получить id текущей локали из таблицы  Yii::$app->localeService->getCurrentLocaleId()

@@ -29,32 +29,35 @@ class DomainService extends Service
             return $result;
         }
 
+        if (! isset(Yii::$app->params['yii2handbook'])){
+
+            return null;
+        }
+
+        if (! isset(Yii::$app->params['yii2handbook']['domainMap'])){
+
+            return null;
+        }
+
+        $domainMap = Yii::$app->params['yii2handbook']['domainMap'];
         $host = $this->getCurrentHost();
         if(! $host) {
             return null;
         }
 
+        if (! isset($domainMap[$host])){
+            return null;
+        }
+
+        $domainAlias = $domainMap[$host];
         $domains = $this->catalog();
         $domains = array_flip($domains);
-
-        return $this->getCurrentDomainIdFromCatalog($host, $domains);
-    }
-
-    /**
-     * Возвращает ID переданного хоста из каталога
-     *
-     * @param string $host
-     * @param array $domainsCatalog
-     * @return integer|null
-     */
-    protected function getCurrentDomainIdFromCatalog($host, $domainsCatalog)
-    {
-        if (! isset($domainsCatalog[$host])){
+        if (! isset($domains[$domainAlias])){
 
             return null;
         }
 
-        return $domainsCatalog[$host];
+        return $domains[$domainAlias];
     }
 
     /**
@@ -76,9 +79,7 @@ class DomainService extends Service
         }
         $parsed = parse_url($currentDomain);
 
-        $result = $parsed['scheme'] . "://" . $parsed['host'];
-
-        return $result;
+        return $parsed['host'];
     }
 
     /**
@@ -96,8 +97,8 @@ class DomainService extends Service
             return $result;
         }
 
-        $currentDomain = $this->getCurrentHost();
-        $result = $this->getOneByCondition(['domain' => $currentDomain]);
+        $currentDomainId = $this->getCurrentDomainId();
+        $result = $this->findById($currentDomainId);
 
         return $result;
     }

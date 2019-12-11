@@ -16,7 +16,6 @@ class m191106_101926__init_domain_table extends Migration
     {
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
-            'domain' => $this->string(255)->notNull(),
             'caption' => $this->string(100)->notNull(),
             'alias' => $this->string(100),
             'description' => $this->string(1024),
@@ -25,7 +24,6 @@ class m191106_101926__init_domain_table extends Migration
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
             'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
         ]);
-        $this->addIndex(['domain']);
         $this->addIndex(['sort']);
         $this->addIndex(['status']);
     }

@@ -10,7 +10,6 @@ use concepture\yii2logic\models\ActiveRecord;
  *
  * @property integer $id
  * @property integer $sort
- * @property string $domain
  * @property string $caption
  * @property string $alias
  * @property string $description
@@ -38,7 +37,7 @@ class Domain extends ActiveRecord
      */
     public function toString()
     {
-        return $this->domain;
+        return $this->alias;
     }
 
     /**
@@ -83,8 +82,7 @@ class Domain extends ActiveRecord
                 ],
                 TranslitValidator::className(),
                 'source' => 'caption'
-            ],
-            ['domain', 'url', 'defaultScheme' => 'https']
+            ]
         ];
     }
 
@@ -94,7 +92,6 @@ class Domain extends ActiveRecord
             'id' => Yii::t('domain','#'),
             'sort' => Yii::t('domain','Позиция сортировки'),
             'status' => Yii::t('domain','Статус'),
-            'domain' => Yii::t('domain','Домен'),
             'caption' => Yii::t('domain','Название'),
             'alias' => Yii::t('domain','Альяс'),
             'description' => Yii::t('domain','Описание'),
