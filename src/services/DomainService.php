@@ -46,7 +46,13 @@ class DomainService extends Service
         }
 
         if (! isset($domainMap[$host])){
-            return null;
+            $domainMap = array_flip($domainMap);
+            if (! isset($domainMap[$host])){
+                return null;
+            }
+
+            $host = $domainMap[$host];
+            $domainMap = array_flip($domainMap);
         }
 
         $domainAlias = $domainMap[$host];
