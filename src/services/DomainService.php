@@ -25,6 +25,7 @@ class DomainService extends Service
         static $result;
 
         if($result && ! $reset) {
+
             return $result;
         }
 
@@ -35,14 +36,34 @@ class DomainService extends Service
 
         $domains = $this->catalog();
         $domains = array_flip($domains);
-        if (! isset($domains[$host])){
+
+        return $this->getCurrentDomainIdFromCatalog($host, $domains);
+
+//        if (! isset($domains[$host])){
+//
+//            return null;
+//        }
+//        d($domains);
+//        $result = $domains[$host];
+
+//        return $result;
+    }
+
+    /**
+     * Возвращает ID переданного хоста из каталога
+     *
+     * @param string $host
+     * @param array $domainsCatalog
+     * @return integer|null
+     */
+    protected function getCurrentDomainIdFromCatalog($host, $domainsCatalog)
+    {
+        if (! isset($domainsCatalog[$host])){
 
             return null;
         }
 
-        $result = $domains[$host];
-
-        return $result;
+        return $domainsCatalog[$host];
     }
 
     /**
