@@ -21,7 +21,7 @@ class SettingsTypeEnum extends Enum
         return [
             self::TEXT => Yii::t('handbook', "Текст"),
             self::TEXT_AREA => Yii::t('handbook', "Многострочный текст"),
-            self::FROALA => Yii::t('handbook', "Фроала"),
+            self::FROALA => Yii::t('handbook', "Текстовый редактор"),
         ];
     }
 }
