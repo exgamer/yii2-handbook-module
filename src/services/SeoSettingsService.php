@@ -11,7 +11,8 @@ use yii\web\View;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
-use yii\base\Model;
+use concepture\yii2logic\forms\Model;
+use yii\base\Model as YiiModel;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
 
 /**
@@ -64,9 +65,9 @@ class SeoSettingsService extends Service
     /**
      * Установка сео настроек для страницы
      *
-     * @param Model $model
+     * @param YiiModel $model
      */
-    public function apply(Model $model = null)
+    public function apply(YiiModel $model = null)
     {
         $data = $this->getSeoDataSet($model);
         if(null !== $data->seo_title) {
