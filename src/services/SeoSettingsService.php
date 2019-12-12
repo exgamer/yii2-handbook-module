@@ -187,6 +187,9 @@ class SeoSettingsService extends Service
     {
         $current = Yii::$app->getRequest()->getPathInfo();
         $current = trim($current, '/');
+        if (! $current){
+            $current = "/";
+        }
         $md5 = md5($current);
 
         return $this->getAllByCondition(function(ActiveQuery $query) use ($md5){
