@@ -1,12 +1,20 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 
 $this->setTitle($searchModel::label());
 $this->pushBreadcrumbs($this->title);
-$this->viewHelper()->pushPageHeader();
+$this->viewHelper()->pushPageHeader(null, null, null,
+    [
+        'class' => 'magic-modal-control',
+        'data-url' => Url::to(['create']),
+        'data-modal-size' => 'modal-lg',
+        'data-callback' => 'function(){callbackHelper.reloadPjax("#list-pjax")}'
+    ]
+);
 ?>
 <?php Pjax::begin(); ?>
 <?= GridView::widget([
