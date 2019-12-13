@@ -34,6 +34,22 @@ $this->viewHelper()->pushPageHeader(null, null, null,
         [
             'class'=>'yii\grid\ActionColumn',
             'template'=>'{view} {update}',
+            'buttons' => [
+                'update'=> function ($url, $model) {
+                    return Html::a(
+                        '<i class="icon-pencil6"></i>'. Yii::t('yii2admin', 'Редактирование'),
+                        '#',
+                        [
+                            'class' => 'dropdown-item magic-modal-control',
+                            'aria-label' => Yii::t('yii2admin', 'Редактирование'),
+                            'title' => Yii::t('yii2admin', 'Редактирование'),
+                            'data-url' => Url::to(['update', 'id' => $model->id]),
+                            'data-modal-size' => 'modal-lg',
+                            'data-callback' => 'function(){callbackHelper.reloadPjax("#list-pjax")}'
+                        ]
+                    );
+                },
+            ]
         ],
     ],
 ]); ?>
