@@ -11,20 +11,10 @@
 <?php endif;?>
 
 <?php if ($model->type == SettingsTypeEnum::TEXT_EDITOR) : ?>
-    <?= $form
-        ->field($model, 'value')
-        ->widget(FroalaEditor::class, [
-            'model' => $model,
-            'attribute' => 'value',
-            'clientOptions' => [
-                'attribution' => false,
-                'heightMin' => 200,
-                'toolbarSticky' => true,
-                'toolbarInline'=> false,
-                'theme' =>'royal', //optional: dark, red, gray, royal
-                'language' => Yii::$app->language,
-                'quickInsertTags' => [],
-            ]
-        ]);
-    ?>
+    <?= $this->render('/include/_editor.php', [
+        'form' => $form,
+        'model' => $model,
+        'attribute' => 'value',
+        'originModel' => $originModel
+    ]) ?>
 <?php endif;?>

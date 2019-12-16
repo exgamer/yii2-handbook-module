@@ -40,22 +40,12 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
     <div class="card-body">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <?= $form
-                    ->field($model, 'seo_text')
-                    ->widget(FroalaEditor::class, [
-                        'model' => $model,
-                        'attribute' => 'seo_text',
-                        'clientOptions' => [
-                            'attribution' => false,
-                            'heightMin' => 200,
-                            'toolbarSticky' => true,
-                            'toolbarInline'=> false,
-                            'theme' =>'royal', //optional: dark, red, gray, royal
-                            'language' => Yii::$app->language,
-                            'quickInsertTags' => [],
-                        ]
-                    ]);
-                ?>
+                <?= $this->render('/include/_editor.php', [
+                    'form' => $form,
+                    'model' => $model,
+                    'attribute' => 'seo_text',
+                    'originModel' => $originModel
+                ]) ?>
             </div>
 <!--            <div class="col-lg-12 col-md-12 col-sm-12">-->
 <!--                --><?//= $form->field($model, 'seo_text')->textarea(); ?>
