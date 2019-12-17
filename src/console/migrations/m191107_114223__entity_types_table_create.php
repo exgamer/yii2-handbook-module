@@ -19,8 +19,8 @@ class m191107_114223__entity_types_table_create extends Migration
     {
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
-            'table_name' =>$this->string(1024)->notNull(),
-            'caption' => $this->string(1024)->notNull(),
+            'table_name' =>$this->string(100)->notNull(),
+            'caption' => $this->string(255)->notNull(),
             'status' => $this->smallInteger()->defaultValue(0),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
             'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
