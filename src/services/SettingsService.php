@@ -47,7 +47,9 @@ class SettingsService extends Service
 
     /**
      * Переопределено для возможности автоматического добавления настроек, не найденных в БД при вызове catalogValue
+     *
      * @todo пока рассчитано не небольшое количество настроек, т.к. считывается весь кататлог в статику parent::catalogValue
+     * 
      * @see \concepture\yii2logic\services\traits\CatalogTrait::catalogValue($key)
      * Возвращает значение из каталога по ключу
      * Для использования у search модели должны быть определены методы
