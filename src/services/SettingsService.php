@@ -75,15 +75,7 @@ class SettingsService extends Service
         $form->name = $key;
         $form->value = $value;
         $form->type = $type;
-        if (! $this->create($form))
-        {
-            $errorsStr = "";
-            $errors = $form->getErrors();
-            foreach ($errors as $attr=>$error){
-                $errorsStr .= $error;
-            }
-            throw new Exception("cannot add setting, cause: ".$errorsStr);
-        }
+        $this->create($form);
 
         return $value;
     }
