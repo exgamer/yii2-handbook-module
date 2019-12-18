@@ -54,6 +54,11 @@ class SeoSettingsService extends Service
     private $keywords;
 
     /**
+     * @var string
+     */
+    private $text;
+
+    /**
      * @inheritDoc
      */
     public function init()
@@ -70,6 +75,7 @@ class SeoSettingsService extends Service
     public function apply(YiiModel $model = null)
     {
         $data = $this->getSeoDataSet($model);
+        d($data);
         if(null !== $data->seo_title) {
             $this->title = $data->seo_title;
         } else {
@@ -86,6 +92,10 @@ class SeoSettingsService extends Service
 
         if(null !== $data->seo_h1) {
             $this->heading = $data->seo_h1;
+        }
+
+        if(null !== $data->seo_text) {
+            $this->text = $data->seo_text;
         }
     }
 
@@ -119,6 +129,14 @@ class SeoSettingsService extends Service
     public function getHeading()
     {
         return $this->heading;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
     }
 
     protected function beforeCreate(Model $form)
