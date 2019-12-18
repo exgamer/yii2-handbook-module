@@ -75,7 +75,6 @@ class SeoSettingsService extends Service
     public function apply(YiiModel $model = null)
     {
         $data = $this->getSeoDataSet($model);
-        d($data);
         if(null !== $data->seo_title) {
             $this->title = $data->seo_title;
         } else {
