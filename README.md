@@ -32,11 +32,8 @@
 return [
     'yii2handbook' => [
         'domainMap' => [
-            '1xbet.loc' => '1xbet',
-            'bet365.loc' => 'bet365',
-            'fonbet.loc' => 'fonbet',
-            'winline.loc' => 'winline',
-            'liga-stavok.loc' => 'ls',
+            'example1.loc' => 'example1',
+            'example2.loc' => 'example2'
         ]
     ]
 ];

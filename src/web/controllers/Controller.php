@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\web\controllers;
 
 use concepture\yii2user\enum\UserRoleEnum;
 use concepture\yii2logic\controllers\web\Controller as Base;
+use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
 
 /**
  * Базовый контроллер для модуля пользователя
@@ -14,6 +15,11 @@ use concepture\yii2logic\controllers\web\Controller as Base;
  */
 abstract class Controller extends Base
 {
+    use ControllerTrait;
+
+    /**
+     * @inheritDoc
+     */
     protected function getAccessRules()
     {
         return [

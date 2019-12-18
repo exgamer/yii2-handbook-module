@@ -10,7 +10,17 @@ $this->pushBreadcrumbs(['label' => $model::label(), 'url' => ['index']]);
 $this->pushBreadcrumbs($this->title);
 
 $this->viewHelper()->pushPageHeader();
-$this->viewHelper()->pushPageHeader(['update' ,'id' => $model->id], Yii::t('yii2admin','Редактирование'), 'icon-pencil6');
+$this->viewHelper()->pushPageHeader(
+        ['update' ,'id' => $model->id],
+        Yii::t('yii2admin','Редактирование'),
+        'icon-pencil6',
+        [
+            'class' => 'magic-modal-control',
+            'data-url' => Url::to(['update', 'id' => $model->id]),
+            'data-modal-size' => 'modal-lg',
+            'data-callback' => 'function(){callbackHelper.reloadPjax("#list-pjax")}'
+        ]
+);
 $this->viewHelper()->pushPageHeader(['index'], $model::label(),'icon-list');
 ?>
 
@@ -37,8 +47,10 @@ $this->viewHelper()->pushPageHeader(['index'], $model::label(),'icon-list');
                                 '<i class="icon-pencil6"></i>' . Yii::t('yii2admin', 'Редактирование'),
                                 ['update', 'id' => $model->id],
                                 [
-                                    'class' => 'dropdown-item',
-                                    'data-pjax' => '0',
+                                    'class' => 'dropdown-item magic-modal-control',
+                                    'data-url' => Url::to(['update', 'id' => $model->id]),
+                                    'data-modal-size' => 'modal-lg',
+                                    'data-callback' => 'function(){callbackHelper.reloadPjax("#list-pjax")}'
                                 ]
                             );?>
                         </ul>
