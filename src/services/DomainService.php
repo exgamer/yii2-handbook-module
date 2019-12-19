@@ -80,9 +80,11 @@ class DomainService extends Service
         }
 
         $currentDomain = null;
-        if (Yii::$app instanceof \yii\web\Application) {
-            $currentDomain = Url::base(true);
+        if (! Yii::$app instanceof \yii\web\Application) {
+            return null;
         }
+
+        $currentDomain = Url::base(true);
         $parsed = parse_url($currentDomain);
 
         return $parsed['host'];
