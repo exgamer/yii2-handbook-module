@@ -15,6 +15,6 @@
         'form' => $form,
         'model' => $model,
         'attribute' => 'value',
-        'originModel' => $originModel
+        'originModel' => isset($originModel) ? $originModel : null
     ]) ?>
 <?php endif;?>

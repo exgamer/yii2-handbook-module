@@ -44,7 +44,7 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
                     'form' => $form,
                     'model' => $model,
                     'attribute' => 'seo_text',
-                    'originModel' => $originModel
+                    'originModel' => isset($originModel) ? $originModel : null
                 ]) ?>
             </div>
 <!--            <div class="col-lg-12 col-md-12 col-sm-12">-->
