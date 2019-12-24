@@ -18,7 +18,8 @@ trait ReadSupportTrait
      */
     protected function applyDomain(ActiveQuery $query)
     {
-        $query->andWhere("domain_id = :domain_id OR domain_id IS NULL", [':domain_id' => Yii::$app->domainService->getCurrentDomainId()]);
+        $table = $this->getTableName();
+        $query->andWhere("{$table}.domain_id = :domain_id OR {$table}.domain_id IS NULL", [':domain_id' => Yii::$app->domainService->getCurrentDomainId()]);
     }
 
     /**
@@ -28,7 +29,8 @@ trait ReadSupportTrait
      */
     protected function applyLocale(ActiveQuery $query)
     {
-        $query->andWhere("locale = :locale", [':locale' => Yii::$app->localeService->getCurrentLocaleId()]);
+        $table = $this->getTableName();
+        $query->andWhere("{$table}.locale = :locale", [':locale' => Yii::$app->localeService->getCurrentLocaleId()]);
     }
 }
 
