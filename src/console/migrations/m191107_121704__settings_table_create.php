@@ -27,7 +27,7 @@ class m191107_121704__settings_table_create extends Migration
             'value' => $this->string(1024)->notNull(),
             'description' => $this->string(1024),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
-            'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
+            'updated_at' => $this->dateTime(),
         ]);
         $this->addIndex(['domain_id']);
         $this->addIndex(['locale']);

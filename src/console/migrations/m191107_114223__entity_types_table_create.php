@@ -23,7 +23,7 @@ class m191107_114223__entity_types_table_create extends Migration
             'caption' => $this->string(255)->notNull(),
             'status' => $this->smallInteger()->defaultValue(0),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
-            'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
+            'updated_at' => $this->dateTime(),
         ]);
         $this->addIndex(['status']);
         $this->addUniqueIndex(['table_name']);

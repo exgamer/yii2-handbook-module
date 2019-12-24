@@ -23,7 +23,7 @@ class m191125_101549_tags extends Migration
             'caption' => $this->string(100)->notNull(),
             'description' => $this->string(255),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
-            'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
+            'updated_at' => $this->dateTime(),
             'is_deleted' => $this->smallInteger()->defaultValue(0),
         ]);
         $this->addIndex(['user_id']);

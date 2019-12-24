@@ -29,7 +29,7 @@ class m191121_034605__seo_table_init extends Migration
             'seo_keywords' => $this->string(175),
             'seo_text' => $this->text(),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
-            'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
+            'updated_at' => $this->dateTime(),
         ]);
 
         $this->addIndex(['locale']);

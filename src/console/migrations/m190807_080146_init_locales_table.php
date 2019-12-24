@@ -21,7 +21,7 @@ class m190807_080146_init_locales_table extends Migration
             'sort' => $this->integer()->defaultValue(0),
             'status' => $this->smallInteger()->defaultValue(0),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
-            'updated_at' => $this->dateTime()->append('ON UPDATE NOW()'),
+            'updated_at' => $this->dateTime(),
         ]);
         $this->addIndex(['sort']);
         $this->addIndex(['status']);
