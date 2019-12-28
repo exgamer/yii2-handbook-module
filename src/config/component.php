@@ -7,6 +7,9 @@ return [
     'localeService' => [
         'class' => 'concepture\yii2handbook\services\LocaleService'
     ],
+    'currencyService' => [
+        'class' => 'concepture\yii2handbook\services\CurrencyService'
+    ],
     'entityTypeService' => [
         'class' => 'concepture\yii2handbook\services\EntityTypeService'
     ],
