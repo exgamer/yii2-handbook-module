@@ -1,6 +1,7 @@
 <?php
 namespace concepture\yii2handbook\traits;
 
+use concepture\yii2handbook\services\CurrencyService;
 use concepture\yii2handbook\services\DomainService;
 use concepture\yii2handbook\services\EntityTypeService;
 use concepture\yii2handbook\services\LocaleService;
@@ -30,6 +31,14 @@ trait ServicesTrait
     public function localeService()
     {
         return Yii::$app->localeService;
+    }
+
+    /**
+     * @return CurrencyService
+     */
+    public function currencyService()
+    {
+        return Yii::$app->currencyService;
     }
 
     /**
