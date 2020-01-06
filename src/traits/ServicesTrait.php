@@ -5,6 +5,7 @@ use concepture\yii2handbook\services\CurrencyService;
 use concepture\yii2handbook\services\DomainService;
 use concepture\yii2handbook\services\EntityTypeService;
 use concepture\yii2handbook\services\LocaleService;
+use concepture\yii2handbook\services\PaymentSystemService;
 use concepture\yii2handbook\services\SeoSettingsService;
 use concepture\yii2handbook\services\SettingsService;
 use concepture\yii2handbook\services\TagsService;
@@ -39,6 +40,14 @@ trait ServicesTrait
     public function currencyService()
     {
         return Yii::$app->currencyService;
+    }
+
+    /**
+     * @return PaymentSystemService
+     */
+    public function paymentSystemService()
+    {
+        return Yii::$app->paymentSystemService;
     }
 
     /**

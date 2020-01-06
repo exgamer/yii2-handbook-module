@@ -10,6 +10,9 @@ return [
     'currencyService' => [
         'class' => 'concepture\yii2handbook\services\CurrencyService'
     ],
+    'paymentSystemService' => [
+        'class' => 'concepture\yii2handbook\services\PaymentSystemService'
+    ],
     'entityTypeService' => [
         'class' => 'concepture\yii2handbook\services\EntityTypeService'
     ],
