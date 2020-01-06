@@ -11,7 +11,7 @@ trait PaymentSystemTrait
 {
     public function getPaymentSystem()
     {
-        return $this->hasOne(PaymentSystem::className(), ['id' => 'payment_system_id']);
+        return $this->hasOne(PaymentSystem::class, ['id' => 'payment_system_id']);
     }
 
     public function getPaymentSystemCaption()

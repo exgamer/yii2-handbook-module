@@ -11,7 +11,7 @@ trait CurrencyTrait
 {
     public function getCurrency()
     {
-        return $this->hasOne(Currency::className(), ['id' => 'currency']);
+        return $this->hasOne(Currency::class, ['id' => 'currency']);
     }
 
     public function getCurrencyIso()
