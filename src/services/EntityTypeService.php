@@ -10,7 +10,6 @@ use concepture\yii2logic\services\Service;
  */
 class EntityTypeService extends Service
 {
-    public $cache = true;
 
     /**
      * @see \concepture\yii2logic\services\traits\CatalogTrait

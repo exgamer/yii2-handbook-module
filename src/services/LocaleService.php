@@ -17,8 +17,6 @@ class LocaleService extends Service
 {
     use StatusTrait;
 
-    public $cache = true;
-
     /**
      * Возвращает ID текущей локали приложения
      *

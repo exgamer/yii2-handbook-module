@@ -26,8 +26,6 @@ class SettingsService extends Service
     use ModifySupportTrait;
     use CoreReadSupportTrait;
 
-    public $cache = true;
-
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);

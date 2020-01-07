@@ -28,8 +28,6 @@ class SeoSettingsService extends Service
     use ModifySupportTrait;
     use CoreReadSupportTrait;
 
-    public $cache = true;
-
     /**
      * @var View
      */
