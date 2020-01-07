@@ -11,7 +11,7 @@ trait DomainTrait
 {
     public function getDomain()
     {
-        return $this->hasOne(Domain::className(), ['id' => 'domain_id']);
+        return $this->hasOne(Domain::class, ['id' => 'domain_id']);
     }
 
     public function getDomainName()

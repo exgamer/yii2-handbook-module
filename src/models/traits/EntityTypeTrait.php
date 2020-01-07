@@ -11,7 +11,7 @@ trait EntityTypeTrait
 {
     public function getEntityType()
     {
-        return $this->hasOne(EntityType::className(), ['id' => 'entity_type_id']);
+        return $this->hasOne(EntityType::class, ['id' => 'entity_type_id']);
     }
 
     public function getEntityName()
