@@ -15,4 +15,6 @@ use Yii;
 class CurrencyService extends Service
 {
     use StatusTrait;
+
+    public $cache = true;
 }
