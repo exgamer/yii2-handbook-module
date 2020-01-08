@@ -31,8 +31,7 @@ class SeoSettingsForm extends Form
             [
                 [
                     'seo_h1',
-                    'seo_title',
-                    'seo_description'
+                    'seo_title'
                 ],
                 'required'
             ],
