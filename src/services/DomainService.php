@@ -39,25 +39,37 @@ class DomainService extends Service
             return null;
         }
 
-        $domainMap = Yii::$app->params['yii2handbook']['domainMap'];
+        $domainMap = Yii::$app->params['yii2handbook']['domainMap'] ?? [];;
         $host = $this->getCurrentHost();
         if(! $host) {
             return null;
         }
 
-        if (! isset($domainMap[$host])){
-            $domainMap = array_flip($domainMap);
-            if (! isset($domainMap[$host])){
+        $domainInfo = [];
+        foreach ($domainMap as $domain => $info){
+            if (is_array($info)){
+                $alias = $info['alias'] ?? null;
+            }else{
+                $alias = $info;
+            }
+
+            $domainInfo[$domain] = $alias;
+        }
+
+        if (! isset($domainInfo[$host])){
+            $domainInfo = array_flip($domainInfo);
+            if (! isset($domainInfo[$host])){
                 return null;
             }
 
-            $host = $domainMap[$host];
-            $domainMap = array_flip($domainMap);
+            $host = $domainInfo[$host];
+            $domainInfo = array_flip($domainInfo);
         }
 
-        $domainAlias = $domainMap[$host];
+        $domainAlias = $domainInfo[$host];
         $domains = $this->catalog(false);
         $domains = array_flip($domains);
+
         if (! isset($domains[$domainAlias])){
 
             return null;
