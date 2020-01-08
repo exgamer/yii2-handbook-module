@@ -107,6 +107,10 @@ class DomainService extends Service
 
         $currentDomain = null;
         if (! Yii::$app instanceof \yii\web\Application) {
+            if (defined('VIRTUAL_HOST')){
+                return VIRTUAL_HOST;
+            }
+
             return null;
         }
 
