@@ -1,0 +1,104 @@
+<?php
+namespace concepture\yii2handbook\models;
+
+use Yii;
+use concepture\yii2logic\models\ActiveRecord;
+use concepture\yii2logic\models\traits\StatusTrait;
+
+/**
+ * Country model
+ *
+ * @property integer $id
+ * @property integer $sort
+ * @property string $locale
+ * @property string $caption
+ * @property string $iso
+ * @property integer $status
+ * @property datetime $created_at
+ * @property datetime $updated_at
+ *
+ * @author Olzhas Kulzhambekov <exgamer@live.ru>
+ */
+class Country extends ActiveRecord
+{
+    use StatusTrait;
+
+    /**
+     * @see \concepture\yii2logic\models\ActiveRecord:label()
+     *
+     * @return string
+     */
+    public static function label()
+    {
+        return Yii::t('handbook', 'Страны');
+    }
+
+    /**
+     * @see \concepture\yii2logic\models\ActiveRecord:toString()
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->iso;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return '{{country}}';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [
+                [
+                    'status',
+                    'sort',
+                    'locale',
+                ],
+                'integer'
+            ],
+            [
+                [
+                    'iso'
+                ],
+                'string',
+                'max'=>2
+            ],
+            [
+                [
+                    'caption'
+                ],
+                'string',
+                'max'=>100
+            ],
+            [
+                [
+                    'iso'
+                ],
+                'unique'
+            ]
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('handbook','#'),
+            'sort' => Yii::t('handbook','Позиция сортировки'),
+            'status' => Yii::t('handbook','Статус'),
+            'locale' => Yii::t('handbook','Язык'),
+            'iso' => Yii::t('handbook','ISO код страны'),
+            'caption' => Yii::t('handbook','Название'),
+            'created_at' => Yii::t('handbook','Дата создания'),
+            'updated_at' => Yii::t('handbook','Дата обновления'),
+        ];
+    }
+}
