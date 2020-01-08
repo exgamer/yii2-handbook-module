@@ -14,6 +14,26 @@ use Yii;
 class DomainService extends Service
 {
     /**
+     * Возвращает карту доменов из параметров
+     *
+     * @return mixed|null
+     */
+    public function getDomainMap()
+    {
+        if (! isset(Yii::$app->params['yii2handbook'])){
+
+            return null;
+        }
+
+        if (! isset(Yii::$app->params['yii2handbook']['domainMap'])){
+
+            return null;
+        }
+
+        return Yii::$app->params['yii2handbook']['domainMap'];
+    }
+
+    /**
      * Возвращает id текущего домена
      *
      * @param bool $reset
@@ -29,17 +49,11 @@ class DomainService extends Service
             return $result;
         }
 
-        if (! isset(Yii::$app->params['yii2handbook'])){
-
+        $domainMap = $this->getDomainMap();
+        if ($domainMap == null){
             return null;
         }
 
-        if (! isset(Yii::$app->params['yii2handbook']['domainMap'])){
-
-            return null;
-        }
-
-        $domainMap = Yii::$app->params['yii2handbook']['domainMap'] ?? [];;
         $host = $this->getCurrentHost();
         if(! $host) {
             return null;
