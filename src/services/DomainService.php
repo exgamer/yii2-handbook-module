@@ -34,6 +34,38 @@ class DomainService extends Service
     }
 
     /**
+     * Установка виртуального текущего ид домена
+     *
+     * @param $domain_id
+     */
+    public function setVirtualDomainId($domain_id)
+    {
+        $GLOBALS['VIRTUAL_DOMAIN_ID'] = $domain_id;
+    }
+
+    /**
+     * Получение виртуального текущего ид домена
+     *
+     */
+    public function getVirtualDomainId()
+    {
+        if (isset($GLOBALS['VIRTUAL_DOMAIN_ID'])){
+            return $GLOBALS['VIRTUAL_DOMAIN_ID'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Удаление виртуального текущего ид домена
+     *
+     */
+    public function clearVirtualDomainId()
+    {
+        unset($GLOBALS['VIRTUAL_DOMAIN_ID']);
+    }
+
+    /**
      * Возвращает id текущего домена
      *
      * @param bool $reset
@@ -42,6 +74,10 @@ class DomainService extends Service
      */
     public function getCurrentDomainId($reset = false)
     {
+        if ($this->getVirtualDomainId()){
+            return $this->getVirtualDomainId();
+        }
+
         static $result;
 
         if($result && ! $reset) {
