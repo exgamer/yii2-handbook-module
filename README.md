@@ -53,7 +53,7 @@ return [
 Получить настройку по ключу Yii::$app->settingsService->catalogValue($key);
 
 
-SEO
+##SEO
 
 Для получения настроек сео для страницы вызываем 
    Yii::$app->seoSettingsService->getSeoDataSet($model = null);
@@ -62,3 +62,32 @@ SEO
         - дефолтные данные сео где не указан конкретный УРЛ
         - если передана модель следом будут учтены сео данные модели
         - и после всего будут учтены настройки SEO для текущего URL
+        
+## Динамический индексируемый файл (robots.txt)
+Подключение :
+- В необходимом контроллере подключается действие (например frontend\controllers\SiteController.php)
+    ```php
+        public function actions()
+        {
+            $actions = parent::actions();
+            ...
+            $actions['robots'] = [
+                'class' => 'concepture\yii2handbook\actions\RobotsAction',
+            ];
+            ...
+        
+            return $actions;
+        }
+    ```
+- Прописать в роутинге правило (например frontend\config\routes.php)
+    ```php
+       return [
+           ...
+           [
+               'pattern' => 'robots',
+               'route' => 'site/robots',
+               'suffix' => '.txt'
+           ],
+           ...
+       ];
+    ```
