@@ -39,14 +39,13 @@ use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
     <div class="card-body">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <?= $this->render('include/_value_field', [
+                <?= $this->render('../include/_value_field', [
                     'form' => $form,
                     'model' => $model,
                 ]) ?>
             </div>
         </div>
     </div>
-
     <div class="card-body text-right">
         <?=  Html::submitButton(
             '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),

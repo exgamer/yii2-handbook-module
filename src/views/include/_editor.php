@@ -8,12 +8,14 @@ use concepture\yii2logic\enum\EditorTypeEnum;
 <?php if (isset(Yii::$app->params['concepture']['editor']['type']) && Yii::$app->params['concepture']['editor']['type'] === EditorTypeEnum::CKE):?>
 
     <?= $form->field($model, $attribute)->widget(CKEditor::className(),[
-        'editorOptions' => [
-            'preset' => 'full', //разработанны стандартные настройки basic, standard, full данную возможность не обязательно использовать
-            'inline' => false, //по умолчанию false
-            'allowedContent' => true,
-        ],
-    ]); ?>
+            'editorOptions' => [
+                'preset' => 'full', //разработанны стандартные настройки basic, standard, full данную возможность не обязательно использовать
+                'inline' => false, //по умолчанию false
+                'allowedContent' => true,
+            ],
+        ])
+        ->label($label ?? $model->getAttributeLabel($attribute));
+    ?>
 
 <?php else: ?>
 
@@ -31,7 +33,8 @@ use concepture\yii2logic\enum\EditorTypeEnum;
                 'language' => Yii::$app->language,
                 'quickInsertTags' => [],
             ]
-        ]);
+        ])
+        ->label($label ?? $model->getAttributeLabel($attribute))
     ?>
 
 <?php endif;?>

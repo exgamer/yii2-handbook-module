@@ -1,19 +1,21 @@
 <?php
+
 namespace concepture\yii2handbook\services;
 
+use Yii;
+use yii\db\ActiveQuery;
+use yii\web\View;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
 use concepture\yii2logic\services\Service;
 use yii\base\InvalidConfigException;
-use yii\db\ActiveQuery;
-use Yii;
-use yii\web\View;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
 use concepture\yii2logic\forms\Model;
 use yii\base\Model as YiiModel;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
+use concepture\yii2handbook\forms\SeoSettingsMultipleForm;
 
 /**
  * Class SeoSettingsService
@@ -217,5 +219,43 @@ class SeoSettingsService extends Service
             );
             $query->orderBy('url');
         });
+    }
+
+    /**
+     * @param $searchModel
+     * @return \yii\data\ActiveDataProvider
+     */
+    public function getGroupDataProvider($searchModel)
+    {
+        $condition = function(ActiveQuery $q) {
+            $q->select(['*', 'count(id) as hash_count']);
+            $q->groupBy('url_md5_hash');
+            $q->orderBy('id DESC');
+        };
+
+        return parent::getDataProvider([], [], $searchModel, null, $condition);
+    }
+
+    /**
+     * Обновление значений пачкой
+     *
+     * @param SeoSettingsMultipleForm $form
+     * @return mixed
+     */
+    public function updateMultiple(SeoSettingsMultipleForm $form)
+    {
+        $index = 0;
+        $data = [];
+        $attributes = $form->getAttributes();
+        foreach ($attributes as $key => $value) {
+            if($key === 'ids') {
+                continue;
+            }
+
+            $data[] = [$form->ids[$index] ,$value];
+            $index++;
+        }
+
+        return $this->batchInsert(['id', 'value'], $data);
     }
 }

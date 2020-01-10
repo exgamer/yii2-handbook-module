@@ -13,23 +13,39 @@ use yii\db\ActiveQuery;
 class SeoSettingsSearch extends SeoSettings
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc/
      */
     public function rules()
     {
         return [
-            [
-                [
-                    'id',
-                    'domain_id',
-                    'locale',
-                ],
-                'integer'
-            ],
-            [['url'], 'safe'],
+                    [
+                        [
+                            'id',
+                            'domain_id',
+                            'locale',
+                        ],
+                        'integer'
+                    ],
+                    [
+                        [
+                            'url',
+                            'name',
+                        ],
+                        'safe'
+                    ],
+                    [
+                        [
+                            'url_md5_hash'
+                        ],
+                        'string',
+                        'max' => 32
+                    ]
         ];
     }
 
+    /**
+     * @inheritDoc/
+     */
     public function extendQuery(ActiveQuery $query)
     {
         $query->andFilterWhere([
@@ -41,10 +57,19 @@ class SeoSettingsSearch extends SeoSettings
         $query->andFilterWhere([
             'locale' => $this->locale
         ]);
+        # todd: реализовать нормальный поиск
         $query->andFilterWhere([
             'like',
             'url',
             $this->url
+        ]);
+        $query->andFilterWhere([
+            'like',
+            'name',
+            $this->name
+        ]);
+        $query->andFilterWhere([
+            'url_md5_hash' => $this->url_md5_hash
         ]);
     }
 }

@@ -1,9 +1,8 @@
 <?php
+
 namespace concepture\yii2handbook\forms;
 
-
 use concepture\yii2handbook\enum\SettingsTypeEnum;
-use Yii;
 use kamaelkz\yii2admin\v1\forms\BaseForm;
 
 /**

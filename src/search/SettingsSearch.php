@@ -27,7 +27,12 @@ class SettingsSearch extends Settings
                 ],
                 'integer'
             ],
-            [['name'], 'safe'],
+            [
+                [
+                    'name'
+                ],
+                'safe'
+            ],
         ];
     }
 

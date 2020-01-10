@@ -1,18 +1,36 @@
 <?php
+
 namespace concepture\yii2handbook\models;
 
-use concepture\yii2handbook\models\traits\DomainTrait;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\validators\MD5Validator;
+use concepture\yii2handbook\models\traits\DomainTrait;
 
 /**
- * Class SeoSettings
- * @package concepture\yii2handbook\models
+ * SEO настройки
+ *
+ * @property integer $id
+ * @property integer $domain_id
+ * @property integer $locale
+ * @property string $url
+ * @property string $url_md5_hash
+ * @property string $name
+ * @property string $value
+ * @property string $caption
+ * @property integer $type
+ * @property string $created_at
+ * @property string $updated_at
+ *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
 class SeoSettings extends ActiveRecord
 {
+    /**
+     * @var integer
+     */
+    public $hash_count;
+
     use DomainTrait;
 
     /**
@@ -22,11 +40,12 @@ class SeoSettings extends ActiveRecord
      */
     public static function label()
     {
-        return Yii::t('handbook', 'Настройки SEO');
+        return Yii::t('handbook', 'SEO настройки');
     }
 
     /**
      * @see \concepture\yii2logic\models\ActiveRecord:toString()
+     *
      * @return string
      */
     public function toString()
@@ -52,18 +71,26 @@ class SeoSettings extends ActiveRecord
                 [
                     'domain_id',
                     'locale',
+                    'type'
                 ],
                 'integer'
             ],
             [
                 [
-                    'seo_text',
+                    'name',
+                    'caption'
                 ],
-                'string'
+                'string',
+                'max' => 512
             ],
             [
                 [
-                    'seo_h1',
+                    'value',
+                ],
+                'string',
+            ],
+            [
+                [
                     'url',
                 ],
                 'string',
@@ -71,27 +98,17 @@ class SeoSettings extends ActiveRecord
             ],
             [
                 [
-                    'seo_title',
-                    'seo_description',
-                    'seo_keywords',
-                ],
-                'string',
-                'max'=>175
-            ],
-            [
-                [
                     'url_md5_hash',
                 ],
-                MD5Validator::className(),
+                MD5Validator::class,
                 'source' => 'url'
             ],
             [
                 [
-                    'locale',
                     'url_md5_hash'
                 ],
                 'unique',
-                'targetAttribute' => ['locale', 'url_md5_hash']
+                'targetAttribute' => ['url_md5_hash', 'name', 'domain_id']
             ]
         ];
     }
@@ -102,15 +119,15 @@ class SeoSettings extends ActiveRecord
             'id' => Yii::t('handbook','#'),
             'domain_id' => Yii::t('handbook','Домен'),
             'locale' => Yii::t('handbook','Язык'),
-            'url' => Yii::t('handbook','url страницы'),
+            'url' => Yii::t('handbook','Адрес страницы'),
             'url_md5_hash' => Yii::t('handbook','md5 url страницы'),
-            'seo_h1' => Yii::t('handbook','SEO H1'),
-            'seo_title' => Yii::t('handbook','SEO title'),
-            'seo_description' => Yii::t('handbook','SEO description'),
-            'seo_keywords' => Yii::t('handbook','SEO keywords'),
-            'seo_text' => Yii::t('handbook','SEO текст'),
+            'name' => Yii::t('handbook','Ключ'),
+            'value' => Yii::t('handbook','Значение'),
+            'caption' => Yii::t('handbook','Наименование'),
+            'type' => Yii::t('handbook','Тип'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
+            'hash_count' => Yii::t('handbook','Количество'),
         ];
     }
 }
