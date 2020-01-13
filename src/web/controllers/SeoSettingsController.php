@@ -3,7 +3,7 @@
 namespace concepture\yii2handbook\web\controllers;
 
 use Yii;
-use yii\validators\Validator;
+use yii\db\ActiveQuery;
 use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 use concepture\yii2handbook\services\SeoSettingsService;
 use concepture\yii2handbook\search\SeoSettingsSearch;
@@ -45,7 +45,7 @@ class SeoSettingsController extends Controller
     {
         $searchModel = Yii::createObject(SeoSettingsSearch::class);
         $searchModel->load(Yii::$app->request->queryParams);
-        $dataProvider =  $this->getSeoSettingsService()->getGroupDataProvider($searchModel);
+        $dataProvider =  $this->getSeoSettingsService()->getDataProviderGroupByHash();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -61,21 +61,17 @@ class SeoSettingsController extends Controller
     public function actionUpdate($hash)
     {
         $form = new SeoSettingsMultipleForm();
-        $search = Yii::createObject(SeoSettingsSearch::class);
-        $search->url_md5_hash = (string) $hash;
-        $dataProvider =  $this->getSeoSettingsService()->getDataProvider([], [], $search);
-        $items = $dataProvider->getModels();
+        $items = $this->getSeoSettingsService()->getAllByHash((string) $hash);
         foreach ($items as $item) {
             $form->setVirtualAttribute($item->name, $item->value);
             $form->setRequiredValidator($item->name, $item->caption);
         }
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            if (($result = $this->getSeoSettingsService()->updateMultiple($form)) != false) {
+            $this->getSeoSettingsService()->updateMultiple($form);
 
-                if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
-                    return $this->redirect(['index']);
-                }
+            if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
+                return $this->redirect(['index']);
             }
         }
 

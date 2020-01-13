@@ -10,6 +10,7 @@ $this->setTitle(Yii::t('yii2admin', 'Редактирование'));
 $this->pushBreadcrumbs(['label' => SeoSettings::label(), 'url' => ['index']]);
 $this->pushBreadcrumbs($this->title);
 $this->viewHelper()->pushPageHeader(['index'], SeoSettings::label(),'icon-list');
+
 $saveButton = Html::submitButton(
     '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),
     [

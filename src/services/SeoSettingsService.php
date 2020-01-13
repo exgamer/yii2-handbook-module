@@ -2,20 +2,26 @@
 
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2handbook\enum\SeoSettingEnum;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\web\View;
+use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\base\Model as YiiModel;
+use yii\base\InvalidConfigException;
+use concepture\yii2handbook\search\SeoSettingsSearch;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
 use concepture\yii2logic\services\Service;
-use yii\base\InvalidConfigException;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
 use concepture\yii2logic\forms\Model;
-use yii\base\Model as YiiModel;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
 use concepture\yii2handbook\forms\SeoSettingsMultipleForm;
+use concepture\yii2handbook\services\DomainService;
+use concepture\yii2handbook\services\LocaleService;
 
 /**
  * Class SeoSettingsService
@@ -29,6 +35,16 @@ class SeoSettingsService extends Service
     use ReadSupportTrait;
     use ModifySupportTrait;
     use CoreReadSupportTrait;
+
+    /**
+     * @var array
+     */
+    private $existsItems = [];
+
+    /**
+     * @var array
+     */
+    private $writeItems = [];
 
     /**
      * @var View
@@ -70,34 +86,19 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * Установка сео настроек для страницы
-     *
-     * @param YiiModel $model
+     * @return DomainService
      */
-    public function apply(YiiModel $model = null)
+    private function getDomainService()
     {
-        $data = $this->getSeoDataSet($model);
-        if(null !== $data->seo_title) {
-            $this->title = $data->seo_title;
-        } else {
-            $this->title = $this->view->title;
-        }
+        return Yii::$app->domainService;
+    }
 
-        if(null !== $data->seo_description) {
-            $this->description = $data->seo_description;
-        }
-
-        if(null !== $data->seo_keywords) {
-            $this->keywords = $data->seo_keywords;
-        }
-
-        if(null !== $data->seo_h1) {
-            $this->heading = $data->seo_h1;
-        }
-
-        if(null !== $data->seo_text) {
-            $this->text = $data->seo_text;
-        }
+    /**
+     * @return LocaleService
+     */
+    private function getLocaleService()
+    {
+        return Yii::$app->localeService;
     }
 
     /**
@@ -140,6 +141,9 @@ class SeoSettingsService extends Service
         return $this->text;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);
@@ -159,6 +163,61 @@ class SeoSettingsService extends Service
         $this->applyLocale($query);
     }
 
+
+    /**
+     * Получение SEO настройки
+     *
+     * @param int $type
+     * @param string $name
+     * @param string $value
+     * @param string $caption
+     *
+     * @return string
+     */
+    public function getSetting(int $type, string $name, string $value, string $caption)
+    {
+        $dataSet = $this->getSeoDataSet();
+        $attribute = strtolower($name);
+        # если такой настройки нет, записываем в массив для записи
+        if(! isset($dataSet->{$attribute})) {
+            $this->writeItems[$name] = [
+                'url' => $this->getCurrentUrl(),
+                'url_md5_hash' => $this->getCurrentUlrHash(),
+                'domain_id' => $this->getDomainService()->getCurrentDomainId(),
+                'locale' => $this->getLocaleService()->getCurrentLocaleId(),
+                'type' => $type,
+                'name' => $name,
+                'value' => $value,
+                'caption' => $caption,
+            ];
+
+            return $value;
+        }
+
+        return $dataSet->{$attribute} ?? null;
+    }
+
+    /**
+     * Установка сео настроек для страницы
+     *
+     * @param YiiModel $model
+     */
+    public function apply(YiiModel $model = null)
+    {
+        $data = $this->getSeoDataSet($model);
+        $this->title = ($data->seo_title ?? $data->title ?? $this->view->title);
+        $this->description = $data->seo_description ?? $data->description ?? null;
+        $this->keywords = $data->seo_keywords ?? $data->keywords ?? null;
+
+        if(null !== $data->seo_h1) {
+            $this->heading = $data->seo_h1;
+        }
+
+        if(null !== $data->seo_text) {
+            $this->text = $data->seo_text;
+        }
+    }
+
     /**
      * Возвращает настройки SEO для текущей страницы
      *
@@ -168,29 +227,23 @@ class SeoSettingsService extends Service
      */
     public function getSeoDataSet($model = null)
     {
-        $defaultSeoSetting = null;
-        $pageCustomSeoSetting =null;
-        $dataSet = new SeoData();
-        $defaultSeoSettings = $this->getSeoForCurrentUrl();
-        foreach ($defaultSeoSettings as $seoSetting){
-            if (empty($seoSetting->url)){
-                $defaultSeoSetting = $seoSetting;
-                continue;
-            }
+        static $dataSet;
 
-            $pageCustomSeoSetting = $seoSetting;
+        if($dataSet && ! $model) {
+            return $dataSet;
         }
 
-        if ($defaultSeoSetting){
-            $dataSet = DataLoadHelper::loadData($defaultSeoSetting, $dataSet, true);
+        if(! $dataSet) {
+            $dataSet = new SeoData();
+            $items = $this->getSettingsForCurrentUrl();
+            foreach ($items as $item) {
+                $dataSet->setVirtualAttribute($item->name, $item->value);
+                $this->existsItems[$item->name] = $item->getAttributes();
+            }
         }
 
         if ($model){
             $dataSet = DataLoadHelper::loadData($model, $dataSet, true);
-        }
-
-        if ($pageCustomSeoSetting){
-            $dataSet = DataLoadHelper::loadData($pageCustomSeoSetting, $dataSet, true);
         }
 
         return $dataSet;
@@ -202,38 +255,51 @@ class SeoSettingsService extends Service
      * @return array
      * @throws InvalidConfigException
      */
-    public function getSeoForCurrentUrl()
+    public function getSettingsForCurrentUrl()
     {
-        $current = Yii::$app->getRequest()->getPathInfo();
-        $current = trim($current, '/');
-        if (! $current){
-            $current = "/";
-        }
-        $md5 = md5($current);
+        static $items;
 
-        return $this->getAllByCondition(function(ActiveQuery $query) use ($md5){
+        if($items) {
+            return $items;
+        }
+
+        $items = $this->getAllByCondition(function(ActiveQuery $query) {
             $query->andWhere("url_md5_hash = :url_md5_hash OR url_md5_hash IS NULL",
                 [
-                    ':url_md5_hash' => $md5
+                    ':url_md5_hash' => $this->getCurrentUlrHash()
                 ]
             );
             $query->orderBy('url');
         });
+
+        return $items;
     }
 
     /**
-     * @param $searchModel
+     * @param string hash
      * @return \yii\data\ActiveDataProvider
      */
-    public function getGroupDataProvider($searchModel)
+    public function getAllByHash(string $hash)
     {
-        $condition = function(ActiveQuery $q) {
-            $q->select(['*', 'count(id) as hash_count']);
-            $q->groupBy('url_md5_hash');
-            $q->orderBy('id DESC');
+        return $this->getAllByCondition(function(ActiveQuery $query) use($hash) {
+            $query->andWhere(['url_md5_hash' => $hash]);
+            $query->orderBy('id');
+        });
+    }
+
+    /**
+     * @param SeoSettingsSearch $searchModel
+     * @return \yii\data\ActiveDataProvider
+     */
+    public function getDataProviderGroupByHash()
+    {
+        $condition = function(ActiveQuery $query) {
+            $query->select(['*', 'count(id) as hash_count']);
+            $query->groupBy('url_md5_hash');
+            $query->orderBy('id DESC');
         };
 
-        return parent::getDataProvider([], [], $searchModel, null, $condition);
+        return $this->getDataProvider([], [], null, null, $condition);
     }
 
     /**
@@ -257,5 +323,101 @@ class SeoSettingsService extends Service
         }
 
         return $this->batchInsert(['id', 'value'], $data);
+    }
+
+    /**
+     * Возвращает текущий адрес страницы
+     *
+     * @return string
+     * @throws InvalidConfigException
+     */
+    private function getCurrentUrl()
+    {
+        static $result;
+        if($result) {
+            return $result;
+        }
+
+        $result = Yii::$app->getRequest()->getPathInfo();
+        $result = trim($result, '/');
+        # главная страница
+        if (! $result){
+            $result = "/";
+        }
+
+        return $result;
+    }
+
+    /**
+     * Возвращает хэш текущего адреса страницы
+     *
+     * @return string
+     */
+    public function getCurrentUlrHash()
+    {
+        return md5($this->getCurrentUrl());
+    }
+
+    /**
+     * Записывает новые настройки в базу
+     *
+     * @return |null
+     */
+    public function writeSettings()
+    {
+        $data = $this->writeItems;
+        if(! $data) {
+            return null;
+        }
+
+        $item = reset($data);
+        $fields = array_keys($item);
+        $this->batchInsert($fields, $data);
+    }
+
+    /**
+     * Возвращает элемент управления настройкой
+     *
+     * @param $value
+     */
+    public function getManageControl($name, $value, $caption)
+    {
+        # todo: проверка на админа
+//        d(Yii::$app->getUser()->identity->roles);
+        # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
+        if(in_array($name, SeoSettingEnum::values())) {
+            return null;
+        }
+
+        return Html::tag(
+            'div',
+            $value,
+            [
+                'class' => 'yii2-handbook-seo-manage-control',
+                'data-url' => $this->getUpdateUrl(),
+                'data-title' => $caption
+            ]
+        );
+    }
+
+    /**
+     * Панель управления
+     */
+    public function getManagePanel()
+    {
+        return $this->view->render('@concepture/yii2handbook/views/seo-settings/include/manage_panel', [
+            'url' => $this->getUpdateUrl(),
+            'count' => count($this->existsItems)
+        ]);
+    }
+
+    /**
+     * Ссылка на редактирование настроек
+     *
+     * @return string
+     */
+    private function getUpdateUrl()
+    {
+        return Url::to(['admin/handbook/seo-settings/update', 'hash' => $this->getCurrentUlrHash()]);
     }
 }

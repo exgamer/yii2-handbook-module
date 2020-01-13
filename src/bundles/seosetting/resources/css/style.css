@@ -1,0 +1,15 @@
+.yii2-handbook-seo-manage-control {
+    outline: 1px dashed #F7D358;
+    cursor: pointer;
+}
+.yii2-handbook-seo-manage-panel {
+    position: fixed;
+    background-color: #F7D358;
+    bottom: 0;
+    left: 0;
+    /*z-index: 9999;*/
+    cursor: pointer;
+    padding: 13px 18px;
+    opacity: 0.9;
+    font-size: 14px;
+}
