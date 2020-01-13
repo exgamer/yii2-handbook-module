@@ -2,7 +2,6 @@
 
 namespace concepture\yii2handbook\services;
 
-use concepture\yii2handbook\enum\SeoSettingEnum;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\web\View;
@@ -10,6 +9,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\base\Model as YiiModel;
 use yii\base\InvalidConfigException;
+use yii\web\Application;
 use concepture\yii2handbook\search\SeoSettingsSearch;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
@@ -22,6 +22,8 @@ use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrai
 use concepture\yii2handbook\forms\SeoSettingsMultipleForm;
 use concepture\yii2handbook\services\DomainService;
 use concepture\yii2handbook\services\LocaleService;
+use concepture\yii2handbook\bundles\seosetting\Bundle;
+use concepture\yii2handbook\enum\SeoSettingEnum;
 
 /**
  * Class SeoSettingsService
@@ -83,6 +85,11 @@ class SeoSettingsService extends Service
     {
         parent::init();
         $this->view = \Yii::$app->getView();
+        Bundle::register($this->view);
+        Yii::$app->on(Application::EVENT_AFTER_REQUEST, function () {
+            $this->writeSettings();
+        });
+        Yii::$app->getView()->on(View::EVENT_END_BODY, [$this, 'renderManagePanel']);
     }
 
     /**
@@ -382,11 +389,13 @@ class SeoSettingsService extends Service
      */
     public function getManageControl($name, $value, $caption)
     {
-        # todo: проверка на админа
-//        d(Yii::$app->getUser()->identity->roles);
         # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
         if(in_array($name, SeoSettingEnum::values())) {
             return null;
+        }
+
+        if( ! $this->canManage()) {
+            return $value;
         }
 
         return Html::tag(
@@ -403,9 +412,13 @@ class SeoSettingsService extends Service
     /**
      * Панель управления
      */
-    public function getManagePanel()
+    public function renderManagePanel()
     {
-        return $this->view->render('@concepture/yii2handbook/views/seo-settings/include/manage_panel', [
+        if(! $this->canManage()) {
+            return null;
+        }
+
+        echo $this->view->render('@concepture/yii2handbook/views/seo-settings/include/manage_panel', [
             'url' => $this->getUpdateUrl(),
             'count' => count($this->existsItems)
         ]);
@@ -419,5 +432,23 @@ class SeoSettingsService extends Service
     private function getUpdateUrl()
     {
         return Url::to(['admin/handbook/seo-settings/update', 'hash' => $this->getCurrentUlrHash()]);
+    }
+
+    /**
+     * Возвращает признак возможности управления настройками с внешней части
+     *
+     * @return bool
+     */
+    private function canManage()
+    {
+        static $result;
+
+        if($result) {
+            return $result;
+        }
+        # todo: пока не имеем RBAC
+        $result = Yii::$app->getUser()->getIsGuest() ? false : true;
+
+        return $result;
     }
 }

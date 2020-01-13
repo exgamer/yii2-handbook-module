@@ -20,11 +20,6 @@ class SeoSettingsExtension extends AbstractExtension
      */
     private $constants = [];
 
-    public function __construct()
-    {
-        Bundle::register(Yii::$app->getView());
-    }
-
     /**
      * @return SeoSettingsService
      */
@@ -41,7 +36,7 @@ class SeoSettingsExtension extends AbstractExtension
         return [
             # получение
             new TwigFunction(
-                'seo_entity_*',
+                'seo_*',
                 function($function) {
                     return $this->getSeoSettingsService()->{"get{$function}"}();
                 }
@@ -75,18 +70,7 @@ class SeoSettingsExtension extends AbstractExtension
 
                     return $constants[$constant] ?? null;
                 }
-            ),
-            new TwigFunction(
-                'seo_manage_panel',
-                function() {
-                    return $this->getSeoSettingsService()->getManagePanel();
-                },
-                [
-                    'is_safe' => [
-                        'html'
-                    ]
-                ]
-            ),
+            )
         ];
     }
 }
