@@ -20,8 +20,6 @@ use concepture\yii2handbook\services\traits\ModifySupportTrait;
 use concepture\yii2logic\forms\Model;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
 use concepture\yii2handbook\forms\SeoSettingsMultipleForm;
-use concepture\yii2handbook\services\DomainService;
-use concepture\yii2handbook\services\LocaleService;
 use concepture\yii2handbook\bundles\seosetting\Bundle;
 use concepture\yii2handbook\enum\SeoSettingEnum;
 
@@ -85,15 +83,16 @@ class SeoSettingsService extends Service
     {
         parent::init();
         $this->view = \Yii::$app->getView();
-        Bundle::register($this->view);
-        Yii::$app->on(Application::EVENT_AFTER_REQUEST, function () {
-            $this->writeSettings();
-        });
-        Yii::$app->getView()->on(View::EVENT_END_BODY, [$this, 'renderManagePanel']);
+        # todo : пока так, мб и не поменяется, только на фронте
+        if(Yii::$app->has('request') && Yii::$app->request->baseUrl == '') {
+            Bundle::register($this->view);
+            Yii::$app->on(Application::EVENT_AFTER_REQUEST, [$this, 'writeSettings']);
+            $this->view->on(View::EVENT_END_BODY, [$this, 'renderManagePanel']);
+        }
     }
 
     /**
-     * @return DomainService
+     * @return \concepture\yii2handbook\services\DomainService
      */
     private function getDomainService()
     {
@@ -101,7 +100,7 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * @return LocaleService
+     * @return \concepture\yii2handbook\services\LocaleService
      */
     private function getLocaleService()
     {
@@ -403,7 +402,7 @@ class SeoSettingsService extends Service
             $value,
             [
                 'class' => 'yii2-handbook-seo-manage-control',
-                'data-url' => $this->getUpdateUrl(),
+                'data-url' => $this->getUpdateUrl($name),
                 'data-title' => $caption
             ]
         );
@@ -427,11 +426,21 @@ class SeoSettingsService extends Service
     /**
      * Ссылка на редактирование настроек
      *
+     * @param string|null $anchor
+     *
      * @return string
      */
-    private function getUpdateUrl()
+    private function getUpdateUrl($anchor = null)
     {
-        return Url::to(['admin/handbook/seo-settings/update', 'hash' => $this->getCurrentUlrHash()]);
+        $url = [
+            'admin/handbook/seo-settings/update',
+            'hash' => $this->getCurrentUlrHash()
+        ];
+        if($anchor) {
+            $url['#'] = $anchor;
+        }
+
+        return Url::to($url);
     }
 
     /**
@@ -447,7 +456,7 @@ class SeoSettingsService extends Service
             return $result;
         }
         # todo: пока не имеем RBAC
-        $result = Yii::$app->getUser()->getIsGuest() ? false : true;
+        $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
 
         return $result;
     }

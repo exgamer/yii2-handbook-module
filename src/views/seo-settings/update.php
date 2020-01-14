@@ -39,7 +39,7 @@ $saveRedirectButton = Html::submitButton(
             <div class="card-body">
                 <div class="row">
                     <?php foreach ($items as $key => $item) :?>
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div id="<?= $item->name;?>" class="col-lg-12 col-md-12 col-sm-12">
                             <?= $this->render('include/_miltiple_items', [
                                 'form' => $form,
                                 'model' => $model,
