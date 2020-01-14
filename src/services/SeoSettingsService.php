@@ -180,7 +180,7 @@ class SeoSettingsService extends Service
      *
      * @return string
      */
-    public function getSetting(int $type, string $name, string $value, string $caption)
+    public function getSetting(int $type, string $name, string $caption, $value = null)
     {
         $dataSet = $this->getSeoDataSet();
         $attribute = strtolower($name);
@@ -386,7 +386,7 @@ class SeoSettingsService extends Service
      *
      * @param $value
      */
-    public function getManageControl($name, $value, $caption)
+    public function getManageControl($name, $caption, $value = null)
     {
         # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
         if(in_array($name, SeoSettingEnum::values())) {

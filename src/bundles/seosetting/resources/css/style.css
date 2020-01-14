@@ -1,6 +1,7 @@
 .yii2-handbook-seo-manage-control {
     outline: 1px dashed #F7D358;
     cursor: pointer;
+    min-height: 15px;
 }
 .yii2-handbook-seo-manage-panel {
     position: fixed;

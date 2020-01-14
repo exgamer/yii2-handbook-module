@@ -43,10 +43,10 @@ class SeoSettingsExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'seo_setting',
-                function($type, $name, $value, $caption) {
-                    $value = $this->getSeoSettingsService()->getSetting($type, $name, $value, $caption);
+                function($type, $name, $caption, $value = null) {
+                    $value = $this->getSeoSettingsService()->getSetting($type, $name, $caption, $value);
 
-                    return $this->getSeoSettingsService()->getManageControl($name, $value, $caption);
+                    return $this->getSeoSettingsService()->getManageControl($name, $caption, $value);
                 },
                 [
                     'is_safe' => [
