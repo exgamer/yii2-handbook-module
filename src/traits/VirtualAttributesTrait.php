@@ -3,6 +3,7 @@
 namespace concepture\yii2handbook\traits;
 
 use Yii;
+use yii\validators\StringValidator;
 use yii\validators\Validator;
 use yii\base\UnknownPropertyException;
 use yii\helpers\ArrayHelper;
@@ -12,6 +13,7 @@ use yii\helpers\ArrayHelper;
  * Трейт виртуальных атрибутов модели
  *
  * @todo: перенести в logic core
+ * @todo: валидаторы прописаны по тупому
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -101,6 +103,28 @@ trait VirtualAttributesTrait
             ],
             [
                 'message' => Yii::t('yii', '{attribute} cannot be blank.' , ['attribute' => $label])
+            ]
+        );
+        $this->getValidators()->append($validator);
+    }
+
+    /**
+     * Установка валидатора на виртуальный атрибут
+     *
+     * @param string $attribute
+     * @param string $label
+     */
+    public function setStringValidator($attribute, $label)
+    {
+        $attribute = $this->normalizeAttribute($attribute);
+        $validator = Validator::createValidator(
+            'string',
+            $this,
+            [
+                $attribute
+            ],
+            [
+                'message' => Yii::t('yii', '{attribute} must be a string.', $label)
             ]
         );
         $this->getValidators()->append($validator);

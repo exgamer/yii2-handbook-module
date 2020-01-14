@@ -64,7 +64,7 @@ class SeoSettingsController extends Controller
         $items = $this->getSeoSettingsService()->getAllByHash((string) $hash);
         foreach ($items as $item) {
             $form->setVirtualAttribute($item->name, $item->value);
-//            $form->setRequiredValidator($item->name, $item->caption);
+            $form->setStringValidator($item->name, $item->caption);
         }
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
