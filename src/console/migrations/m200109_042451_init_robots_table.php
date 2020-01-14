@@ -20,7 +20,7 @@ class m200109_042451_init_robots_table extends Migration
             'content' => $this->text()->notNull(),
             'status' => $this->smallInteger()->defaultValue(0),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
-            'updated_at' => $this->dateTime(),
+            'updated_at' => ($this->isMysql() ? $this->dateTime()->append('ON UPDATE NOW()') : $this->dateTime()),
             'is_deleted' => $this->smallInteger()->defaultValue(0),
         ]);
         $this->addIndex(['status']);

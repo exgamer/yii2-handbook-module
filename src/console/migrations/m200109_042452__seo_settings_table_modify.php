@@ -17,8 +17,8 @@ class m200109_042452__seo_settings_table_modify extends Migration
      */
     public function safeUp()
     {
-//        $this->dropForeignKey('fk_seo_settings_domain_id_domain_id', $this->getTableName());
-//        $this->dropForeignKey('fk_seo_settings_locale_locale_id', $this->getTableName());
+        $this->dropForeignKey('fk_seo_settings_domain_id_domain_id', $this->getTableName());
+        $this->dropForeignKey('fk_seo_settings_locale_locale_id', $this->getTableName());
         $this->renameTable($this->getTableName(), "{$this->getTableName()}_old");
 
         $this->addTable([
@@ -32,7 +32,7 @@ class m200109_042452__seo_settings_table_modify extends Migration
             'caption' => $this->string(512),
             'type' => $this->smallInteger(),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
-            'updated_at' => $this->dateTime(),
+            'updated_at' => ($this->isMysql() ? $this->dateTime()->append('ON UPDATE NOW()') : $this->dateTime()),
         ]);
 
         $this->addIndex(['locale']);
