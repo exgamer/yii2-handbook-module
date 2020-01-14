@@ -297,15 +297,14 @@ class SeoSettingsService extends Service
      * @param SeoSettingsSearch $searchModel
      * @return \yii\data\ActiveDataProvider
      */
-    public function getDataProviderGroupByHash()
+    public function getDataProviderGroupByHash(SeoSettingsSearch $searchModel)
     {
         $condition = function(ActiveQuery $query) {
-            $query->select(['*', 'count(id) as hash_count']);
-            $query->groupBy('url_md5_hash');
-            $query->orderBy('id DESC');
+            $query->select(['url_md5_hash', 'url', 'count(id) as hash_count']);
+            $query->groupBy('url_md5_hash, url');
         };
 
-        return $this->getDataProvider([], [], null, null, $condition);
+        return $this->getDataProvider([], [], $searchModel, null, $condition);
     }
 
     /**

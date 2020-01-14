@@ -94,7 +94,7 @@ class SeoSettings extends ActiveRecord
                     'url',
                 ],
                 'string',
-                'max'=>1024
+                'max'=>256
             ],
             [
                 [

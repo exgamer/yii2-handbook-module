@@ -45,7 +45,7 @@ class SeoSettingsController extends Controller
     {
         $searchModel = Yii::createObject(SeoSettingsSearch::class);
         $searchModel->load(Yii::$app->request->queryParams);
-        $dataProvider =  $this->getSeoSettingsService()->getDataProviderGroupByHash();
+        $dataProvider =  $this->getSeoSettingsService()->getDataProviderGroupByHash($searchModel);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

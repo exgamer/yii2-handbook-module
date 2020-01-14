@@ -32,7 +32,6 @@ class SeoSettingsForm extends BaseForm
                 [
                     'url',
                     'name',
-                    'value',
                     'caption',
                     'type'
                 ],
