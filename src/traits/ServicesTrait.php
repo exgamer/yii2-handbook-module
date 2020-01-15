@@ -1,4 +1,5 @@
 <?php
+
 namespace concepture\yii2handbook\traits;
 
 use concepture\yii2handbook\services\CountryService;
