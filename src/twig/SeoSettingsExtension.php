@@ -25,9 +25,14 @@ class SeoSettingsExtension extends AbstractExtension
     public function __construct()
     {
         $view = Yii::$app->getView();
-        Yii::$app->on(Application::EVENT_AFTER_REQUEST, [$this->getSeoSettingsService(), 'writeSettings']);
-        $view->on(View::EVENT_END_BODY, [$this->getSeoSettingsService(), 'renderManagePanel']);
         Bundle::register($view);
+        $view->on(View::EVENT_BEFORE_RENDER, function() {
+            return $this->getSeoSettingsService()->apply();
+        });
+        $view->on(View::EVENT_END_BODY, [$this->getSeoSettingsService(), 'renderManagePanel']);
+        $view->on(View::EVENT_AFTER_RENDER, function() {
+            return $this->getSeoSettingsService()->writeSettings();
+        });
     }
 
     /**
