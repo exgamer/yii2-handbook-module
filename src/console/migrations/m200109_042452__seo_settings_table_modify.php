@@ -17,15 +17,49 @@ class m200109_042452__seo_settings_table_modify extends Migration
      */
     public function safeUp()
     {
-        $this->dropForeignKey('fk_seo_settings_domain_id_domain_id', $this->getTableName());
-        $this->dropForeignKey('fk_seo_settings_locale_locale_id', $this->getTableName());
-        $this->dropIndex('ind_locale_seo_settings', $this->getTableName());
-        $this->dropIndex('ind_url_seo_settings', $this->getTableName());
-        $this->dropIndex('ind_domain_id_seo_settings', $this->getTableName());
-        $this->dropIndex('uni_url_md5_hash_locale_seo_settings', $this->getTableName());
-        $this->dropIndex('ss_url_md5_hash_index', $this->getTableName());
-        $this->renameTable($this->getTableName(), "{$this->getTableName()}_old");
+        try {
+            $this->dropForeignKey('fk_seo_settings_domain_id_domain_id', $this->getTableName());
+        }catch (Exception $e){
 
+        }
+
+        try {
+            $this->dropForeignKey('fk_seo_settings_locale_locale_id', $this->getTableName());
+        }catch (Exception $e){
+
+        }
+
+        try {
+            $this->dropIndex('ind_locale_seo_settings', $this->getTableName());
+        }catch (Exception $e){
+
+        }
+
+        try {
+            $this->dropIndex('ind_url_seo_settings', $this->getTableName());
+        }catch (Exception $e){
+
+        }
+
+        try {
+            $this->dropIndex('ind_domain_id_seo_settings', $this->getTableName());
+        }catch (Exception $e){
+
+        }
+
+        try {
+            $this->dropIndex('uni_url_md5_hash_locale_seo_settings', $this->getTableName());
+        }catch (Exception $e){
+
+        }
+
+        try {
+            $this->dropIndex('ss_url_md5_hash_index', $this->getTableName());
+        }catch (Exception $e){
+
+        }
+
+        $this->renameTable($this->getTableName(), "{$this->getTableName()}_old");
         $this->addTable([
             'id' => $this->bigPrimaryKey(),
             'domain_id' => $this->bigInteger(),
