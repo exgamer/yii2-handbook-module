@@ -2,11 +2,13 @@
 
 namespace concepture\yii2handbook\twig;
 
-use concepture\yii2handbook\bundles\seosetting\Bundle;
 use Yii;
+use yii\web\Application;
+use yii\web\View;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use concepture\yii2handbook\services\SeoSettingsService;
+use concepture\yii2handbook\bundles\seosetting\Bundle;
 
 /**
  * Расширения twig для SEO настроек
@@ -19,6 +21,14 @@ class SeoSettingsExtension extends AbstractExtension
      * @var array
      */
     private $constants = [];
+
+    public function __construct()
+    {
+        $view = Yii::$app->getView();
+        Yii::$app->on(Application::EVENT_AFTER_REQUEST, [$this->getSeoSettingsService(), 'writeSettings']);
+        $view->on(View::EVENT_END_BODY, [$this->getSeoSettingsService(), 'renderManagePanel']);
+        Bundle::register($view);
+    }
 
     /**
      * @return SeoSettingsService

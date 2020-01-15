@@ -31,6 +31,8 @@ use concepture\yii2handbook\enum\SeoSettingEnum;
  */
 class SeoSettingsService extends Service
 {
+    const INTERACTIVE_MODE_SESSION = 'seo_ineractive_mode';
+
     use HandbookServices;
     use ReadSupportTrait;
     use ModifySupportTrait;
@@ -83,12 +85,6 @@ class SeoSettingsService extends Service
     {
         parent::init();
         $this->view = \Yii::$app->getView();
-        # todo : пока так, мб и не поменяется, только на фронте
-        if(Yii::$app->has('request') && Yii::$app->request->baseUrl == '') {
-            Bundle::register($this->view);
-            Yii::$app->on(Application::EVENT_AFTER_REQUEST, [$this, 'writeSettings']);
-            $this->view->on(View::EVENT_END_BODY, [$this, 'renderManagePanel']);
-        }
     }
 
     /**
@@ -105,6 +101,14 @@ class SeoSettingsService extends Service
     private function getLocaleService()
     {
         return Yii::$app->localeService;
+    }
+
+    /**
+     * @return \yii\web\Session
+     */
+    private function getSession()
+    {
+        return Yii::$app->session;
     }
 
     /**
@@ -392,6 +396,7 @@ class SeoSettingsService extends Service
             return null;
         }
 
+        $interactiveMode = $this->getInteractiveMode();
         if( ! $this->canManage()) {
             return $value;
         }
@@ -400,9 +405,9 @@ class SeoSettingsService extends Service
             'div',
             $value,
             [
-                'class' => 'yii2-handbook-seo-manage-control',
+                'class' => 'yii2-handbook-seo-manage-control ' . ($interactiveMode ? 'yii2-handbook-seo-interactive-mode' : null),
                 'data-url' => $this->getUpdateUrl($name),
-                'data-title' => $caption
+                'data-title' => $caption,
             ]
         );
     }
@@ -418,8 +423,31 @@ class SeoSettingsService extends Service
 
         echo $this->view->render('@concepture/yii2handbook/views/seo-settings/include/manage_panel', [
             'url' => $this->getUpdateUrl(),
-            'count' => count($this->existsItems)
+            'count' => count($this->existsItems),
+            'interactiveMode' => $this->getInteractiveMode()
         ]);
+    }
+
+    /**
+     * Признак интерактивного мода режима на внешней стороне
+     *
+     * @return mixed
+     */
+    public function getInteractiveMode()
+    {
+        $result = $this->getSession()->get(self::INTERACTIVE_MODE_SESSION, false);
+
+        return ( $result === 'true' ? true : false );
+    }
+
+    /**
+     * Установка значения интерактивного режима на внешней стороне
+     *
+     * @param bool $value
+     */
+    public function setInteractiveMode($value)
+    {
+        $this->getSession()->set(self::INTERACTIVE_MODE_SESSION, $value);
     }
 
     /**

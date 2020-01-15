@@ -1,4 +1,4 @@
-.yii2-handbook-seo-manage-control {
+.yii2-handbook-seo-manage-control.yii2-handbook-seo-interactive-mode {
     outline: 1px dashed #F7D358;
     cursor: pointer;
     min-height: 15px;
@@ -9,8 +9,16 @@
     bottom: 0;
     left: 0;
     /*z-index: 9999;*/
-    cursor: pointer;
     padding: 13px 18px;
+    cursor: pointer;
     opacity: 0.9;
     font-size: 14px;
+}
+.yii2-handbook-seo-manage-panel ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.yii2-handbook-seo-manage-panel ul li {
+    display: inline-block;
 }
