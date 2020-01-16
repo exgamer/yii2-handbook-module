@@ -124,14 +124,14 @@ return [
     ```php
           ...
             [
-              'domainPatterns' => [
+              'patterns' => [
                   DomainEnum::A => 'objects',
                   DomainEnum::B => 'subjects',
               ],
               'route' => 'object/index'
             ],
             [
-              'domainPatterns' => [
+              'patterns' => [
                   DomainEnum::A => "objects/<seo_name:({$seo_name_regexp})>",
                   DomainEnum::B => "subjects/<seo_name:({$seo_name_regexp})>",
               ],

@@ -14,14 +14,14 @@ use concepture\yii2handbook\services\DomainService;
 class DomainUrlRule extends YiiUrlRule
 {
     /**
-     * @var array
+     * @var array массив правил по доменам
      */
-    public $domainPatterns;
+    public $patterns;
 
     /**
      * @var string
      */
-    public $language;
+    public $locale;
 
     /**
      * @return DomainService
@@ -46,10 +46,10 @@ class DomainUrlRule extends YiiUrlRule
     {
 
         if(
-            ! $this->domainPatterns
+            ! $this->patterns
             && ! $this->pattern
         ) {
-            throw new InvalidConfigException('DomainUrlRule::pattern or DomainUrlRule::domainPatterns must be set.');
+            throw new InvalidConfigException('DomainUrlRule::pattern or DomainUrlRule::patterns must be set.');
         }
 
         $this->setPattern();
@@ -64,12 +64,12 @@ class DomainUrlRule extends YiiUrlRule
     {
         static $domainMap;
 
-        if(! $this->domainPatterns) {
+        if(! $this->patterns) {
             return;
         }
 
-        if(! is_array($this->domainPatterns)) {
-            $this->pattern = $this->domainPatterns;
+        if(! is_array($this->patterns)) {
+            $this->pattern = $this->patterns;
         } else {
             if(! $domainMap) {
                 $domainService = $this->getDomainService();
@@ -78,16 +78,16 @@ class DomainUrlRule extends YiiUrlRule
 
             $hostName = $this->getRequest()->getHostName();
             $alias = $domainMap[$hostName]['alias'] ?? null;
-            $this->language = $domainMap[$hostName]['language'] ?? null;
+            $this->locale = $domainMap[$hostName]['locale'] ?? null;
             if(! $alias) {
                 throw new InvalidConfigException("Domain alias is not found in domainMap.");
             }
+//
+//            if(! isset($this->patterns[$alias])) {
+//                throw new InvalidConfigException("Route is not registered. ");
+//            }
 
-            if(! isset($this->domainPatterns[$alias])) {
-                throw new InvalidConfigException("Route is not registered. ");
-            }
-
-            $this->pattern = $this->domainPatterns[$alias];
+            $this->pattern = $this->patterns[$alias];
         }
     }
 }
