@@ -106,3 +106,41 @@ return [
            ...
        ];
     ```
+    
+## Роутинг по доменам
+- Подключение (например frontend\config\main.php)
+    ```php
+      ...
+        'components' => [
+            'urlManager' => [
+                'class' => 'concepture\yii2handbook\components\routing\DomainUrlManager',
+                'rules' => require __DIR__ . '/routes.php',
+                ...
+            ],
+        ],
+      ...
+    ```
+- Правила роутинга (например frontend\config\routes.php)
+    ```php
+          ...
+            [
+              'domainPatterns' => [
+                  DomainEnum::A => 'objects',
+                  DomainEnum::B => 'subjects',
+              ],
+              'route' => 'object/index'
+            ],
+            [
+              'domainPatterns' => [
+                  DomainEnum::A => "objects/<seo_name:({$seo_name_regexp})>",
+                  DomainEnum::B => "subjects/<seo_name:({$seo_name_regexp})>",
+              ],
+              'route' => 'object/view'
+            ],
+            [
+                'pattern' => 'robots',
+                'route' => 'site/robots',
+                'suffix' => '.txt'
+            ]
+          ...
+    ```
