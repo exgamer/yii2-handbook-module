@@ -44,13 +44,28 @@ class DomainUrlRule extends YiiUrlRule
      */
     public function init()
     {
-        static $domainMap;
 
         if(
             ! $this->domainPatterns
             && ! $this->pattern
         ) {
             throw new InvalidConfigException('DomainUrlRule::pattern or DomainUrlRule::domainPatterns must be set.');
+        }
+
+        $this->setPattern();
+
+        parent::init();
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    private function setPattern()
+    {
+        static $domainMap;
+
+        if(! $this->domainPatterns) {
+            return;
         }
 
         if(! is_array($this->domainPatterns)) {
@@ -65,12 +80,14 @@ class DomainUrlRule extends YiiUrlRule
             $alias = $domainMap[$hostName]['alias'] ?? null;
             $this->language = $domainMap[$hostName]['language'] ?? null;
             if(! $alias) {
-                throw new InvalidConfigException("Alias is not found in domainMap");
+                throw new InvalidConfigException("Domain alias is not found in domainMap.");
+            }
+
+            if(! isset($this->domainPatterns[$alias])) {
+                throw new InvalidConfigException("Route is not registered. ");
             }
 
             $this->pattern = $this->domainPatterns[$alias];
         }
-
-        parent::init();
     }
 }
