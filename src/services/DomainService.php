@@ -3,6 +3,7 @@ namespace concepture\yii2handbook\services;
 
 use concepture\yii2handbook\models\Domain;
 use concepture\yii2logic\services\Service;
+use concepture\yii2logic\traits\ConfigAwareTrait;
 use yii\helpers\Url;
 use Yii;
 
@@ -13,12 +14,23 @@ use Yii;
  */
 class DomainService extends Service
 {
+    use ConfigAwareTrait;
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        parent::init();
+        $this->setDomainMap();
+    }
+
     /**
      * Возвращает карту доменов из параметров
      *
      * @return mixed|null
      */
-    public function getDomainMap()
+    public function setDomainMap()
     {
         if (! isset(Yii::$app->params['yii2handbook'])){
 
@@ -30,7 +42,15 @@ class DomainService extends Service
             return null;
         }
 
-        return Yii::$app->params['yii2handbook']['domainMap'];
+        $this->setConfig(['domainMap' => Yii::$app->params['yii2handbook']['domainMap']]);
+    }
+
+    /**
+     * @return array
+     */
+    public function getDomainMap()
+    {
+        return $this->getConfigItem('domainMap');
     }
 
     /**
