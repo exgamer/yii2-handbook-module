@@ -77,7 +77,7 @@ class m200109_042452__seo_settings_table_modify extends Migration
         $this->addIndex(['locale']);
         $this->addIndex(['url']);
         $this->addIndex(['domain_id']);
-        $this->addUniqueIndex(['url_md5_hash', 'name', 'domain_id']);
+        $this->addUniqueIndex(['url_md5_hash', 'name']);
         if ($this->isMysql()) {
             $this->execute("ALTER TABLE seo_settings
             ADD INDEX url_md5_hash_index
