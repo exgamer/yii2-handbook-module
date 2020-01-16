@@ -13,11 +13,6 @@ use concepture\yii2handbook\components\routing\DomainUrlRule;
 class DomainUrlManager extends YiiUrlManager
 {
     /**
-     * @var bool признак мультидоменности
-     */
-    public $multiDomain = false;
-
-    /**
      * @var bool
      */
     public $enablePrettyUrl = true;
