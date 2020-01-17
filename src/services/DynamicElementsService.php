@@ -291,8 +291,12 @@ class DynamicElementsService extends Service
     public function getAllByHash(string $hash)
     {
         return $this->getAllByCondition(function(ActiveQuery $query) use($hash) {
-            $query->andWhere(['url_md5_hash' => $hash]);
-            $query->orderBy('id');
+            $query->andWhere([
+                'OR',
+                ['url_md5_hash' => $hash],
+                ['url' => '']
+            ]);
+            $query->orderBy('url_md5_hash, id');
         });
     }
 

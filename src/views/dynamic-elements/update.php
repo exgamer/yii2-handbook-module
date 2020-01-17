@@ -38,8 +38,20 @@ $saveRedirectButton = Html::submitButton(
             </div>
             <div class="card-body">
                 <div class="row">
+                    <?php $generalHeader = false;?>
                     <?php foreach ($items as $key => $item) :?>
                         <div id="<?= $item->name;?>" class="col-lg-12 col-md-12 col-sm-12">
+                            <?php if($key === 0 && $item->is_general == false):?>
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    <?= Yii::t('yii2handbook', 'По адресу') ;?>
+                                </legend>
+                            <?php endif;?>
+                            <?php if($generalHeader == false && $item->is_general == true) :?>
+                                <?php $generalHeader = true;?>
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    <?= Yii::t('yii2handbook', 'Общие') ;?>
+                                </legend>
+                            <?php endif;?>
                             <?= $this->render('include/_miltiple_items', [
                                 'form' => $form,
                                 'model' => $model,
