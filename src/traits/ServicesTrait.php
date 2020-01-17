@@ -2,16 +2,16 @@
 
 namespace concepture\yii2handbook\traits;
 
+use Yii;
 use concepture\yii2handbook\services\CountryService;
 use concepture\yii2handbook\services\CurrencyService;
 use concepture\yii2handbook\services\DomainService;
 use concepture\yii2handbook\services\EntityTypeService;
 use concepture\yii2handbook\services\LocaleService;
 use concepture\yii2handbook\services\PaymentSystemService;
-use concepture\yii2handbook\services\SeoSettingsService;
 use concepture\yii2handbook\services\SettingsService;
 use concepture\yii2handbook\services\TagsService;
-use Yii;
+use concepture\yii2handbook\services\DynamicElementsService;
 
 /**
  * Trait ServicesTrait
@@ -85,11 +85,20 @@ trait ServicesTrait
     }
 
     /**
-     * @return SeoSettingsService
+     * @deprecated
+     * @todo удалить (для совместимости)
      */
     public function seoSettingsService()
     {
-        return Yii::$app->seoSettingsService;
+        return Yii::$app->dynamicElementsService;
+    }
+
+    /**
+     * @return DynamicElementsService
+     */
+    public function dynamicElementsService()
+    {
+        return Yii::$app->dynamicElementsService;
     }
 }
 

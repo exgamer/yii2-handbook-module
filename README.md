@@ -53,30 +53,30 @@ return [
 Получить настройку по ключу Yii::$app->settingsService->catalogValue($key);
 
 
-## SEO настройки
+## Динамические элементы
 
 - Для получения настроек сео для страницы вызываем
     ```php
-   Yii::$app->seoSettingsService->getSeoDataSet($model = null);
+   Yii::$app->dynamicElementsService->getDataSet($model = null);
     ```
    Метод вернет обьект  concepture\yii2handbook\datasets\SeoData
    в котором будут учтены:
     - дефолтные данные сео где не указан конкретный УРЛ
     - если передана модель следом будут учтены сео данные модели
-    - и после всего будут учтены настройки SEO для текущего URL
+    - и после всего будут учтены элементы для текущего URL
         
 - Расширение для твига - в конфигурацию твига добавить расширение:
     
     ```php
         ...
-          'extensions' => 'concepture\yii2handbook\twig\SeoSettingsExtension'
+          'extensions' => 'concepture\yii2handbook\twig\DynamicElementsExtension'
         ...
     ```
 - Пример
     ```twig
-        {{ seo_setting(seo_constant('SettingsTypeEnum::TEXT'), seo_constant('SeoSettingEnum::TITLE'), 'Главная страница', 'Заголовок главной страницы') }}
-        {{ seo_setting(seo_constant('SettingsTypeEnum::TEXT_AREA'), 'MY_TEXT_AREA', 'Произвольный текст', 'Некий текст') }}
-        {{ seo_setting(seo_constant('SettingsTypeEnum::TEXT_EDITOR'), 'MY_EDITOR', 'Произвольный текст', 'Некий текст 2') }}
+        {{ de(de_constant('SettingsTypeEnum::TEXT'), de_constant('SeoSettingEnum::TITLE'), 'Главная страница', 'Заголовок главной страницы') }}
+        {{ de(de_constant('SettingsTypeEnum::TEXT_AREA'), 'MY_TEXT_AREA', 'Произвольный текст', 'Некий текст') }}
+        {{ de(de_constant('SettingsTypeEnum::TEXT_EDITOR'), 'MY_EDITOR', 'Произвольный текст', 'Некий текст 2') }}
     ```
 ## Динамический индексируемый файл (robots.txt)
 Подключение :

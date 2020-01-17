@@ -22,8 +22,8 @@ return [
     'settingsService' => [
         'class' => 'concepture\yii2handbook\services\SettingsService'
     ],
-    'seoSettingsService' => [
-        'class' => 'concepture\yii2handbook\services\SeoSettingsService'
+    'dynamicElementsService' => [
+        'class' => 'concepture\yii2handbook\services\DynamicElementsService'
     ],
     'tagsService' => [
         'class' => 'concepture\yii2handbook\services\TagsService'

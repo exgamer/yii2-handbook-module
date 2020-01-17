@@ -2,21 +2,19 @@
 
 namespace concepture\yii2handbook\web\controllers;
 
+use concepture\yii2handbook\services\DynamicElementsService;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\filters\VerbFilter;
 use concepture\yii2user\enum\UserRoleEnum;
 use kamaelkz\yii2admin\v1\helpers\RequestHelper;
-use concepture\yii2handbook\services\SeoSettingsService;
-use concepture\yii2handbook\search\SeoSettingsSearch;
-use concepture\yii2handbook\forms\SeoSettingsMultipleForm;
+use concepture\yii2handbook\search\DynamicElementsSearch;
+use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
 
 /**
- * Class SeoSettingsController
- * @package concepture\yii2handbook\web\controllers
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SeoSettingsController extends Controller
+class DynamicElementsController extends Controller
 {
     /**
      * @inheritDoc
@@ -70,11 +68,11 @@ class SeoSettingsController extends Controller
     }
 
     /**
-     * @return SeoSettingsService
+     * @return DynamicElementsService
      */
-    protected function getSeoSettingsService()
+    private function getDynamicElementsService()
     {
-        return Yii::$app->seoSettingsService;
+        return Yii::$app->dynamicElementsService;
     }
 
     /**
@@ -96,9 +94,9 @@ class SeoSettingsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = Yii::createObject(SeoSettingsSearch::class);
+        $searchModel = Yii::createObject(DynamicElementsSearch::class);
         $searchModel->load(Yii::$app->request->queryParams);
-        $dataProvider =  $this->getSeoSettingsService()->getDataProviderGroupByHash($searchModel);
+        $dataProvider =  $this->getDynamicElementsService()->getDataProviderGroupByHash($searchModel);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -113,15 +111,15 @@ class SeoSettingsController extends Controller
      */
     public function actionUpdate($hash)
     {
-        $form = new SeoSettingsMultipleForm();
-        $items = $this->getSeoSettingsService()->getAllByHash((string) $hash);
+        $form = new DynamicElementsMultipleForm();
+        $items = $this->getDynamicElementsService()->getAllByHash((string) $hash);
         foreach ($items as $item) {
             $form->setVirtualAttribute($item->name, $item->value);
             $form->setStringValidator($item->name, $item->caption);
         }
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            $this->getSeoSettingsService()->updateMultiple($form);
+            $this->getDynamicElementsService()->updateMultiple($form);
 
             if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
                 return $this->redirect(['index']);
@@ -143,6 +141,6 @@ class SeoSettingsController extends Controller
             return null;
         }
 
-        return $this->getSeoSettingsService()->setInteractiveMode(Yii::$app->request->post('value'));
+        return $this->getDynamicElementsService()->setInteractiveMode(Yii::$app->request->post('value'));
     }
 }

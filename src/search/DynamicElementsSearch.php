@@ -2,15 +2,15 @@
 
 namespace concepture\yii2handbook\search;
 
-use concepture\yii2handbook\models\SeoSettings;
 use yii\db\ActiveQuery;
+use concepture\yii2handbook\models\DynamicElements;
 
 /**
- * Class SeoSettingsSearch
- * @package concepture\yii2handbook\search
+ * Поиск по динамическим элементам
+ *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SeoSettingsSearch extends SeoSettings
+class DynamicElementsSearch extends DynamicElements
 {
     /**
      * @inheritDoc/

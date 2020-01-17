@@ -10,7 +10,7 @@ use yii\helpers\Html;
 use yii\base\Model as YiiModel;
 use yii\base\InvalidConfigException;
 use yii\web\Application;
-use concepture\yii2handbook\search\SeoSettingsSearch;
+use concepture\yii2handbook\search\DynamicElementsSearch;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
 use concepture\yii2logic\services\Service;
@@ -19,19 +19,17 @@ use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
 use concepture\yii2logic\forms\Model;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
-use concepture\yii2handbook\forms\SeoSettingsMultipleForm;
-use concepture\yii2handbook\bundles\seosetting\Bundle;
-use concepture\yii2handbook\enum\SeoSettingEnum;
+use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
+use concepture\yii2handbook\enum\DynamicElementsEnum;
 
 /**
- * Class SeoSettingsService
- * @package concepture\yii2handbook\services
- * @author Olzhas Kulzhambekov <exgamer@live.ru>
+ * Сервис динамическх элементов
+ *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class SeoSettingsService extends Service
+class DynamicElementsService extends Service
 {
-    const INTERACTIVE_MODE_SESSION = 'seo_ineractive_mode';
+    const INTERACTIVE_MODE_SESSION = 'ineractive_mode';
 
     use HandbookServices;
     use ReadSupportTrait;
@@ -175,7 +173,7 @@ class SeoSettingsService extends Service
 
 
     /**
-     * Получение SEO настройки
+     * Получение элементов
      *
      * @param int $type
      * @param string $name
@@ -184,21 +182,22 @@ class SeoSettingsService extends Service
      *
      * @return string
      */
-    public function getSetting(int $type, string $name, string $caption, $value = null)
+    public function getElements(int $type, string $name, string $caption, $value = '', $is_general = false)
     {
-        $dataSet = $this->getSeoDataSet();
+        $dataSet = $this->getDataSet();
         $attribute = strtolower($name);
         # если такой настройки нет, записываем в массив для записи
         if(! isset($dataSet->{$attribute})) {
             $this->writeItems[$name] = [
-                'url' => $this->getCurrentUrl(),
-                'url_md5_hash' => $this->getCurrentUlrHash(),
+                'url' => $this->getCurrentUrl($is_general),
+                'url_md5_hash' => $this->getCurrentUlrHash($is_general),
                 'domain_id' => $this->getDomainService()->getCurrentDomainId(),
                 'locale' => $this->getLocaleService()->getCurrentLocaleId(),
                 'type' => $type,
                 'name' => $name,
                 'value' => $value,
                 'caption' => $caption,
+                'is_general' => $is_general,
             ];
 
             return $value;
@@ -208,13 +207,13 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * Установка сео настроек для страницы
+     * Установка элементов для страницы
      *
      * @param YiiModel $model
      */
     public function apply(YiiModel $model = null)
     {
-        $data = $this->getSeoDataSet($model);
+        $data = $this->getDataSet($model);
         $this->title = ($data->seo_title ?? $data->title ?? $this->view->title);
         $this->description = $data->seo_description ?? $data->description ?? null;
         $this->keywords = $data->seo_keywords ?? $data->keywords ?? null;
@@ -229,13 +228,13 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * Возвращает настройки SEO для текущей страницы
+     * Возвращает элементы для текущей страницы
      *
      * @param null $model
      * @return SeoData|mixed
      * @throws InvalidConfigException
      */
-    public function getSeoDataSet($model = null)
+    public function getDataSet($model = null)
     {
         static $dataSet;
 
@@ -245,7 +244,7 @@ class SeoSettingsService extends Service
 
         if(! $dataSet) {
             $dataSet = new SeoData();
-            $items = $this->getSettingsForCurrentUrl();
+            $items = $this->getElementsForCurrentUrl();
             foreach ($items as $item) {
                 $dataSet->setVirtualAttribute($item->name, $item->value);
                 $this->existsItems[$item->name] = $item->getAttributes();
@@ -260,12 +259,12 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * Возвращает настройки SEO для текущей страницы и дефолтные с учетом чзыка приложения
+     * Возвращает элементы для текущей страницы и дефолтные с учетом языка приложения
      *
      * @return array
      * @throws InvalidConfigException
      */
-    public function getSettingsForCurrentUrl()
+    public function getElementsForCurrentUrl()
     {
         static $items;
 
@@ -274,7 +273,7 @@ class SeoSettingsService extends Service
         }
 
         $items = $this->getAllByCondition(function(ActiveQuery $query) {
-            $query->andWhere("url_md5_hash = :url_md5_hash OR url_md5_hash IS NULL",
+            $query->andWhere("url = '' OR url_md5_hash = :url_md5_hash",
                 [
                     ':url_md5_hash' => $this->getCurrentUlrHash()
                 ]
@@ -298,10 +297,10 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * @param SeoSettingsSearch $searchModel
+     * @param DynamicElementsSearch $searchModel
      * @return \yii\data\ActiveDataProvider
      */
-    public function getDataProviderGroupByHash(SeoSettingsSearch $searchModel)
+    public function getDataProviderGroupByHash(DynamicElementsSearch $searchModel)
     {
         $condition = function(ActiveQuery $query) {
             $query->select(['url_md5_hash', 'url', 'count(id) as hash_count']);
@@ -312,37 +311,21 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * Обновление значений пачкой
-     *
-     * @param SeoSettingsMultipleForm $form
-     * @return mixed
-     */
-    public function updateMultiple(SeoSettingsMultipleForm $form)
-    {
-        $index = 0;
-        $data = [];
-        $attributes = $form->getAttributes();
-        foreach ($attributes as $key => $value) {
-            if($key === 'ids') {
-                continue;
-            }
-
-            $data[] = [$form->ids[$index] ,$value];
-            $index++;
-        }
-
-        return $this->batchInsert(['id', 'value'], $data);
-    }
-
-    /**
      * Возвращает текущий адрес страницы
+     *
+     * @param bool $is_general
      *
      * @return string
      * @throws InvalidConfigException
      */
-    private function getCurrentUrl()
+    private function getCurrentUrl($is_general = false)
     {
         static $result;
+
+        if($is_general) {
+            return '';
+        }
+
         if($result) {
             return $result;
         }
@@ -360,19 +343,49 @@ class SeoSettingsService extends Service
     /**
      * Возвращает хэш текущего адреса страницы
      *
+     * @param bool $is_general
+     *
      * @return string
      */
-    public function getCurrentUlrHash()
+    public function getCurrentUlrHash($is_general = false)
     {
+        if($is_general) {
+
+            return md5('');
+        }
+
         return md5($this->getCurrentUrl());
     }
 
     /**
-     * Записывает новые настройки в базу
+     * Обновление значений пачкой
+     *
+     * @param DynamicElementsMultipleForm $form
+     * @return mixed
+     */
+    public function updateMultiple(DynamicElementsMultipleForm $form)
+    {
+        $index = 0;
+        $data = [];
+        $attributes = $form->getAttributes();
+        foreach ($attributes as $key => $value) {
+            if($key === 'ids') {
+                continue;
+            }
+
+            $data[] = [$form->ids[$index] ,$value];
+            $index++;
+        }
+
+        return $this->batchInsert(['id', 'value'], $data);
+    }
+
+    /**
+     * Записывает новые элементы в базу
      *
      * @return |null
      */
-    public function writeSettings()
+    public function writeElements()
     {
         $data = $this->writeItems;
         if(! $data) {
@@ -385,14 +398,17 @@ class SeoSettingsService extends Service
     }
 
     /**
-     * Возвращает элемент управления настройкой
+     * Возвращает элемент управления элементами
      *
-     * @param $value
+     * @param string $name
+     * @param string $caption
+     * @param string $value
+     * @param boolean $is_general
      */
-    public function getManageControl($name, $caption, $value = null)
+    public function getManageControl($name, $caption, $value = '', $is_general = false)
     {
         # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
-        if(in_array($name, SeoSettingEnum::values())) {
+        if(in_array($name, DynamicElementsEnum::values())) {
             return null;
         }
 
@@ -401,13 +417,19 @@ class SeoSettingsService extends Service
             return $value;
         }
 
+        $class = 'yii2-handbook-dynamic-elements-manage-control ' . ($interactiveMode ? 'yii2-handbook-dynamic-elements-interactive-mode' : null);
+        if($is_general) {
+            $class = "{$class} general";
+        }
+
         return Html::tag(
             'div',
             $value,
             [
-                'class' => 'yii2-handbook-seo-manage-control ' . ($interactiveMode ? 'yii2-handbook-seo-interactive-mode' : null),
+                'class' => $class,
                 'data-url' => $this->getUpdateUrl($name),
                 'data-title' => $caption,
+                'is_general' => $is_general,
             ]
         );
     }
@@ -421,7 +443,7 @@ class SeoSettingsService extends Service
             return null;
         }
 
-        echo $this->view->render('@concepture/yii2handbook/views/seo-settings/include/manage_panel', [
+        echo $this->view->render('@concepture/yii2handbook/views/dynamic-elements/include/manage_panel', [
             'url' => $this->getUpdateUrl(),
             'count' => count($this->existsItems),
             'interactiveMode' => $this->getInteractiveMode()
@@ -460,7 +482,7 @@ class SeoSettingsService extends Service
     private function getUpdateUrl($anchor = null)
     {
         $url = [
-            'admin/handbook/seo-settings/update',
+            'admin/handbook/dynamic-elements/update',
             'hash' => $this->getCurrentUlrHash()
         ];
         if($anchor) {

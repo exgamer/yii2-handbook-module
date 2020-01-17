@@ -8,7 +8,7 @@ use concepture\yii2logic\validators\MD5Validator;
 use concepture\yii2handbook\models\traits\DomainTrait;
 
 /**
- * SEO настройки
+ * Динамические элементы
  *
  * @property integer $id
  * @property integer $domain_id
@@ -21,17 +21,18 @@ use concepture\yii2handbook\models\traits\DomainTrait;
  * @property integer $type
  * @property string $created_at
  * @property string $updated_at
+ * @property boolean $is_general
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SeoSettings extends ActiveRecord
+class DynamicElements extends ActiveRecord
 {
+    use DomainTrait;
+
     /**
      * @var integer
      */
     public $hash_count;
-
-    use DomainTrait;
 
     /**
      * @see \concepture\yii2logic\models\ActiveRecord:label()
@@ -40,7 +41,7 @@ class SeoSettings extends ActiveRecord
      */
     public static function label()
     {
-        return Yii::t('handbook', 'SEO настройки');
+        return Yii::t('handbook', 'Динамические элементы');
     }
 
     /**
@@ -58,7 +59,7 @@ class SeoSettings extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{seo_settings}}';
+        return '{{dynamic_elements}}';
     }
 
     /**
@@ -71,9 +72,15 @@ class SeoSettings extends ActiveRecord
                 [
                     'domain_id',
                     'locale',
-                    'type'
+                    'type',
                 ],
                 'integer'
+            ],
+            [
+                [
+                    'is_general'
+                ],
+                'boolean'
             ],
             [
                 [

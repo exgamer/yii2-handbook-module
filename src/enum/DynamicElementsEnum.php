@@ -5,11 +5,11 @@ namespace concepture\yii2handbook\enum;
 use concepture\yii2logic\enum\Enum;
 
 /**
- * Типы SEO настроек
+ * Типы Динамические элементы
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class SeoSettingEnum extends Enum
+class DynamicElementsEnum extends Enum
 {
     const TITLE = 'TITLE';
     const DESCRIPTION = 'DESCRIPTION';

@@ -3,19 +3,18 @@
 namespace concepture\yii2handbook\twig;
 
 use Yii;
-use yii\web\Application;
 use yii\web\View;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use concepture\yii2handbook\services\SeoSettingsService;
-use concepture\yii2handbook\bundles\seosetting\Bundle;
+use concepture\yii2handbook\services\DynamicElementsService;
+use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
 
 /**
- * Расширения twig для SEO настроек
+ * Расширения twig для динамических элементов
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class SeoSettingsExtension extends AbstractExtension
+class DynamicElementsExtension extends AbstractExtension
 {
     /**
      * @var array
@@ -27,20 +26,20 @@ class SeoSettingsExtension extends AbstractExtension
         $view = Yii::$app->getView();
         Bundle::register($view);
         $view->on(View::EVENT_BEFORE_RENDER, function() {
-            return $this->getSeoSettingsService()->apply();
+            return $this->getDynamicElementsService()->apply();
         });
-        $view->on(View::EVENT_END_BODY, [$this->getSeoSettingsService(), 'renderManagePanel']);
+        $view->on(View::EVENT_END_BODY, [$this->getDynamicElementsService(), 'renderManagePanel']);
         $view->on(View::EVENT_AFTER_RENDER, function() {
-            return $this->getSeoSettingsService()->writeSettings();
+            return $this->getDynamicElementsService()->writeElements();
         });
     }
 
     /**
-     * @return SeoSettingsService
+     * @return DynamicElementsService
      */
-    private function getSeoSettingsService()
+    private function getDynamicElementsService()
     {
-        return Yii::$app->seoSettingsService;
+        return Yii::$app->dynamicElementsService;
     }
 
     /**
@@ -53,15 +52,15 @@ class SeoSettingsExtension extends AbstractExtension
             new TwigFunction(
                 'seo_*',
                 function($function) {
-                    return $this->getSeoSettingsService()->{"get{$function}"}();
+                    return $this->getDynamicElementsService()->{"get{$function}"}();
                 }
             ),
             new TwigFunction(
-                'seo_setting',
-                function($type, $name, $caption, $value = null) {
-                    $value = $this->getSeoSettingsService()->getSetting($type, $name, $caption, $value);
+                'de',
+                function($type, $name, $caption, $value = '', $is_general = false) {
+                    $value = $this->getDynamicElementsService()->getElements($type, $name, $caption, $value, $is_general);
 
-                    return $this->getSeoSettingsService()->getManageControl($name, $caption, $value);
+                    return $this->getDynamicElementsService()->getManageControl($name, $caption, $value, $is_general);
                 },
                 [
                     'is_safe' => [
@@ -70,7 +69,7 @@ class SeoSettingsExtension extends AbstractExtension
                 ]
             ),
             new TwigFunction(
-                'seo_constant',
+                'de_constant',
                 function($value) {
                     list($class, $constant) = explode('::', $value);
                     $namespace = "concepture\\yii2handbook\\enum\\{$class}";

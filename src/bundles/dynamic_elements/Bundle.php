@@ -1,11 +1,11 @@
 <?php
 
-namespace concepture\yii2handbook\bundles\seosetting;
+namespace concepture\yii2handbook\bundles\dynamic_elements;
 
 use concepture\yii2logic\bundles\Bundle as CoreBundle;
 
 /**
- * Бандл SEO настроек
+ * Бандл динамических элементов
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */

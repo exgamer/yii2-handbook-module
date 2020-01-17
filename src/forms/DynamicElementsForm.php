@@ -7,11 +7,11 @@ use concepture\yii2handbook\enum\SettingsTypeEnum;
 use kamaelkz\yii2admin\v1\forms\BaseForm;
 
 /**
- * Форма SEO настроек
+ * Форма динамических элементов
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SeoSettingsForm extends BaseForm
+class DynamicElementsForm extends BaseForm
 {
     public $domain_id;
     public $locale;
@@ -30,7 +30,6 @@ class SeoSettingsForm extends BaseForm
         return [
             [
                 [
-                    'url',
                     'name',
                     'caption',
                     'type'

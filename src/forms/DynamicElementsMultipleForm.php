@@ -6,13 +6,11 @@ use kamaelkz\yii2admin\v1\forms\BaseModel;
 use concepture\yii2handbook\traits\VirtualAttributesTrait;
 
 /**
- * Форма редактирования SEO настроек, пачкой
- *
- * @todo возможно вынести в абстракцию
+ * Форма редактирования динамических элементов, пачкой
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class SeoSettingsMultipleForm extends BaseModel
+class DynamicElementsMultipleForm extends BaseModel
 {
     use VirtualAttributesTrait;
 

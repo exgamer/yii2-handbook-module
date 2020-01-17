@@ -7,8 +7,8 @@ use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 
 ?>
 
-<?php Pjax::begin(['formSelector' => '#seo-settings-form']); ?>
-    <?php $form = ActiveForm::begin(['id' => 'seo-settings-form']); ?>
+<?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
+    <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form']); ?>
         <div class="card">
             <div class="card-body text-right">
                 <?=  Html::submitButton(

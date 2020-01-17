@@ -1,15 +1,15 @@
 <?php
 
 use yii\helpers\Html;
-use \concepture\yii2handbook\models\SeoSettings;
+use \concepture\yii2handbook\models\DynamicElements;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 
 $this->setTitle(Yii::t('yii2admin', 'Редактирование'));
-$this->pushBreadcrumbs(['label' => SeoSettings::label(), 'url' => ['index']]);
+$this->pushBreadcrumbs(['label' => DynamicElements::label(), 'url' => ['index']]);
 $this->pushBreadcrumbs($this->title);
-$this->viewHelper()->pushPageHeader(['index'], SeoSettings::label(),'icon-list');
+$this->viewHelper()->pushPageHeader(['index'], DynamicElements::label(),'icon-list');
 
 $saveButton = Html::submitButton(
     '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),
@@ -29,8 +29,8 @@ $saveRedirectButton = Html::submitButton(
 
 ?>
 
-<?php Pjax::begin(['formSelector' => '#seo-settings-form']); ?>
-    <?php $form = ActiveForm::begin(['id' => 'seo-settings-form']); ?>
+<?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
+    <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form']); ?>
         <div class="card">
             <div class="card-body text-right">
                 <?= $saveRedirectButton; ?>
