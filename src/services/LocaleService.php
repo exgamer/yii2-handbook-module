@@ -31,7 +31,11 @@ class LocaleService extends Service
             return $result;
         }
 
-        $result =  LocaleConverter::key(Yii::$app->language);
+        $locale = Yii::$app->language;
+        if (Yii::$app->getRequest()->getQueryParam('_locale')){
+            $locale = Yii::$app->getRequest()->getQueryParam('_locale');
+        }
+        $result =  LocaleConverter::key($locale);
 
         return $result;
     }
