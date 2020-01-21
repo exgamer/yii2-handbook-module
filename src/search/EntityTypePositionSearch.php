@@ -13,13 +13,23 @@ use concepture\yii2handbook\models\EntityTypePosition;
 class EntityTypePositionSearch extends EntityTypePosition
 {
     /**
-    * {@inheritdoc}
+    * @inheritdoc
     */
     public function rules()
     {
         return [
-
-
+            [
+                [
+                    'id'
+                ],
+                'integer'
+            ],
+            [
+                [
+                    'caption'
+                ],
+                'string'
+            ],
         ];
     }
 
@@ -28,6 +38,14 @@ class EntityTypePositionSearch extends EntityTypePosition
      */
     public function extendQuery(ActiveQuery $query)
     {
+        $query->andFilterWhere([
+            static::tableName().'.id' => $this->id
+        ]);
+        $query->andFilterWhere([
+            'like',
+            'caption',
+            $this->caption
+        ]);
         $query->with('entityType');
     }
 }
