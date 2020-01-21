@@ -82,6 +82,12 @@ class Domain extends ActiveRecord
                 ],
                 TranslitValidator::className(),
                 'source' => 'caption'
+            ],
+            [
+                [
+                    'alias',
+                ],
+                'unique'
             ]
         ];
     }
