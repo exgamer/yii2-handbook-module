@@ -28,6 +28,6 @@ class EntityTypePositionSearch extends EntityTypePosition
      */
     public function extendQuery(ActiveQuery $query)
     {
-
+        $query->with('entityType');
     }
 }

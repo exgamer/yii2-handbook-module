@@ -20,7 +20,12 @@ $this->viewHelper()->pushPageHeader();
         'columns' => [
             'id',
             'caption',
-            'entity_type_id',
+            [
+                'attribute' => 'entity_type_id',
+                'value' => function ($model) {
+                    return $model->entityType->caption;
+                }
+            ],
             'created_at',
             'updated_at',
 
