@@ -11,9 +11,8 @@ use concepture\yii2handbook\models\EntityType;
  */
 class EntityTypeSearch extends EntityType
 {
-
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
@@ -23,13 +22,19 @@ class EntityTypeSearch extends EntityType
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function getListSearchKeyAttribute()
     {
         return 'id';
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function getListSearchAttribute()
     {
-        return 'table_name';
+        return 'caption';
     }
 }
