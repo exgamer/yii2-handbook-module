@@ -19,8 +19,8 @@ $this->viewHelper()->pushPageHeader();
         ],
         'columns' => [
             'id',
-            'table_name',
             'caption',
+            'entity_type_id',
             'created_at',
             'updated_at',
 

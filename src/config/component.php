@@ -19,6 +19,9 @@ return [
     'entityTypeService' => [
         'class' => 'concepture\yii2handbook\services\EntityTypeService'
     ],
+    'entityTypePositionService' => [
+        'class' => 'concepture\yii2handbook\services\EntityTypePositionService'
+    ],
     'settingsService' => [
         'class' => 'concepture\yii2handbook\services\SettingsService'
     ],

@@ -30,6 +30,6 @@ class EntityTypeSearch extends EntityType
 
     public static function getListSearchAttribute()
     {
-        return 'table_name';
+        return 'caption';
     }
 }

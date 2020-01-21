@@ -171,7 +171,6 @@ class DynamicElementsService extends Service
         $this->applyLocale($query);
     }
 
-
     /**
      * Получение элементов
      *

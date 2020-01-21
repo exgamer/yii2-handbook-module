@@ -13,6 +13,7 @@ use concepture\yii2logic\models\ActiveRecord;
  * @property integer $status
  * @property datetime $created_at
  * @property datetime $updated_at
+ * @property boolean $sort_module - использовать в модуле сортировки
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
@@ -55,7 +56,13 @@ class EntityType extends ActiveRecord
                 [
                     'status'
                 ],
-                'integer'
+                'integer',
+            ],
+            [
+                [
+                    'sort_module'
+                ],
+                'boolean',
             ],
             [
                 [
@@ -80,6 +87,7 @@ class EntityType extends ActiveRecord
             'table_name' => Yii::t('handbook','Наименование таблицы'),
             'status' => Yii::t('handbook','Статус'),
             'caption' => Yii::t('handbook','Метка'),
+            'sort_module' => Yii::t('handbook','Использование сущности в разделе сортировки'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];

@@ -7,6 +7,7 @@ use concepture\yii2handbook\services\CountryService;
 use concepture\yii2handbook\services\CurrencyService;
 use concepture\yii2handbook\services\DomainService;
 use concepture\yii2handbook\services\EntityTypeService;
+use concepture\yii2handbook\services\EntityTypePositionService;
 use concepture\yii2handbook\services\LocaleService;
 use concepture\yii2handbook\services\PaymentSystemService;
 use concepture\yii2handbook\services\SettingsService;
@@ -66,6 +67,14 @@ trait ServicesTrait
     public function entityTypeService()
     {
         return Yii::$app->entityTypeService;
+    }
+
+    /**
+     * @return EntityTypePositionService
+     */
+    public function entityTypePositionService()
+    {
+        return Yii::$app->entityTypePositionService;
     }
 
     /**
