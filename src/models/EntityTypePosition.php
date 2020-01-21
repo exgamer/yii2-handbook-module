@@ -6,6 +6,7 @@ use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\validators\TranslitValidator;
 use concepture\yii2handbook\models\EntityType;
+use concepture\yii2logic\models\traits\StatusTrait;
 
 /**
  * Позиции сущностей в приложении
@@ -23,6 +24,8 @@ use concepture\yii2handbook\models\EntityType;
  */
 class EntityTypePosition extends ActiveRecord
 {
+    use StatusTrait;
+
     /**
     * @see \concepture\yii2logic\models\ActiveRecord:label()
     *
@@ -75,17 +78,17 @@ class EntityTypePosition extends ActiveRecord
             [
                 [
                     'alias',
-                    'domain_id'
                 ],
-                'unique',
-                'targetAttribute' => ['alias', 'domain_id']
+                TranslitValidator::class,
+                'source' => 'caption'
             ],
             [
                 [
                     'alias',
+                    'domain_id'
                 ],
-                TranslitValidator::class,
-                'source' => 'caption'
+                'unique',
+                'targetAttribute' => ['alias', 'domain_id']
             ],
         ];
     }

@@ -27,13 +27,12 @@ class EntityTypePositionForm extends BaseForm
     /**
     * @inheritdoc
     */
-    public function rules()
+    public function formRules()
     {
         return [
             [
                 [
                     'caption',
-                    'alias'
                 ],
                 'required'
             ]

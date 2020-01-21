@@ -20,6 +20,7 @@ $saveButton = Html::submitButton(
         'class' => 'btn bg-success btn-labeled btn-labeled-left ml-1'
     ]
 );
+
 ?>
 
 <?php Pjax::begin(['formSelector' => '#entity-type-form']); ?>
