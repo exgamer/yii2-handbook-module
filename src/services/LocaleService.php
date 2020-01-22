@@ -32,7 +32,10 @@ class LocaleService extends Service
         }
 
         $locale = Yii::$app->language;
-        if (Yii::$app->getRequest()->getQueryParam('_locale')){
+        if (
+            Yii::$app->has('request')
+             && Yii::$app->getRequest()->getQueryParam('_locale')
+        ) {
             $locale = Yii::$app->getRequest()->getQueryParam('_locale');
         }
 
