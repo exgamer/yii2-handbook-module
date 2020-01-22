@@ -21,7 +21,7 @@ class LocaleService extends Service
      * Возвращает ID текущей локали приложения
      *
      * @param bool $reset
-     * @return int
+     * @return int|array
      */
     public function getCurrentLocaleId($reset = false)
     {
@@ -35,6 +35,11 @@ class LocaleService extends Service
         if (Yii::$app->getRequest()->getQueryParam('_locale')){
             $locale = Yii::$app->getRequest()->getQueryParam('_locale');
         }
+
+        if (is_array($locale)){
+            return $locale;
+        }
+
         $result =  LocaleConverter::key($locale);
 
         return $result;
