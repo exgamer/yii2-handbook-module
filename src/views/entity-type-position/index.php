@@ -20,6 +20,7 @@ $this->viewHelper()->pushPageHeader();
         'columns' => [
             'id',
             'caption',
+            'alias',
             [
                 'attribute' => 'entity_type_id',
                 'value' => function ($model) {
@@ -28,7 +29,6 @@ $this->viewHelper()->pushPageHeader();
             ],
             'created_at',
             'updated_at',
-
             [
                 'class'=>'yii\grid\ActionColumn',
                 'template'=>'{view} {update}',

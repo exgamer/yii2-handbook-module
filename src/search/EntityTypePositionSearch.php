@@ -26,7 +26,8 @@ class EntityTypePositionSearch extends EntityTypePosition
             ],
             [
                 [
-                    'caption'
+                    'caption',
+                    'alias'
                 ],
                 'string'
             ],
@@ -45,6 +46,11 @@ class EntityTypePositionSearch extends EntityTypePosition
             'like',
             'caption',
             $this->caption
+        ]);
+        $query->andFilterWhere([
+            'like',
+            'alias',
+            $this->alias
         ]);
         $query->with('entityType');
     }

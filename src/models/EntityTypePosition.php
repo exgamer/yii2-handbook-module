@@ -85,10 +85,8 @@ class EntityTypePosition extends ActiveRecord
             [
                 [
                     'alias',
-                    'domain_id'
                 ],
                 'unique',
-                'targetAttribute' => ['alias', 'domain_id']
             ],
         ];
     }

@@ -33,6 +33,7 @@ class EntityTypePositionForm extends BaseForm
             [
                 [
                     'caption',
+                    'entity_type_id',
                 ],
                 'required'
             ]

@@ -29,7 +29,7 @@ class EntityTypePositionService extends Service
      */
     protected function beforeCreate(Model $form)
     {
-        $this->setCurrentDomain($form);
+//        $this->setCurrentDomain($form);
     }
 
     /**
@@ -41,6 +41,6 @@ class EntityTypePositionService extends Service
      */
     protected function extendQuery(ActiveQuery $query)
     {
-        $this->applyDomain($query);
+//        $this->applyDomain($query);
     }
 }

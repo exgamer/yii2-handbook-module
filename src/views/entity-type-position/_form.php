@@ -20,7 +20,6 @@ $saveButton = Html::submitButton(
         'class' => 'btn bg-success btn-labeled btn-labeled-left ml-1'
     ]
 );
-
 ?>
 
 <?php Pjax::begin(['formSelector' => '#entity-type-form']); ?>
@@ -35,11 +34,9 @@ $saveButton = Html::submitButton(
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <?= $form->field($model, 'caption')->textInput(['maxlength' => true]) ?>
                     </div>
-                    <?php if(isset($originModel)) :?>
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <?= $form->field($model, 'alias')->textInput(['maxlength' => true, 'disabled' => isset($originModel) ? true : false]) ?>
-                        </div>
-                    <?php endif;?>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <?= $form->field($model, 'alias')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                    </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <?=
                             $form->field($model, 'entity_type_id')->dropDownList(
