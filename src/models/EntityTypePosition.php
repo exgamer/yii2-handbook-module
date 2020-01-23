@@ -19,6 +19,7 @@ use concepture\yii2logic\models\traits\StatusTrait;
  * @property string $created_at
  * @property string $updated_at
  * @property int $entity_type_id
+ * @property int $max_count
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -63,7 +64,8 @@ class EntityTypePosition extends ActiveRecord
                 [
                     'status',
                     'domain_id',
-                    'entity_type_id'
+                    'entity_type_id',
+                    'max_count'
                 ],
                 'integer'
             ],
@@ -112,6 +114,7 @@ class EntityTypePosition extends ActiveRecord
             'entity_type_id' => Yii::t('handbook', 'Сущность'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
+            'max_count' => Yii::t('handbook','Максимальное количество элементов'),
         ];
     }
 }

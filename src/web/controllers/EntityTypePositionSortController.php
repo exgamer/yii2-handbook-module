@@ -55,11 +55,15 @@ class EntityTypePositionSortController extends Controller
         $model->entity_type_position_id = $entity_type_position_id;
 
         if ($model->validate()) {
-            if (($result = $this->getService()->create($model)) !== false) {
-                return $this->responseNotify();
+            try {
+                if (($result = $this->getService()->create($model)) !== false) {
+                    return $this->responseNotify();
+                }
+            } catch (\Exception $e) {
+                return $this->responseNotify(FlashAlertEnum::WARNING, $e->getMessage());
             }
         }
 
-        return $this->responseNotify(FlashAlertEnum::ERROR, $this->getErrorFlash());
+        return $this->responseNotify(FlashAlertEnum::WARNING, $this->getErrorFlash());
     }
 }

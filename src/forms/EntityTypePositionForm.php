@@ -13,6 +13,7 @@ use kamaelkz\yii2admin\v1\forms\BaseForm;
  * @property int $status
  * @property int $domain_id
  * @property int $entity_type_id
+ * @property int $max_count
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -23,6 +24,7 @@ class EntityTypePositionForm extends BaseForm
     public $status = StatusEnum::ACTIVE;
     public $domain_id;
     public $entity_type_id;
+    public $max_count;
 
     /**
     * @inheritdoc
@@ -34,6 +36,7 @@ class EntityTypePositionForm extends BaseForm
                 [
                     'caption',
                     'entity_type_id',
+                    'max_count',
                 ],
                 'required'
             ]

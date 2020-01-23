@@ -27,6 +27,7 @@ $this->viewHelper()->pushPageHeader();
                     return $model->entityType->caption;
                 }
             ],
+            'max_count',
             'created_at',
             'updated_at',
             [

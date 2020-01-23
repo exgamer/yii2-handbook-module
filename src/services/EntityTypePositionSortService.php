@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\services;
 
+use Yii;
 use yii\db\ActiveQuery;
 use concepture\yii2logic\forms\Model;
 use concepture\yii2logic\services\Service;
@@ -10,6 +11,8 @@ use concepture\yii2handbook\services\traits\ModifySupportTrait;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
 use concepture\yii2logic\services\traits\UpdateColumnTrait;
 use concepture\yii2logic\services\interfaces\UpdateColumnInterface;
+use concepture\yii2handbook\forms\EntityTypePositionSortForm;
+use concepture\yii2handbook\services\EntityTypePositionService;
 
 /**
  * Сервис для работы с
@@ -24,24 +27,35 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
     use UpdateColumnTrait;
 
     /**
+     * @return EntityTypePositionService
+     */
+    private function getEntityTypePositionService()
+    {
+        return Yii::$app->entityTypePositionService;
+    }
+
+    /**
      * @inheritDoc
      */
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);
-        # находит максимальное число сортировки и инкрементируем
-        $sql = "
-                SELECT max(sort) 
-                FROM {$this->getTableName()} 
-                WHERE entity_type_position_id = {$form->entity_type_position_id}
-                AND domain_id = {$form->domain_id}
-        ";
-        $value = $this->getDb()->createCommand($sql)->queryScalar();
-        if(! $value) {
-            return;
+        # todo првоерять кол-во элементов
+        $position = $this->getEntityTypePositionService()->getOneByCondition(['id' => $form->entity_type_position_id]);
+        if(! $position) {
+            throw new EntityTypePositionSortServiceException(Yii::t('handbook', 'Позиция не найдена'));
         }
 
-        $form->sort = ($value + 1);
+        $maxCount = $position->max_count;
+        $itemCount = $this->getItemsCount($form->entity_type_position_id, $form->domain_id);
+        if($itemCount >= $maxCount) {
+            throw new EntityTypePositionSortServiceException(Yii::t('handbook', 'Максимальное кол-во элементов в позиции - {count}', ['count' => $maxCount]));
+        }
+        # находит максимальное число сортировки и инкрементируем
+        $maxSortValue = $this->getMaxSortValue($form->entity_type_position_id, $form->domain_id);
+        if($maxSortValue) {
+            $form->sort = ($maxSortValue + 1);
+        }
     }
 
     /**
@@ -80,4 +94,52 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
 
         return $items;
     }
+
+    /**
+     * Максимальное значение сортировки
+     *
+     * @param integer $entity_type_position_id
+     * @param integer $domain_id
+     * @return integer
+     */
+    private function getMaxSortValue($entity_type_position_id, $domain_id)
+    {
+        $sql = "
+                SELECT max(sort) 
+                FROM {$this->getTableName()} 
+                WHERE entity_type_position_id = {$entity_type_position_id}
+                AND domain_id = {$domain_id}
+        ";
+
+        return $this->getDb()->createCommand($sql)->queryScalar();
+    }
+
+    /**
+     * Количество элементов
+     *
+     * @param integer $entity_type_position_id
+     * @param integer $domain_id
+     * @return integer
+     */
+    private function getItemsCount($entity_type_position_id, $domain_id)
+    {
+        $sql = "
+                SELECT count(sort) 
+                FROM {$this->getTableName()} 
+                WHERE entity_type_position_id = {$entity_type_position_id}
+                AND domain_id = {$domain_id}
+        ";
+
+        return $this->getDb()->createCommand($sql)->queryScalar();
+    }
+}
+
+/**
+ * Исключение сервиса
+ *
+ * @author kamaelkz <kamaelkz@yandex.kz>
+ */
+class EntityTypePositionSortServiceException extends \Exception
+{
+
 }

@@ -3,14 +3,17 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\lists\grid\EditableColumn;
-use yii\helpers\ArrayHelper;
+use kamaelkz\yii2admin\v1\enum\FlashAlertEnum;
+use kamaelkz\yii2admin\v1\widgets\notifications\alert\Alert;
 
 $this->setTitlePrefix($entitySearchModel::label());
 $this->setTitle(Yii::t('yii2admin', 'Сортировка'));
 $this->pushBreadcrumbs(['label' => $entitySearchModel::label(), 'url' => ['index']]);
 $this->pushBreadcrumbs($this->title);
+$this->viewHelper()->pushPageHeader(['index'], $entitySearchModel::label(),'icon-list');
 $this->viewHelper()->pushPageHeader(null, Yii::t('yii2admin','Добавить позицию'), null,
     [
         'class' => 'magic-modal-control',
@@ -77,58 +80,67 @@ $this->viewHelper()->pushPageHeader(null, Yii::t('yii2admin','Добавить �
                         <?= Yii::t('yii2admin', 'Элементы'); ?>
                     </h5>
                 </div>
+                <?php if(empty($entity_type_position_id)):?>
+                    <div class="card-body">
+                        <?= Alert::widget([
+                            'type' => FlashAlertEnum::INFO,
+                            'message' => Yii::t('yii2admin', 'Необходимо выбрать позицию сущности.'),
+                        ]) ;?>
+                    </div>
+                <?php endif;?>
             </div>
-            <?= GridView::widget([
-                'dataProvider' => $sortDataProvider,
-                'searchVisible' => false,
-                'dragAndDrop' => true,
-                'columns' => [
-                    [
-                        'attribute' => 'entity_id',
-                        'value' => function($data) {
-                            return $data['entity_id'];
-                        },
-                        'label' => '#',
-                    ],
-                    [
-                        'attribute' => 'label',
-                        'value' => function($data) {
-                            return $data['label'];
-                        },
-                        'label' => Yii::t('yii2admin', 'Сущность'),
-                    ],
-                            [
-                                'attribute' => 'sort',
-                                'class' => EditableColumn::class,
-                                'contentOptions' => [
-                                    'style' => 'width:15%',
-                                    'class'=> 'text-center'
-                                ],
-                                'label' => Yii::t('yii2admin', 'Сортировка'),
-                            ],
-                    [
-                        'class' => 'yii\grid\ActionColumn',
-                        'dropdown' => false,
-                        'template' => '{delete}',
-                        'buttons' => [
-                            'delete' => function ($url, $data) use ($type) {
-                                return Html::a(
-                                    '<i class="icon-cross2"></i>',
-                                    ['/handbook/entity-type-position-sort/delete', 'id' => $data['id']],
-                                    [
-                                        'class' => 'admin-action list-icons-item',
-                                        'title' => Yii::t('backend', 'Удалить'),
-                                        'data-pjax-id' => 'list-pjax',
-                                        'data-pjax-url' => Url::current([], true),
-                                        'data-swal' => Yii::t('yii2admin' , 'Удалить'),
-//                                        'data-callback' => 'function(){callbackHelper.reloadPjax("#list-pjax")}'
-                                    ]
-                                );
+            <?php if(! empty($entity_type_position_id)):?>
+                <?= GridView::widget([
+                    'dataProvider' => $sortDataProvider,
+                    'searchVisible' => false,
+                    'dragAndDrop' => true,
+                    'columns' => [
+                        [
+                            'attribute' => 'entity_id',
+                            'value' => function($data) {
+                                return $data['entity_id'];
                             },
+                            'label' => '#',
                         ],
+                        [
+                            'attribute' => 'label',
+                            'value' => function($data) {
+                                return $data['label'];
+                            },
+                            'label' => Yii::t('yii2admin', 'Сущность'),
+                        ],
+                                [
+                                    'attribute' => 'sort',
+                                    'class' => EditableColumn::class,
+                                    'contentOptions' => [
+                                        'style' => 'width:15%',
+                                        'class'=> 'text-center'
+                                    ],
+                                    'label' => Yii::t('yii2admin', 'Сортировка'),
+                                ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'dropdown' => false,
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $data) use ($type) {
+                                    return Html::a(
+                                        '<i class="icon-cross2"></i>',
+                                        ['/handbook/entity-type-position-sort/delete', 'id' => $data['id']],
+                                        [
+                                            'class' => 'admin-action list-icons-item',
+                                            'title' => Yii::t('backend', 'Удалить'),
+                                            'data-pjax-id' => 'list-pjax',
+                                            'data-pjax-url' => Url::current([], true),
+                                            'data-swal' => Yii::t('yii2admin' , 'Удалить'),
+                                        ]
+                                    );
+                                },
+                            ],
+                        ]
                     ]
-                ]
-            ]); ?>
+                ]); ?>
+            <?php endif;?>
         </div>
     </div>
 
