@@ -3,6 +3,7 @@
 namespace concepture\yii2handbook\search;
 
 use yii\db\ActiveQuery;
+use yii\data\ActiveDataProvider;
 use concepture\yii2handbook\models\EntityTypePositionSort;
 
 /**
@@ -20,7 +21,8 @@ class EntityTypePositionSortSearch extends EntityTypePositionSort
         return [
             [
                 [
-                    'id'
+                    'id',
+                    'entity_type_position_id',
                 ],
                 'integer'
             ],
@@ -35,5 +37,19 @@ class EntityTypePositionSortSearch extends EntityTypePositionSort
         $query->andFilterWhere([
             static::tableName().'.id' => $this->id
         ]);
+        $query->andFilterWhere([
+            static::tableName().'.entity_type_position_id' => $this->entity_type_position_id
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function extendDataProvider(ActiveDataProvider $dataProvider)
+    {
+        $dataProvider->pagination = false;
+        $dataProvider->getSort()->defaultOrder = ['sort' => SORT_ASC];
+
+        parent::extendDataProvider($dataProvider);
     }
 }

@@ -3,9 +3,10 @@
 namespace concepture\yii2handbook\web\controllers;
 
 use Yii;
-use yii\db\ActiveQuery;
-use concepture\yii2article\services\PostService;
-use concepture\yii2logic\enum\IsDeletedEnum;
+use concepture\yii2handbook\services\EntityTypePositionSortService;
+use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
+use kamaelkz\yii2admin\v1\enum\FlashAlertEnum;
+
 
 /**
  * Контроллер сортировки сущностей по позиции на сайте
@@ -14,6 +15,8 @@ use concepture\yii2logic\enum\IsDeletedEnum;
  */
 class EntityTypePositionSortController extends Controller
 {
+    use ControllerTrait;
+
     /**
      * @inheritDoc
      */
@@ -24,50 +27,39 @@ class EntityTypePositionSortController extends Controller
 
         return $actions;
     }
-//
-//    /**
-//     * @return PostService
-//     */
-//    private function getPostService()
-//    {
-//        return Yii::$app->postService;
-//    }
-//
-//    /**
-//     * Интерфейс сортировки
-//     *
-//     * @param integer $entity_type_id
-//     * @param integer $entity_type_position_id
-//     *
-//     * @return string HTML
-//     */
-//    public function actionIndex($entity_type_id = null, $entity_type_position_id = null)
-//    {
-//        $searchClass = $this->getPostService()->getRelatedSearchModelClass();
-//        $searchModel = Yii::createObject($searchClass);
-//        $searchModel->load(Yii::$app->request->queryParams);
-//
-//        $dataProvider =  $this->getPostService()->getDataProvider([], [], $searchModel, null, function(ActiveQuery $query) {
-//            $query->andWhere([
-//                'is_deleted' => IsDeletedEnum::NOT_DELETED,
-//            ]);
-//        });
-//
-//        $entityTypesPositions = [];
-//        $entityTypes = Yii::$app->entityTypeService->getDropDownList();
-//        if($entity_type_id) {
-//            $entityTypesPositions = Yii::$app->entityTypePositionService->getDropDownList([], '', function (ActiveQuery $query) use ($entity_type_id) {
-//                $query->andWhere(['entity_type_id' => $entity_type_id]);
-//            });
-//        }
-//
-//        return $this->render('index', [
-//            'entity_type_id' => $entity_type_id,
-//            'entity_type_position_id' => $entity_type_position_id,
-//            'searchModel' => $searchModel,
-//            'dataProvider' => $dataProvider,
-//            'entityTypes' => $entityTypes,
-//            'entityTypesPositions' => $entityTypesPositions,
-//        ]);
-//    }
+
+    /**
+     * @return EntityTypePositionSortService
+     */
+    public function getService()
+    {
+        return Yii::$app->entityTypePositionSortService;
+    }
+
+    /**
+     * Создание
+     *
+     * @param integer $entity_id
+     * @param integer $entity_type_position_id
+     *
+     * @return string HTML
+     */
+    public function actionCreate($entity_id, $entity_type_position_id)
+    {
+        $model = $this->getService()->getRelatedForm();
+        if (method_exists($model, 'customizeForm')) {
+            $model->customizeForm();
+        }
+
+        $model->entity_id = $entity_id;
+        $model->entity_type_position_id = $entity_type_position_id;
+
+        if ($model->validate()) {
+            if (($result = $this->getService()->create($model)) !== false) {
+                return $this->responseNotify();
+            }
+        }
+
+        return $this->responseNotify(FlashAlertEnum::ERROR, $this->getErrorFlash());
+    }
 }

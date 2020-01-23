@@ -7,6 +7,7 @@ use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\validators\TranslitValidator;
 use concepture\yii2handbook\models\EntityType;
 use concepture\yii2logic\models\traits\StatusTrait;
+use concepture\yii2handbook\models\EntityTypePosition;
 
 /**
  * Сортировка сущностей по позиции в приложении
@@ -66,6 +67,16 @@ class EntityTypePositionSort extends ActiveRecord
                 'integer'
             ],
         ];
+    }
+
+    /**
+     * Позиция сущности в приложении
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEntityTypePosition()
+    {
+        return $this->hasOne(EntityTypePosition::class, ['id' => 'entity_type_position_id']);
     }
 
     /**

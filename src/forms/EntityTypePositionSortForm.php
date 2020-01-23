@@ -19,7 +19,8 @@ class EntityTypePositionSortForm extends BaseForm
 {
     public $entity_id;
     public $entity_type_position_id;
-    public $sort;
+    public $sort = 1;
+    public $domain_id;
 
     /**
     * @inheritdoc
