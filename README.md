@@ -144,3 +144,54 @@ return [
             ]
           ...
     ```
+## Модуль сортировки для контроллера
+- Создать сущность object (Служебные сущности - таблица `entity_type`)
+- Подключение в контроллере (пример backend\controllers\ObjectController)
+```php
+...
+    	use concepture\yii2handbook\actions\PositionSortIndexAction;
+    	use kamaelkz\yii2admin\v1\actions\EditableColumnAction;
+    	use kamaelkz\yii2admin\v1\actions\SortAction;
+    	use concepture\yii2handbook\services\EntityTypePositionSortService;
+    	use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
+...
+    public function actions(): array
+    {
+        $actions = parent::actions();
+    
+        return array_merge($actions,[
+            ...
+            PositionSortIndexAction::actionName() => [
+                'class' => PositionSortIndexAction::class,
+                'entityColumns' => [
+                    'id',
+                    'name',
+                    'seo_name',
+                ],
+                'labelColumn' => 'name',
+            ],
+            EditableColumnAction::actionName() => [
+                'class' => EditableColumnAction::class,
+                'serviceClass' => EntityTypePositionSortService::class
+            ],
+            SortAction::actionName() => [
+                'class' => SortAction::class,
+                'serviceClass' => EntityTypePositionSortService::class
+            ]
+            ...
+        ]);
+    }
+...
+```
+- Подключение на вьюшке (backend\object\index.php)
+```php
+...
+    use concepture\yii2handbook\actions\PositionSortIndexAction;
+...
+    $this->viewHelper()->pushPageHeader(
+        [PositionSortIndexAction::actionName()],
+        Yii::t('yii2admin', 'Сортировка'),
+        'icon-sort'
+    );
+...
+```
