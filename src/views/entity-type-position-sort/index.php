@@ -123,7 +123,7 @@ $this->viewHelper()->pushPageHeader(null, Yii::t('yii2admin','Добавить �
                             'dropdown' => false,
                             'template' => '{delete}',
                             'buttons' => [
-                                'delete' => function ($url, $data) use ($type) {
+                                'delete' => function ($url, $data) {
                                     return Html::a(
                                         '<i class="icon-cross2"></i>',
                                         ['/handbook/entity-type-position-sort/delete', 'id' => $data['id']],
