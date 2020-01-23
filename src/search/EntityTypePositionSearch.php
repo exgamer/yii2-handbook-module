@@ -54,4 +54,20 @@ class EntityTypePositionSearch extends EntityTypePosition
         ]);
         $query->with('entityType');
     }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getListSearchKeyAttribute()
+    {
+        return 'id';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getListSearchAttribute()
+    {
+        return 'caption';
+    }
 }

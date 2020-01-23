@@ -22,6 +22,9 @@ return [
     'entityTypePositionService' => [
         'class' => 'concepture\yii2handbook\services\EntityTypePositionService'
     ],
+    'entityTypePositionSortService' => [
+        'class' => 'concepture\yii2handbook\services\EntityTypePositionSortService'
+    ],
     'settingsService' => [
         'class' => 'concepture\yii2handbook\services\SettingsService'
     ],

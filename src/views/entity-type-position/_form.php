@@ -6,20 +6,9 @@ use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 
 $entityTypes = Yii::$app->entityTypeService->getDropdownList();
 
-$saveRedirectButton = Html::submitButton(
-    '<b><i class="icon-list"></i></b>' . Yii::t('yii2admin', 'Сохранить и перейти к списку'),
-    [
-        'class' => 'btn bg-info btn-labeled btn-labeled-left ml-1',
-        'name' => \kamaelkz\yii2admin\v1\helpers\RequestHelper::REDIRECT_BTN_PARAM,
-        'value' => 'index'
-    ]
-);
-$saveButton = Html::submitButton(
-    '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),
-    [
-        'class' => 'btn bg-success btn-labeled btn-labeled-left ml-1'
-    ]
-);
+$saveRedirectButton = Html::saveRedirectButton();
+$saveButton = Html::saveButton();
+
 ?>
 
 <?php Pjax::begin(['formSelector' => '#entity-type-form']); ?>
@@ -37,17 +26,19 @@ $saveButton = Html::submitButton(
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <?= $form->field($model, 'alias')->textInput(['maxlength' => true, 'disabled' => true]) ?>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <?=
-                            $form->field($model, 'entity_type_id')->dropDownList(
-                                $entityTypes,
-                                [
-                                    'class' => 'form-control form-control-uniform',
-                                    'prompt' => ''
-                                ]
-                            )
-                        ?>
-                    </div>
+                    <?php if(! isset($entity_type_id)) :?>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <?=
+                                $form->field($model, 'entity_type_id')->dropDownList(
+                                    $entityTypes,
+                                    [
+                                        'class' => 'form-control form-control-uniform',
+                                        'prompt' => ''
+                                    ]
+                                )
+                            ?>
+                        </div>
+                    <?php endif;?>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12">

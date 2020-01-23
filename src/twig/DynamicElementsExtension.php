@@ -25,7 +25,7 @@ class DynamicElementsExtension extends AbstractExtension
     {
         $view = Yii::$app->getView();
         Bundle::register($view);
-        $view->on(View::EVENT_BEFORE_RENDER, function() {
+        $view->on(View::EVENT_BEGIN_PAGE, function() {
             return $this->getDynamicElementsService()->apply();
         });
         $view->on(View::EVENT_END_BODY, [$this->getDynamicElementsService(), 'renderManagePanel']);
