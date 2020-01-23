@@ -137,7 +137,7 @@ class DomainService extends Service
         }
 
         $domainAlias = $domainInfo[$host];
-        $domains = $this->catalog(false);
+        $domains = $this->catalog();
         $domains = array_flip($domains);
 
         if (! isset($domains[$domainAlias])){
