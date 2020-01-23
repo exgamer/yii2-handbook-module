@@ -82,7 +82,6 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
         }
 
         $items = $this->getAllByCondition(function(ActiveQuery $query) use($entity_type_id, $entity_type_position_id) {
-            $query->select(['entity_type_position_sort.id', 'entity_id', 'sort']);
             $query->andWhere([
                 'entity_type_id' => $entity_type_id,
                 'entity_type_position_id' => $entity_type_position_id
