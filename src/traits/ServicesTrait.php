@@ -13,6 +13,7 @@ use concepture\yii2handbook\services\PaymentSystemService;
 use concepture\yii2handbook\services\SettingsService;
 use concepture\yii2handbook\services\TagsService;
 use concepture\yii2handbook\services\DynamicElementsService;
+use concepture\yii2handbook\services\EntityTypePositionSortService;
 
 /**
  * Trait ServicesTrait
@@ -75,6 +76,14 @@ trait ServicesTrait
     public function entityTypePositionService()
     {
         return Yii::$app->entityTypePositionService;
+    }
+
+    /**
+     * @return EntityTypePositionSortService
+     */
+    public function entityTypePositionSortService()
+    {
+        return Yii::$app->entityTypePositionSortService;
     }
 
     /**
