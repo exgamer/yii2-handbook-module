@@ -13,6 +13,7 @@ use concepture\yii2logic\services\traits\UpdateColumnTrait;
 use concepture\yii2logic\services\interfaces\UpdateColumnInterface;
 use concepture\yii2handbook\forms\EntityTypePositionSortForm;
 use concepture\yii2handbook\services\EntityTypePositionService;
+use yii\helpers\ArrayHelper;
 
 /**
  * Сервис для работы с
@@ -92,6 +93,31 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
         });
 
         return $items;
+    }
+
+    /**
+     * @param ActiveQuery $query
+     * @param string $entityTableName
+     * @param string $entity_type_position
+     * @param integer $entity_type_id
+     * @param array $orderBy
+     * @throws \ReflectionException
+     */
+    public function applyQuery(ActiveQuery $query, $entityTableName, $entity_type_id, $entity_type_position, $orderBy = [])
+    {
+        $positionSort = $this->getTableName();
+        $position = $this->getEntityTypePositionService()->getTableName();
+        $query->addSelect(["IFNULL({$positionSort}.sort, 9999) as sort"]);
+        $query->join('LEFT JOIN', $positionSort, "{$positionSort}.entity_id = {$entityTableName}.id");
+        $query->join('LEFT JOIN', $position, "{$positionSort}.entity_type_position_id = {$position}.id");
+        $query->andWhere(['AND', [
+            "OR", ["{$position}.alias" => $entity_type_position], ["{$position}.alias" => null]
+        ]]);
+        $query->andWhere(['AND', [
+            "OR", ["{$position}.entity_type_id" => $entity_type_id], ["{$position}.entity_type_id" => null]
+        ]]);
+        $order = ArrayHelper::merge(["sort" => SORT_ASC], $orderBy);
+        $query->orderBy($order);
     }
 
     /**
