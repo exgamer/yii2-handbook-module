@@ -3,9 +3,11 @@
 namespace concepture\yii2handbook\web\controllers;
 
 use Yii;
+use yii\web\NotFoundHttpException;
 use concepture\yii2handbook\services\EntityTypePositionSortService;
 use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
 use kamaelkz\yii2admin\v1\enum\FlashAlertEnum;
+use concepture\yii2logic\filters\AjaxFilter;
 
 
 /**
@@ -23,9 +25,25 @@ class EntityTypePositionSortController extends Controller
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['index'], $actions['create'], $actions['update'], $actions['view']);
+        unset($actions['index'], $actions['create'], $actions['update'], $actions['view'], $actions['delete']);
 
         return $actions;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['onlyAjax'] = [
+            'class' => AjaxFilter::class,
+            'except' => [
+                'options'
+            ],
+        ];
+
+        return $behaviors;
     }
 
     /**
@@ -57,6 +75,7 @@ class EntityTypePositionSortController extends Controller
         if ($model->validate()) {
             try {
                 if (($result = $this->getService()->create($model)) !== false) {
+
                     return $this->responseNotify();
                 }
             } catch (\Exception $e) {
@@ -65,5 +84,28 @@ class EntityTypePositionSortController extends Controller
         }
 
         return $this->responseNotify(FlashAlertEnum::WARNING, $this->getErrorFlash());
+    }
+
+    /**
+     * Удаление записи
+     *
+     * @param integer $id
+     * @return array
+     * @throws \Exception
+     */
+    public function actionDelete($id)
+    {
+        $item = $this->getService()->findById($id);
+        if (! $item){
+            throw new NotFoundHttpException();
+        }
+
+        try {
+            $this->getService()->delete($item);
+
+            return $this->responseNotify();
+        } catch (\Exception $e) {
+            return $this->responseNotify(FlashAlertEnum::WARNING, $e->getMessage());
+        }
     }
 }
