@@ -47,7 +47,7 @@ $this->viewHelper()->pushPageHeader(null, Yii::t('yii2admin','Добавить �
                                 'dropdown' => false,
                                 'template' => '{create}',
                                 'buttons' => [
-                                    'create' => function ($url, $model) use ($entity_type_position_id) {
+                                    'create' => function ($url, $model) use ($entity_type_id, $entity_type_position_id) {
                                         if(! $entity_type_position_id) {
                                             return null;
                                         }
@@ -57,6 +57,7 @@ $this->viewHelper()->pushPageHeader(null, Yii::t('yii2admin','Добавить �
                                             [
                                                 '/handbook/entity-type-position-sort/create',
                                                 'entity_id' => $model->id,
+                                                'entity_type_id' => $entity_type_id,
                                                 'entity_type_position_id' => $entity_type_position_id
                                             ],
                                             [

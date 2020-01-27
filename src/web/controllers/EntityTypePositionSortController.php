@@ -58,11 +58,12 @@ class EntityTypePositionSortController extends Controller
      * Создание
      *
      * @param integer $entity_id
+     * @param integer $entity_type_id
      * @param integer $entity_type_position_id
      *
      * @return string HTML
      */
-    public function actionCreate($entity_id, $entity_type_position_id)
+    public function actionCreate($entity_id, $entity_type_id, $entity_type_position_id)
     {
         $model = $this->getService()->getRelatedForm();
         if (method_exists($model, 'customizeForm')) {
@@ -70,6 +71,7 @@ class EntityTypePositionSortController extends Controller
         }
 
         $model->entity_id = $entity_id;
+        $model->entity_type_id = $entity_type_id;
         $model->entity_type_position_id = $entity_type_position_id;
 
         if ($model->validate()) {
