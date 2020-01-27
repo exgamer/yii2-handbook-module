@@ -116,6 +116,9 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
         $query->andWhere(['AND', [
             "OR", ["{$position}.entity_type_id" => $entity_type_id], ["{$position}.entity_type_id" => null]
         ]]);
+        $query->andWhere(['AND', [
+            "OR", ["{$positionSort}.entity_type_id" => $entity_type_id], ["{$positionSort}.entity_type_id" => null]
+        ]]);
         $order = ArrayHelper::merge(["sort" => SORT_ASC], $orderBy);
         $query->orderBy($order);
     }
