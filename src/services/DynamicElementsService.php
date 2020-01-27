@@ -21,6 +21,8 @@ use concepture\yii2logic\forms\Model;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
 use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
 use concepture\yii2handbook\enum\DynamicElementsEnum;
+use concepture\yii2logic\events\ServiceEvent;
+use concepture\yii2logic\enum\ServiceEventEnum;
 
 /**
  * Сервис динамическх элементов
@@ -380,7 +382,11 @@ class DynamicElementsService extends Service
             $index++;
         }
 
-        return $this->batchInsert(['id', 'value'], $data);
+        $result = $this->batchInsert(['id', 'value'], $data);
+        $event = new ServiceEvent(['sender' => $form]);
+        $this->trigger(ServiceEventEnum::EVENT_AFTER_BATCH_INSERT, $event);
+
+        return $result;
     }
 
     /**
