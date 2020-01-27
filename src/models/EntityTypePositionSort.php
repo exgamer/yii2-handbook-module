@@ -16,6 +16,7 @@ use concepture\yii2handbook\models\EntityTypePosition;
  * @property int $entity_id
  * @property int $entity_type_position_id
  * @property int $domain_id
+ * @property int $entity_type_id
  * @property int $sort
  * @property string $created_at
  * @property string $updated_at
@@ -60,6 +61,7 @@ class EntityTypePositionSort extends ActiveRecord
             [
                 [
                     'entity_id',
+                    'entity_type_id',
                     'entity_type_position_id',
                     'domain_id',
                     'sort',
@@ -88,6 +90,7 @@ class EntityTypePositionSort extends ActiveRecord
             'id' => Yii::t('handbook', '#'),
             'entity_id' => Yii::t('handbook', 'Сущность'),
             'entity_type_position_id' => Yii::t('handbook', 'Позиция сущности'),
+            'entity_type_id' => Yii::t('handbook', 'Тип сущности'),
             'sort' => Yii::t('handbook', 'Сортировка'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),

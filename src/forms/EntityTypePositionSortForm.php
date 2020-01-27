@@ -9,6 +9,7 @@ use kamaelkz\yii2admin\v1\forms\BaseForm;
  * Сортировка сущностей по позиции в приложении
  *
  * @property int $entity_id
+ * @property int $entity_type_id
  * @property int $entity_type_position_id
  * @property int $domain_id
  * @property int $sort
@@ -18,6 +19,7 @@ use kamaelkz\yii2admin\v1\forms\BaseForm;
 class EntityTypePositionSortForm extends BaseForm
 {
     public $entity_id;
+    public $entity_type_id;
     public $entity_type_position_id;
     public $sort = 1;
     public $domain_id;
@@ -32,6 +34,7 @@ class EntityTypePositionSortForm extends BaseForm
                 [
                     'entity_id',
                     'entity_type_position_id',
+                    'entity_type_id'
                 ],
                 'required'
             ]
