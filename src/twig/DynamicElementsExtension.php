@@ -57,8 +57,11 @@ class DynamicElementsExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'de',
-                function($type, $name, $caption, $value = '', $is_general = false) {
+                function($type, $name, $caption, $value = '', $is_general = false, $no_controls = false) {
                     $value = $this->getDynamicElementsService()->getElements($type, $name, $caption, $value, $is_general);
+                    if ($no_controls){
+                        return $value;
+                    }
 
                     return $this->getDynamicElementsService()->getManageControl($name, $caption, $value, $is_general);
                 },
