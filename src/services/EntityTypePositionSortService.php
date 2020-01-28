@@ -108,10 +108,13 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
     public function applyQuery(ActiveQuery $query, $entityTableName, $entity_type_id, $entity_type_position, $orderBy = [])
     {
         # todo: кеширровать
-        $position = $this->getEntityTypePositionService()->getOneByCondition([
-            'alias' => $entity_type_position,
-            'entity_type_id' => $entity_type_id
-        ]);
+        $position = $this->getEntityTypePositionService()->getOneByCondition(
+            [
+                'alias' => $entity_type_position,
+                'entity_type_id' => $entity_type_id
+            ],
+            true
+        );
         if(! $position) {
             throw new EntityTypePositionSortServiceException('Position is not found.');
         }
