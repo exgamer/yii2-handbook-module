@@ -56,7 +56,7 @@ class EntityTypePositionService extends Service
             return parent::getOneByCondition($condition);
         }
 
-        return $this->getDb()->cache(function ($condition) {
+        return $this->getDb()->cache(function () use($condition) {
             return parent::getOneByCondition($condition);
         });
     }
