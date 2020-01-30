@@ -99,8 +99,8 @@ class SitemapService extends Service
         }
 
         $current = $this->getOneByCondition([
-            'entity_type_id' => $model->entity_type_id,
-            'entity_id' => $model->entity_id,
+            'entity_type_id' => $entity_type->id,
+            'entity_id' => $model->id,
         ]);
         if ($current->location == $model->location){
             return;
@@ -121,9 +121,15 @@ class SitemapService extends Service
      */
     public function delete($model)
     {
+        $section = $this->getEntityService($model)->getTableName();
+        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
+        if(! $entity_type) {
+            throw new Exception("Entity type {$section} not found.");
+        }
+
         $current = $this->getOneByCondition([
-            'entity_type_id' => $model->entity_type_id,
-            'entity_id' => $model->entity_id,
+            'entity_type_id' => $entity_type->id,
+            'entity_id' => $model->id,
         ]);
 
         return $this->delete($current);
