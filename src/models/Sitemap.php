@@ -89,6 +89,7 @@ class Sitemap extends ActiveRecord
             'last_modified_dt' => Yii::t('handbook','Дата последнего изменения'),
             'status' => Yii::t('handbook','Статус'),
             'created_at' => Yii::t('handbook','Дата создания'),
+            'is_deleted' => Yii::t('handbook','Удалено'),
         ];
     }
 }

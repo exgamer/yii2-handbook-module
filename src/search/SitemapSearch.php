@@ -2,15 +2,15 @@
 
 namespace concepture\yii2handbook\search;
 
+use concepture\yii2handbook\models\Sitemap;
 use yii\db\ActiveQuery;
-use concepture\yii2handbook\models\Robots;
 
 /**
  * Class SitemapSearch
  * @package concepture\yii2handbook\search
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SitemapSearch extends Robots
+class SitemapSearch extends Sitemap
 {
     /**
      * @inheritDoc

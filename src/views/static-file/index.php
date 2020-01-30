@@ -1,5 +1,6 @@
 <?php
 
+use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
@@ -24,6 +25,13 @@ $this->viewHelper()->pushPageHeader();
             'id',
             'filename',
             'extension',
+            [
+                'attribute'=>'type',
+                'filter'=> StaticFileTypeEnum::arrayList(),
+                'value'=>function($data) {
+                    return $data->typeLabel();
+                }
+            ],
             [
                 'attribute'=>'status',
                 'filter'=> StatusEnum::arrayList(),

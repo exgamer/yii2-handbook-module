@@ -1,6 +1,8 @@
 <?php
 namespace concepture\yii2handbook\models;
 
+use concepture\yii2handbook\enum\StaticFileTypeEnum;
+use concepture\yii2logic\enum\StatusEnum;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
@@ -92,6 +94,17 @@ class StaticFile extends ActiveRecord
             'type' => Yii::t('handbook','Тип'),
             'is_hidden' => Yii::t('handbook','Скрытый'),
             'created_at' => Yii::t('handbook','Дата создания'),
+            'is_deleted' => Yii::t('handbook','Удалено'),
         ];
+    }
+
+    /**
+     * Возвращает метку типа
+     *
+     * @return string|null
+     */
+    public function typeLabel()
+    {
+        return StaticFileTypeEnum::label($this->type);
     }
 }

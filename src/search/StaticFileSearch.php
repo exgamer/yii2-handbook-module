@@ -1,15 +1,15 @@
 <?php
 
 namespace concepture\yii2handbook\search;
-
-use concepture\yii2handbook\models\EntityType;
+use yii\db\ActiveQuery;
+use concepture\yii2handbook\models\StaticFile;
 
 /**
  * Class StaticFileSearch
  * @package concepture\yii2handbook\search
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class StaticFileSearch extends EntityType
+class StaticFileSearch extends StaticFile
 {
     /**
      * @inheritdoc

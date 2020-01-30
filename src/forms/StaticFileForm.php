@@ -15,7 +15,7 @@ class StaticFileForm extends Form
 {
     public $domain_id;
     public $type;
-    public $is_hidden;
+    public $is_hidden = 0;
     public $status = StatusEnum::ACTIVE;
     public $filename;
     public $extension;
