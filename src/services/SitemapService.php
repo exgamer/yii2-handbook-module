@@ -113,6 +113,23 @@ class SitemapService extends Service
     }
 
     /**
+     * удалить карту саита
+     *
+     * @param ActiveRecord $model
+     *
+     * @return mixed
+     */
+    public function delete($model)
+    {
+        $current = $this->getOneByCondition([
+            'entity_type_id' => $model->entity_type_id,
+            'entity_id' => $model->entity_id,
+        ]);
+
+        return $this->delete($current);
+    }
+
+    /**
      * @param $model
      * @return Service
      */
