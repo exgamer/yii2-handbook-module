@@ -67,6 +67,9 @@ $this->viewHelper()->pushPageHeader();
                         );
                     },
                     'activate'=> function ($url, $model) {
+                        if ($model['type'] == StaticFileTypeEnum::ROBOTS){
+                            return '';
+                        }
                         if ($model['is_deleted'] == IsDeletedEnum::DELETED){
                             return '';
                         }
@@ -87,6 +90,9 @@ $this->viewHelper()->pushPageHeader();
                         );
                     },
                     'deactivate'=> function ($url, $model) {
+                        if ($model['type'] == StaticFileTypeEnum::ROBOTS){
+                            return '';
+                        }
                         if ($model['is_deleted'] == IsDeletedEnum::DELETED){
                             return '';
                         }
@@ -105,6 +111,10 @@ $this->viewHelper()->pushPageHeader();
                         );
                     },
                     'delete'=> function ($url, $model) {
+                        if ($model['type'] == StaticFileTypeEnum::ROBOTS){
+                            return '';
+                        }
+
                         if ($model['is_deleted'] == IsDeletedEnum::DELETED){
                             return '';
                         }
