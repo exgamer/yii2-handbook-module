@@ -46,15 +46,15 @@ $saveButton = Html::submitButton(
                             ]);
                         ?>
                     </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                        <?= $form
-                            ->field($model, 'type')
-                            ->dropDownList(StaticFileTypeEnum::labels([StaticFileTypeEnum::SITEMAP, StaticFileTypeEnum::ROBOTS]), [
-                                'class' => 'form-control form-control-uniform',
-                                'prompt' => Yii::t('yii2admin', 'Выберите тип фаила')
-                            ]);
-                        ?>
-                    </div>
+<!--                    <div class="col-lg-12 col-md-12 col-sm-12">-->
+<!--                        --><?//= $form
+//                            ->field($model, 'type')
+//                            ->dropDownList(StaticFileTypeEnum::labels([StaticFileTypeEnum::SITEMAP, StaticFileTypeEnum::ROBOTS]), [
+//                                'class' => 'form-control form-control-uniform',
+//                                'prompt' => Yii::t('yii2admin', 'Выберите тип фаила')
+//                            ]);
+//                        ?>
+<!--                    </div>-->
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <?= $form->field($model, 'content')->textarea(['style' => 'min-height:350px']) ?>
                     </div>
