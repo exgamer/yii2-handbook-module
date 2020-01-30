@@ -33,7 +33,7 @@ class m200109_042461__robots_create extends Migration
         if ($oldRobots){
             $form->content = $oldRobots->content;
         }
-        
+
         Yii::$app->staticFileService->create($form);
     }
 
