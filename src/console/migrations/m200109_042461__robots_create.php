@@ -20,19 +20,12 @@ class m200109_042461__robots_create extends Migration
      */
     public function safeUp()
     {
-        $oldRobots = Yii::$app->robotsService->getOneByCondition([
-            'status' => StatusEnum::ACTIVE,
-            'is_deleted' => IsDeletedEnum::NOT_DELETED
-        ]);
-
         $form = new StaticFileForm();
         $form->filename = "robots";
         $form->extension = FileExtensionEnum::TXT;
         $form->type = StaticFileTypeEnum::ROBOTS;
         $form->status = 1;
-        if ($oldRobots){
-            $form->content = $oldRobots->content;
-        }
+        $form->content = "";
 
         Yii::$app->staticFileService->create($form);
     }

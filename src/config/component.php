@@ -34,9 +34,6 @@ return [
     'tagsService' => [
         'class' => 'concepture\yii2handbook\services\TagsService'
     ],
-    'robotsService' => [
-        'class' => 'concepture\yii2handbook\services\RobotsService'
-    ],
     'staticFileService' => [
         'class' => 'concepture\yii2handbook\services\StaticFileService'
     ],
