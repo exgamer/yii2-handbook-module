@@ -34,7 +34,7 @@ class StaticFile extends ActiveRecord
      */
     public function toString()
     {
-        return $this->filename.$this->extension;
+        return $this->filename. "." .$this->extension;
     }
 
     /**
@@ -79,6 +79,14 @@ class StaticFile extends ActiveRecord
                     'content'
                 ],
                 'string'
+            ],
+            [
+                [
+                    'filename',
+                    'extension'
+                ],
+                'unique',
+                'targetAttribute' => ['filename', 'extension']
             ]
         ];
     }
