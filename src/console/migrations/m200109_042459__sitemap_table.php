@@ -25,7 +25,7 @@ class m200109_042459__sitemap_table extends Migration
             'entity_id' => $this->bigInteger()->notNull(),
             'location' => $this->string(255)->notNull(),
             'section' => $this->string(255)->notNull(),
-            'static_file_id' => $this->bigInteger()->notNull(),
+            'static_file_id' => $this->bigInteger(),
             'last_modified_dt' => $this->dateTime(),
             'status' => $this->smallInteger()->defaultValue(0),
             'is_deleted' => $this->smallInteger()->defaultValue(0),
