@@ -73,7 +73,15 @@ class Sitemap extends ActiveRecord
                 ],
                 'date',
                 'format' => 'php:Y-m-d H:i:s'
-            ]
+            ],
+            [
+                [
+                    'entity_type_id',
+                    'entity_id'
+                ],
+                'unique',
+                'targetAttribute' => ['entity_type_id', 'entity_id']
+            ],
         ];
     }
 

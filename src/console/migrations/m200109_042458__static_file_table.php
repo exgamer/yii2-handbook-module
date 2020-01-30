@@ -6,7 +6,7 @@ use concepture\yii2logic\console\migrations\Migration;
  * Class m200109_042459__static_file_table
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class m200109_042459__static_file_table extends Migration
+class m200109_042458__static_file_table extends Migration
 {
     function getTableName()
     {
