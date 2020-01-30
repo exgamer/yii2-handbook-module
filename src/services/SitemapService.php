@@ -60,7 +60,7 @@ class SitemapService extends Service
      *
      * @return mixed
      */
-    public function add($model, $urlParamAttrs = ['seo_name'])
+    public function add($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
     {
         $frontendUrlManager = UrlHelper::getFrontendUrlManager();
         $queryParams = [];
@@ -69,8 +69,10 @@ class SitemapService extends Service
         }
         $section = $model::tableName();
         $className = ClassHelper::getShortClassName($model);
-        $id = Inflector::camel2id($className);
-        $urlParams = ArrayHelper::merge([$id . '/view'], $queryParams);
+        if (! $controllerId) {
+            $controllerId = Inflector::camel2id($className);
+        }
+        $urlParams = ArrayHelper::merge([$controllerId . '/view'], $queryParams);
         $location = $frontendUrlManager->createUrl($urlParams);
         $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
         if(! $entity_type) {
