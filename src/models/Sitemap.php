@@ -63,6 +63,7 @@ class Sitemap extends ActiveRecord
                 [
                     'location',
                     'section',
+                    'controller_id',
                 ],
                 'string',
                 'max' => 255

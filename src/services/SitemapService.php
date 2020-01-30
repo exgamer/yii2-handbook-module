@@ -49,7 +49,7 @@ class SitemapService extends Service
 
     protected function beforeModelSave(Model $form, ActiveRecord $model, $is_new_record)
     {
-        $form->last_modified_dt = date("Y-m-d H:i:s");
+        $model->last_modified_dt = date("Y-m-d H:i:s");
     }
 
     /**
