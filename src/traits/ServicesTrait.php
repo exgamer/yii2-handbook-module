@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\traits;
 
+use concepture\yii2handbook\services\StaticFileService;
 use Yii;
 use concepture\yii2handbook\services\CountryService;
 use concepture\yii2handbook\services\CurrencyService;
@@ -117,6 +118,14 @@ trait ServicesTrait
     public function dynamicElementsService()
     {
         return Yii::$app->dynamicElementsService;
+    }
+
+    /**
+     * @return StaticFileService
+     */
+    public function staticFileService()
+    {
+        return Yii::$app->staticFileService;
     }
 }
 
