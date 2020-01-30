@@ -1,6 +1,7 @@
 <?php
 
 use concepture\yii2handbook\enum\FileExtensionEnum;
+use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use yii\helpers\Html;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
@@ -48,7 +49,7 @@ $saveButton = Html::submitButton(
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <?= $form
                             ->field($model, 'type')
-                            ->dropDownList(\concepture\yii2handbook\enum\StaticFileTypeEnum::labels(), [
+                            ->dropDownList(StaticFileTypeEnum::labels([StaticFileTypeEnum::SITEMAP]), [
                                 'class' => 'form-control form-control-uniform',
                                 'prompt' => Yii::t('yii2admin', 'Выберите тип фаила')
                             ]);
