@@ -12,8 +12,8 @@ use concepture\yii2logic\enum\Enum;
  */
 class FileExtensionEnum extends Enum
 {
-    const XML = ".xml";
-    const TXT = ".txt";
+    const XML = "xml";
+    const TXT = "txt";
 
     public static function labels()
     {
