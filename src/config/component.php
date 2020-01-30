@@ -40,4 +40,7 @@ return [
     'staticFileService' => [
         'class' => 'concepture\yii2handbook\services\StaticFileService'
     ],
+    'sitemapService' => [
+        'class' => 'concepture\yii2handbook\services\SitemapService'
+    ],
 ];

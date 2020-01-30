@@ -22,8 +22,8 @@ $this->viewHelper()->pushPageHeader();
         ],
         'columns' => [
             'id',
-            'filename',
-            'extension',
+            'section',
+            'location',
             [
                 'attribute'=>'status',
                 'filter'=> StatusEnum::arrayList(),
@@ -41,7 +41,7 @@ $this->viewHelper()->pushPageHeader();
             ],
             [
                 'class'=>'yii\grid\ActionColumn',
-                'template'=>'{update} {activate} {deactivate} {delete}',
+                'template'=>'',
                 'buttons'=>[
                     'update'=> function ($url, $model) {
                         if ($model['is_deleted'] == IsDeletedEnum::DELETED){

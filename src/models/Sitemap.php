@@ -69,19 +69,6 @@ class Sitemap extends ActiveRecord
             ],
             [
                 [
-                    'extension',
-                ],
-                'string',
-                'max' => 10
-            ],
-            [
-                [
-                    'content'
-                ],
-                'string'
-            ],
-            [
-                [
                     'last_modified_dt'
                 ],
                 'date',
@@ -94,12 +81,13 @@ class Sitemap extends ActiveRecord
     {
         return [
             'id' => Yii::t('handbook','#'),
-            'filename' => Yii::t('handbook','Название фаила'),
-            'extension' => Yii::t('handbook','Расширение фаила'),
-            'content' => Yii::t('handbook','Контент'),
+            'entity_type_id' => Yii::t('handbook','Сущность'),
+            'entity_id' => Yii::t('handbook','ИД сущности'),
+            'static_file_id' => Yii::t('handbook','Статический фаил'),
+            'location' => Yii::t('handbook','Адрес'),
+            'section' => Yii::t('handbook','Секция'),
+            'last_modified_dt' => Yii::t('handbook','Дата последнего изменения'),
             'status' => Yii::t('handbook','Статус'),
-            'type' => Yii::t('handbook','Тип'),
-            'is_hidden' => Yii::t('handbook','Скрытый'),
             'created_at' => Yii::t('handbook','Дата создания'),
         ];
     }
