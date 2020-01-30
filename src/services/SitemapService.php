@@ -56,6 +56,7 @@ class SitemapService extends Service
      * Добавить в карту саита ссылку
      *
      * @param ActiveRecord $model
+     * @param string $controllerId
      * @param array $urlParamAttrs
      *
      * @return mixed
@@ -84,6 +85,7 @@ class SitemapService extends Service
 
         $form = new SitemapForm();
         $form->entity_type_id = $entity_type->id;
+        $form->controller_id = $controllerId;
         $form->entity_id = $model->id;
         $form->location = $location;
         $form->section = $section;
