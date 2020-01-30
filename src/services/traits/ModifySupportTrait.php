@@ -1,4 +1,5 @@
 <?php
+
 namespace concepture\yii2handbook\services\traits;
 
 use Yii;

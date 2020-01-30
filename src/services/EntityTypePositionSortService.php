@@ -14,6 +14,7 @@ use concepture\yii2logic\services\interfaces\UpdateColumnInterface;
 use concepture\yii2handbook\forms\EntityTypePositionSortForm;
 use concepture\yii2handbook\services\EntityTypePositionService;
 use yii\helpers\ArrayHelper;
+use concepture\yii2handbook\traits\ServicesTrait as HandbookService;
 
 /**
  * Сервис для работы с
@@ -26,6 +27,7 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
     use ModifySupportTrait;
     use CoreReadSupportTrait;
     use UpdateColumnTrait;
+    use HandbookService;
 
     /**
      * @return EntityTypePositionService
@@ -105,20 +107,29 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
      */
     public function applyQuery(ActiveQuery $query, $entityTableName, $entity_type_id, $entity_type_position, $orderBy = [])
     {
+        # todo: кеширровать
+        $position = $this->getEntityTypePositionService()->getOneByCondition(
+            [
+                'alias' => $entity_type_position,
+                'entity_type_id' => $entity_type_id
+            ],
+            true
+        );
+        if(! $position) {
+            throw new EntityTypePositionSortServiceException('Position is not found.');
+        }
+
+        $domain = $this->domainService()->getCurrentDomain();
         $positionSort = $this->getTableName();
-        $position = $this->getEntityTypePositionService()->getTableName();
         $query->addSelect(["IFNULL({$positionSort}.sort, 9999) as sort"]);
-        $query->join('LEFT JOIN', $positionSort, "{$positionSort}.entity_id = {$entityTableName}.id");
-        $query->join('LEFT JOIN', $position, "{$positionSort}.entity_type_position_id = {$position}.id");
-        $query->andWhere(['AND', [
-            "OR", ["{$position}.alias" => $entity_type_position], ["{$position}.alias" => null]
-        ]]);
-        $query->andWhere(['AND', [
-            "OR", ["{$position}.entity_type_id" => $entity_type_id], ["{$position}.entity_type_id" => null]
-        ]]);
-        $query->andWhere(['AND', [
-            "OR", ["{$positionSort}.entity_type_id" => $entity_type_id], ["{$positionSort}.entity_type_id" => null]
-        ]]);
+        $query->join(
+            'LEFT JOIN',
+            $positionSort,
+            "{$positionSort}.entity_id = {$entityTableName}.id
+            AND {$positionSort}.entity_type_id =  {$entity_type_id}
+            AND {$positionSort}.entity_type_position_id = {$position->id}
+            " . ($domain ? "AND {$positionSort}.domain_id = {$domain->id}" : null)
+        );
         $order = ArrayHelper::merge(["sort" => SORT_ASC], $orderBy);
         $query->orderBy($order);
     }

@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\services;
 
+use Yii;
 use yii\db\ActiveQuery;
 use concepture\yii2logic\forms\Model;
 use concepture\yii2logic\services\Service;
@@ -42,5 +43,21 @@ class EntityTypePositionService extends Service
     protected function extendQuery(ActiveQuery $query)
     {
 //        $this->applyDomain($query);
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @param bool $cache
+     */
+    public function getOneByCondition($condition = null, $cache = false)
+    {
+        if( ! Yii::$app->has('cache') || ! $cache) {
+            return parent::getOneByCondition($condition);
+        }
+
+        return $this->getDb()->cache(function () use($condition) {
+            return parent::getOneByCondition($condition);
+        });
     }
 }

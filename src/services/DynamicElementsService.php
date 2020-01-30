@@ -2,7 +2,9 @@
 
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use Yii;
+use yii\base\Event;
 use yii\db\ActiveQuery;
 use yii\web\View;
 use yii\helpers\Url;
@@ -23,13 +25,14 @@ use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
 use concepture\yii2handbook\enum\DynamicElementsEnum;
 use concepture\yii2logic\events\ServiceEvent;
 use concepture\yii2logic\enum\ServiceEventEnum;
+use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
 
 /**
  * Сервис динамическх элементов
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class DynamicElementsService extends Service
+class DynamicElementsService extends Service implements DynamicElementsEventInterface
 {
     const INTERACTIVE_MODE_SESSION = 'ineractive_mode';
 
@@ -185,6 +188,8 @@ class DynamicElementsService extends Service
      */
     public function getElements(int $type, string $name, string $caption, $value = '', $is_general = false)
     {
+        $event = $this->elementsGetEvent($type, $name, $caption, $value, $is_general);
+        $this->trigger(static::EVENT_BEFORE_GET_ELEMENT, $event);
         $dataSet = $this->getDataSet();
         $attribute = strtolower($name);
         # если такой настройки нет, записываем в массив для записи
@@ -201,10 +206,16 @@ class DynamicElementsService extends Service
                 'is_general' => $is_general,
             ];
 
-            return $value;
+            $event->value = $value;
+            $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
+
+            return $event->value;
         }
 
-        return $dataSet->{$attribute} ?? null;
+        $event->value = ( $dataSet->{$attribute} ?? null);
+        $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
+
+        return $event->value;
     }
 
     /**
@@ -215,6 +226,9 @@ class DynamicElementsService extends Service
     public function apply(YiiModel $model = null)
     {
         $data = $this->getDataSet($model);
+        $event = new Event();
+        $event->data = $data;
+        $this->trigger(static::EVENT_BEFORE_APPLY, $event);
         $this->title = ($data->seo_title ?? $data->title ?? $this->view->title);
         $this->description = $data->seo_description ?? $data->description ?? null;
         $this->keywords = $data->seo_keywords ?? $data->keywords ?? null;
@@ -226,6 +240,8 @@ class DynamicElementsService extends Service
         if(null !== $data->seo_text) {
             $this->text = $data->seo_text;
         }
+
+        $this->trigger(static::EVENT_AFTER_APPLY, $event);
     }
 
     /**
@@ -517,5 +533,25 @@ class DynamicElementsService extends Service
         $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
 
         return $result;
+    }
+
+    /**
+     * @param int $type
+     * @param string $name
+     * @param string $caption
+     * @param string $value
+     * @param bool $is_general
+     * @return DynamicElementsGetEvent
+     */
+    private function elementsGetEvent($type, $name, $caption, $value, $is_general)
+    {
+        $event = new DynamicElementsGetEvent();
+        $event->type = $type;
+        $event->name = $name;
+        $event->caption = $caption;
+        $event->value = $value;
+        $event->is_general = $is_general;
+
+        return $event;
     }
 }
