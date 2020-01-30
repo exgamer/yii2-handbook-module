@@ -63,21 +63,8 @@ class SitemapService extends Service
      */
     public function add($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
     {
-        $frontendUrlManager = UrlHelper::getFrontendUrlManager();
-        $queryParams = [];
-        foreach ($urlParamAttrs as $attribute){
-            $queryParams[$attribute] = $model->{$attribute};
-        }
-
-        $serviceName = ClassHelper::getServiceName($model);
-        $section = Yii::$app->{$serviceName}->getTableName();
-        $className = ClassHelper::getShortClassName($model);
-        if (! $controllerId) {
-            $controllerId = Inflector::camel2id($className);
-        }
-
-        $urlParams = ArrayHelper::merge([$controllerId . '/view'], $queryParams);
-        $location = $frontendUrlManager->createUrl($urlParams);
+        $section = $this->getEntityService($model)->getTableName();
+        $location = $this->getLocation($model, $controllerId, $urlParamAttrs);
         $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
         if(! $entity_type) {
             throw new Exception("Entity type {$section} not found.");
@@ -91,5 +78,72 @@ class SitemapService extends Service
         $form->section = $section;
 
         return $this->create($form);
+    }
+
+    /**
+     * Обновить карту саита
+     *
+     * @param ActiveRecord $model
+     * @param string $controllerId
+     * @param array $urlParamAttrs
+     *
+     * @return mixed
+     */
+    public function update($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
+    {
+        $section = $this->getEntityService($model)->getTableName();
+        $location = $this->getLocation($model, $controllerId, $urlParamAttrs);
+        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
+        if(! $entity_type) {
+            throw new Exception("Entity type {$section} not found.");
+        }
+
+        $current = $this->getOneByCondition([
+            'entity_type_id' => $model->entity_type_id,
+            'entity_id' => $model->entity_id,
+        ]);
+        if ($current->location == $model->location){
+            return;
+        }
+
+        $data = [];
+        $data['location'] = $location;
+
+        return $this->updateById($model->id, $data);
+    }
+
+    /**
+     * @param $model
+     * @return Service
+     */
+    protected function getEntityService($model)
+    {
+        $serviceName = ClassHelper::getServiceName($model);
+
+        return  Yii::$app->{$serviceName};
+    }
+
+    /**
+     * @param $model
+     * @param $controllerId
+     * @param $urlParamAttrs
+     * @return mixed
+     */
+    protected function getLocation($model, &$controllerId, $urlParamAttrs)
+    {
+        $queryParams = [];
+        foreach ($urlParamAttrs as $attribute){
+            $queryParams[$attribute] = $model->{$attribute};
+        }
+
+        $className = ClassHelper::getShortClassName($model);
+        if (! $controllerId) {
+            $controllerId = Inflector::camel2id($className);
+        }
+
+        $urlParams = ArrayHelper::merge([$controllerId . '/view'], $queryParams);
+        $frontendUrlManager = UrlHelper::getFrontendUrlManager();
+
+        return $frontendUrlManager->createUrl($urlParams);
     }
 }
