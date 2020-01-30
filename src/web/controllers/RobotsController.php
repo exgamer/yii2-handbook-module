@@ -9,6 +9,8 @@ use concepture\yii2logic\actions\web\UndeleteAction;
 use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
 
 /**
+ * @deprecated static file type robots use
+ *
  * Контроллер индексных файлов - robots.txt
  *
  * @author kamaelkz <kamaelkz@yandex.kz>

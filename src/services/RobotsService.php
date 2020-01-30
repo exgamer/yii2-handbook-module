@@ -14,6 +14,8 @@ use concepture\yii2handbook\services\traits\ReadSupportTrait as HandbookReadSupp
 use concepture\yii2logic\enum\StatusEnum;
 
 /**
+ * @deprecated static file type robots use
+ *
  * Сервис для работы с индексными файлами - robots.txt
  *
  * @author kamaelkz <kamaelkz@yandex.kz>

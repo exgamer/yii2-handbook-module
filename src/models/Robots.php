@@ -9,6 +9,8 @@ use concepture\yii2handbook\models\traits\DomainTrait;
 use concepture\yii2logic\models\traits\IsDeletedTrait;
 
 /**
+ * @deprecated static file type robots use
+ *
  * Индексный файл - robots.txt
  *
  * @author kamaelkz <kamaelkz@yandex.kz>

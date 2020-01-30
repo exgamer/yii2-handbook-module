@@ -6,6 +6,8 @@ use yii\db\ActiveQuery;
 use concepture\yii2handbook\models\Robots;
 
 /**
+ * @deprecated static file type robots use
+ *
  * Поиск по индексным файлам - robots.txt
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
