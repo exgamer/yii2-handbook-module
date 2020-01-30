@@ -109,7 +109,7 @@ class SitemapService extends Service
         $data = [];
         $data['location'] = $location;
 
-        return $this->updateById($model->id, $data);
+        return $this->updateById($current->id, $data);
     }
 
     /**
