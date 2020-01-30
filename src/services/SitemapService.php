@@ -40,4 +40,9 @@ class SitemapService extends Service
     {
         $this->applyDomain($query);
     }
+
+    protected function beforeModelSave(Model $form, ActiveRecord $model, $is_new_record)
+    {
+        $form->last_modified_dt = date("Y-m-d H:i:s");
+    }
 }
