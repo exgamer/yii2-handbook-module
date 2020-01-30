@@ -87,7 +87,14 @@ class StaticFile extends ActiveRecord
                 ],
                 'unique',
                 'targetAttribute' => ['filename', 'extension']
-            ]
+            ],
+            [
+                [
+                    'type'
+                ],
+                'default',
+                'value' => StaticFileTypeEnum::CUSTOM
+            ],
         ];
     }
 

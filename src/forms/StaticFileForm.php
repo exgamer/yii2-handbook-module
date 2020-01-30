@@ -2,6 +2,7 @@
 namespace concepture\yii2handbook\forms;
 
 
+use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use Yii;
 use concepture\yii2logic\forms\Form;
 use concepture\yii2logic\enum\StatusEnum;
@@ -14,7 +15,7 @@ use concepture\yii2logic\enum\StatusEnum;
 class StaticFileForm extends Form
 {
     public $domain_id;
-    public $type;
+    public $type = StaticFileTypeEnum::CUSTOM;
     public $is_hidden = 0;
     public $status = StatusEnum::ACTIVE;
     public $filename;
