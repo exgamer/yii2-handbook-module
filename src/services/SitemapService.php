@@ -67,11 +67,13 @@ class SitemapService extends Service
         foreach ($urlParamAttrs as $attribute){
             $queryParams[$attribute] = $model->{$attribute};
         }
+
         $section = $model::tableName();
         $className = ClassHelper::getShortClassName($model);
         if (! $controllerId) {
             $controllerId = Inflector::camel2id($className);
         }
+
         $urlParams = ArrayHelper::merge([$controllerId . '/view'], $queryParams);
         $location = $frontendUrlManager->createUrl($urlParams);
         $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
