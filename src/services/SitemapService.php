@@ -68,7 +68,8 @@ class SitemapService extends Service
             $queryParams[$attribute] = $model->{$attribute};
         }
 
-        $section = $model::tableName();
+        $serviceName = ClassHelper::getServiceName($model);
+        $section = Yii::$app->{$serviceName}->getTableName();
         $className = ClassHelper::getShortClassName($model);
         if (! $controllerId) {
             $controllerId = Inflector::camel2id($className);
