@@ -45,19 +45,4 @@ class SitemapService extends Service
     {
         $form->last_modified_dt = date("Y-m-d H:i:s");
     }
-
-    /**
-     * Возвращает urlManager фронта
-     *
-     * @return object
-     * @throws \yii\base\InvalidConfigException
-     */
-    protected function getFrontendUrlManager()
-    {
-        $config = require(Yii::getAlias('@frontend/config/main.php'));
-        $urlManagerConfig = $config['components']['urlManager'];
-        $urlManagerConfig['baseUrl'] = "";
-
-        return Yii::createObject($urlManagerConfig);
-    }
 }
