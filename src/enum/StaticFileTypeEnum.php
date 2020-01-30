@@ -16,12 +16,19 @@ class StaticFileTypeEnum extends Enum
     const SITEMAP = 1;
     const ROBOTS = 2;
 
-    public static function labels()
+    public static function labels($exclude = [])
     {
-        return [
+        $result = [
             self::CUSTOM => Yii::t('handbook', "Дефолтный"),
             self::SITEMAP => Yii::t('handbook', "Карта саита"),
             self::ROBOTS => Yii::t('handbook', "robots.txt")
         ];
+        if(! empty($exclude)) {
+            $result = array_flip($result);
+            $result = array_diff($result, $exclude);
+            $result = array_flip($result);
+        }
+
+        return $result;
     }
 }
