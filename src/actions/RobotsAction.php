@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\actions;
 
+use concepture\yii2handbook\traits\ServicesTrait;
 use Yii;
 use yii\base\Action;
 use concepture\yii2handbook\services\RobotsService;
@@ -16,6 +17,8 @@ use yii\web\Response;
  */
 class RobotsAction extends Action
 {
+    use ServicesTrait;
+
     /**
      * @return RobotsService
      */
@@ -30,10 +33,7 @@ class RobotsAction extends Action
     public function run()
     {
         $this->controller->layout = null;
-        $item = $this->getRobotService()->getOneByCondition([
-            'status' => StatusEnum::ACTIVE,
-            'is_deleted' => IsDeletedEnum::NOT_DELETED
-        ]);
+        $item = $this->staticFileService()->getRobotsFile();
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();
