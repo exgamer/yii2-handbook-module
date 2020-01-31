@@ -37,6 +37,7 @@ class SitemapService extends Service
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);
+        parent::beforeCreate($form);
     }
 
     /**
@@ -50,6 +51,7 @@ class SitemapService extends Service
     protected function beforeModelSave(Model $form, ActiveRecord $model, $is_new_record)
     {
         $model->last_modified_dt = date("Y-m-d H:i:s");
+        parent::beforeCreate($form, $model, $is_new_record);
     }
 
     /**

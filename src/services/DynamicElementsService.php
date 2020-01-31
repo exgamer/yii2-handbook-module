@@ -161,6 +161,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     {
         $this->setCurrentDomain($form);
         $this->setCurrentLocale($form);
+        parent::beforeCreate($form);
     }
 
     /**

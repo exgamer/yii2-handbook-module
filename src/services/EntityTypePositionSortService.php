@@ -59,6 +59,8 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
         if($maxSortValue) {
             $form->sort = ($maxSortValue + 1);
         }
+
+        parent::beforeCreate($form);
     }
 
     /**

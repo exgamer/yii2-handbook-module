@@ -30,6 +30,7 @@ class SettingsService extends Service
     {
         $this->setCurrentDomain($form);
         $this->setCurrentLocale($form);
+        parent::beforeCreate($form);
     }
 
     /**

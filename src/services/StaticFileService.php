@@ -33,6 +33,7 @@ class StaticFileService extends Service
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);
+        parent::beforeCreate($form);
     }
 
     /**
