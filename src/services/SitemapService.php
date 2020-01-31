@@ -3,6 +3,7 @@
 namespace concepture\yii2handbook\services;
 
 use concepture\yii2handbook\forms\SitemapForm;
+use concepture\yii2handbook\services\traits\SitemapGeneratorTrait;
 use concepture\yii2handbook\traits\ServicesTrait;
 use concepture\yii2logic\helpers\ClassHelper;
 use concepture\yii2logic\helpers\UrlHelper;
@@ -30,6 +31,7 @@ class SitemapService extends Service
     use ServicesTrait;
     use HandbookModifySupportTrait;
     use HandbookReadSupportTrait;
+    use SitemapGeneratorTrait;
 
     /**
      * @inheritDoc
@@ -186,16 +188,5 @@ class SitemapService extends Service
         $frontendUrlManager = UrlHelper::getFrontendUrlManager();
 
         return $frontendUrlManager->createUrl($urlParams);
-    }
-
-
-    /**
-     * Возвращает карту саита
-     *
-     * @return string
-     */
-    public function getSitemapFile()
-    {
-        return "";
     }
 }
