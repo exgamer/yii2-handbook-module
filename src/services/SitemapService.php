@@ -55,24 +55,6 @@ class SitemapService extends Service
     }
 
     /**
-     * Обновить карту саита
-     *
-     * @param $model
-     * @param null $controllerId
-     * @param array $urlParamAttrs
-     * @return mixed
-     * @throws \Exception
-     */
-    public function updateSitemap($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
-    {
-        if ($model->isNewRecord){
-            return $this->add($model, $controllerId, $urlParamAttrs);
-        }
-
-        return $this->refresh($model, $controllerId, $urlParamAttrs);
-    }
-
-    /**
      * Добавить в карту саита ссылку
      *
      * @param ActiveRecord $model
