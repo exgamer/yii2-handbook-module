@@ -32,7 +32,7 @@ class SitemapAction extends Action
     public function run()
     {
         $this->controller->layout = null;
-        $item = $this->staticFileService()->getSitemapFile();
+        $item = $this->sitemapService()->getSitemapFile();
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();
