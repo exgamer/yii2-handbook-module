@@ -187,4 +187,15 @@ class SitemapService extends Service
 
         return $frontendUrlManager->createUrl($urlParams);
     }
+
+
+    /**
+     * Возвращает карту саита
+     *
+     * @return string
+     */
+    public function getSitemapFile()
+    {
+        return "";
+    }
 }
