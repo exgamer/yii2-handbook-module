@@ -60,6 +60,7 @@ class SitemapService extends Service
      * @param array $urlParamAttrs
      *
      * @return mixed
+     * @throws \Exception
      */
     public function add($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
     {
