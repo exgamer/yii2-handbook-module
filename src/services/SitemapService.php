@@ -52,7 +52,7 @@ class SitemapService extends Service
 
     protected function beforeModelSave(Model $form, ActiveRecord $model, $is_new_record)
     {
-        $model->last_modified_dt = date("Y-m-d H:i:s");
+        $model->last_modified_dt = Yii::$app->formatter->asDateTime('now', 'php:Y-m-d H:i:s');
         parent::beforeModelSave($form, $model, $is_new_record);
     }
 
