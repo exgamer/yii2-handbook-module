@@ -209,4 +209,21 @@ class SitemapService extends Service
 
         return ArrayHelper::map($models, 'section', 'section');
     }
+
+    /**
+     * Возвращает все по секции
+     *
+     * @param string $section
+     * @return array
+     */
+    public function getAllBySection($section)
+    {
+        return $this->getAllByCondition(function (ActiveQuery $query) use ($section){
+            $query->andWhere([
+                'status' => StatusEnum::ACTIVE,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED,
+                'section' => $section,
+            ]);
+        });
+    }
 }
