@@ -5,6 +5,7 @@ namespace concepture\yii2handbook\services;
 use concepture\yii2handbook\forms\SitemapForm;
 use concepture\yii2handbook\services\traits\SitemapGeneratorTrait;
 use concepture\yii2handbook\traits\ServicesTrait;
+use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\helpers\ClassHelper;
 use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
@@ -188,5 +189,24 @@ class SitemapService extends Service
         $frontendUrlManager = UrlHelper::getFrontendUrlManager();
 
         return $frontendUrlManager->createUrl($urlParams);
+    }
+
+    /**
+     * Возвращает все варианты секций
+     *
+     * @return array
+     */
+    public function getSections()
+    {
+        $models = $this->getAllByCondition(function (ActiveQuery $query){
+            $query->select(['section', 'status', 'is_deleted']);
+            $query->andWhere([
+                'status' => StatusEnum::ACTIVE,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED
+            ]);
+            $query->groupBy('section');
+        });
+
+        return ArrayHelper::map($models, 'section', 'section');
     }
 }
