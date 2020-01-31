@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\forms;
 
+use concepture\yii2handbook\enum\SitemapTypeEnum;
 use kamaelkz\yii2admin\v1\forms\BaseForm;
 use concepture\yii2logic\enum\StatusEnum;
 
@@ -19,6 +20,7 @@ class SitemapForm extends BaseForm
     public $controller_id;
     public $location;
     public $section;
+    public $type = SitemapTypeEnum::DYNAMIC;
     public $last_modified_dt;
     public $status = StatusEnum::ACTIVE;
 

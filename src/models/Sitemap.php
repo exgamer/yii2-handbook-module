@@ -1,6 +1,7 @@
 <?php
 namespace concepture\yii2handbook\models;
 
+use concepture\yii2handbook\enum\SitemapTypeEnum;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
@@ -58,6 +59,7 @@ class Sitemap extends ActiveRecord
                     'entity_type_id',
                     'entity_id',
                     'static_file_id',
+                    'type',
                 ],
                 'integer',
             ],
@@ -84,6 +86,13 @@ class Sitemap extends ActiveRecord
                 ],
                 'unique',
                 'targetAttribute' => ['entity_type_id', 'entity_id']
+            ],
+            [
+                [
+                    'type'
+                ],
+                'default',
+                'value' => SitemapTypeEnum::DYNAMIC
             ],
         ];
     }
