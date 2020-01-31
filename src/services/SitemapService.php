@@ -70,6 +70,15 @@ class SitemapService extends Service
             throw new Exception("Entity type {$section} not found.");
         }
 
+        $current = $this->getOneByCondition([
+            'entity_type_id' => $entity_type->id,
+            'entity_id' => $model->id,
+        ]);
+
+        if ($current){
+            throw new \Exception("sitemap with entity_type_id: {$entity_type->id} and entity_id: {$model->id} exists. Please Check");
+        }
+
         $form = new SitemapForm();
         $form->entity_type_id = $entity_type->id;
         $form->controller_id = $controllerId;
