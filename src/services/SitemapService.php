@@ -89,7 +89,7 @@ class SitemapService extends Service
      *
      * @return mixed
      */
-    public function update($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
+    public function refresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
     {
         $section = $this->getEntityService($model)->getTableName();
         $location = $this->getLocation($model, $controllerId, $urlParamAttrs);
@@ -119,7 +119,7 @@ class SitemapService extends Service
      *
      * @return mixed
      */
-    public function delete($model)
+    public function remove($model)
     {
         $section = $this->getEntityService($model)->getTableName();
         $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
