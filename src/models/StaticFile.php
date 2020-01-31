@@ -15,6 +15,8 @@ use concepture\yii2logic\models\traits\IsDeletedTrait;
  */
 class StaticFile extends ActiveRecord
 {
+    public $allow_physical_delete = false;
+
     use StatusTrait;
     use IsDeletedTrait;
 

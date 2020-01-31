@@ -102,6 +102,11 @@ class SitemapService extends Service
             'entity_type_id' => $entity_type->id,
             'entity_id' => $model->id,
         ]);
+
+        if (! $current){
+            return $this->add($model, $controllerId, $urlParamAttrs);
+        }
+
         if ($current->location == $location){
             return;
         }

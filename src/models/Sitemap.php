@@ -13,6 +13,8 @@ use concepture\yii2logic\models\traits\IsDeletedTrait;
  */
 class Sitemap extends ActiveRecord
 {
+    public $allow_physical_delete = false;
+
     use StatusTrait;
     use IsDeletedTrait;
 
