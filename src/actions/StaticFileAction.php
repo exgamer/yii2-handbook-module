@@ -24,7 +24,7 @@ class StaticFileAction extends Action
     public function run($filename)
     {
         $this->controller->layout = null;
-        $item = $this->sitemapService()->getFile($filename);
+        $item = $this->staticFileService()->getFile($filename);
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();
