@@ -14,6 +14,7 @@ use concepture\yii2handbook\services\traits\ModifySupportTrait as HandbookModify
 use concepture\yii2handbook\services\traits\ReadSupportTrait as HandbookReadSupportTrait;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\enum\IsDeletedEnum;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class StaticFileService
@@ -42,6 +43,25 @@ class StaticFileService extends Service
     protected function extendQuery(ActiveQuery $query)
     {
         $this->applyDomain($query);
+    }
+
+    public function getFile($filename)
+    {
+        $parts = explode(".", $filename);
+        $parts = array_flip($parts);
+        $extension = array_pop($parts);
+        $parts = array_flip($parts);
+        $filename = implode(".", $parts);
+        if (count($parts) !== 2){
+            throw  new NotFoundHttpException();
+        }
+
+        return $this->getOneByCondition([
+            'status' => StatusEnum::ACTIVE,
+            'is_deleted' => IsDeletedEnum::NOT_DELETED,
+            'filename' => $filename,
+            'extension' => $extension,
+        ]);
     }
 
     /**

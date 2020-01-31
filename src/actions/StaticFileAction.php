@@ -10,25 +10,25 @@ use concepture\yii2logic\enum\IsDeletedEnum;
 use yii\web\Response;
 
 /**
- * Class SitemapAction
+ * Class StaticFileAction
  * @package concepture\yii2handbook\actions
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SitemapAction extends Action
+class StaticFileAction extends Action
 {
     use ServicesTrait;
 
     /**
      * @inheritDoc
      */
-    public function run()
+    public function run($filename)
     {
         $this->controller->layout = null;
-        $item = $this->sitemapService()->getSitemapFile();
+        $item = $this->sitemapService()->getFile($filename);
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();
-        $headers->add('Content-Type', 'text/xml');
+        $headers->add('Content-Type', 'text/' . $item->extension);
 
         if(! $item) {
             return null;
