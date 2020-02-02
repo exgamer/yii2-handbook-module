@@ -87,6 +87,10 @@ class DomainUrlRule extends YiiUrlRule
      */
     public function reset()
     {
+        if(! $this->origin_pattern) {
+            return;
+        }
+
         $this->pattern = $this->origin_pattern;
         parent::init();
     }

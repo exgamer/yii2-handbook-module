@@ -40,4 +40,7 @@ return [
     'sitemapService' => [
         'class' => 'concepture\yii2handbook\services\SitemapService'
     ],
+    'hreflangService' => [
+        'class' => 'concepture\yii2handbook\components\routing\HreflangService'
+    ],
 ];
