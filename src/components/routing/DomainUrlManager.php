@@ -58,12 +58,36 @@ class DomainUrlManager extends YiiUrlManager
     /**
      * @inheritDoc
      */
+    public function createUrl($params)
+    {
+        # todo: место узкое - если действие по умолчанию не index
+        $defaultRoute = Yii::$app->defaultRoute . '/index';
+        $result = ltrim(parent::createUrl($params), '/');
+        if(trim($params[0], '/') === $defaultRoute) {
+            return $result;
+        }
+
+        if(! $result) {
+            throw new \Exception("Pattern for route {$params[0]} is not defined");
+        }
+
+        return "/{$result}";
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function parseRequest($request)
     {
         if ($this->enablePrettyUrl) {
             /* @var $rule DomainUrlRule */
             foreach ($this->rules as $rule) {
-                $result = $rule->parseRequest($this, $request);
+                try {
+                    $result = $rule->parseRequest($this, $request);
+                } catch (\Exception $e) {
+                    continue;
+                }
+
                 if (YII_DEBUG) {
                     Yii::debug([
                         'rule' => method_exists($rule, '__toString') ? $rule->__toString() : get_class($rule),

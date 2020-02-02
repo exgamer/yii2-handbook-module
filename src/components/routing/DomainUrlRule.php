@@ -57,9 +57,14 @@ class DomainUrlRule extends YiiUrlRule
             throw new InvalidConfigException('DomainUrlRule::pattern or DomainUrlRule::patterns must be set.');
         }
 
-        $this->multiplePattern();
-
-        parent::init();
+        $result = $this->multiplePattern();
+        if($result) {
+            parent::init();
+        } else {
+            try {
+                parent::init();
+            } catch (\Exception $e) {}
+        }
     }
 
     /**
@@ -94,7 +99,7 @@ class DomainUrlRule extends YiiUrlRule
         static $domainMap;
 
         if(! $this->patterns) {
-            return;
+            return true;
         }
 
         if(! is_array($this->patterns)) {
@@ -113,11 +118,13 @@ class DomainUrlRule extends YiiUrlRule
             }
 
             if(! isset($this->patterns[$alias])) {
-                throw new InvalidConfigException("Route is not registered. ");
+                return false;
             }
 
             $this->setPatternByAlias($alias);
         }
+
+        return true;
     }
 
     /**
@@ -131,6 +138,6 @@ class DomainUrlRule extends YiiUrlRule
             $this->origin_pattern = $this->patterns[$alias];
         }
 
-        $this->pattern = $this->patterns[$alias];
+        $this->pattern = $this->patterns[$alias] ?? null;
     }
 }
