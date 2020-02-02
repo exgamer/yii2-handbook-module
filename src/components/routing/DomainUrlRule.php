@@ -24,6 +24,11 @@ class DomainUrlRule extends YiiUrlRule
     public $locale;
 
     /**
+     * @var string
+     */
+    private $origin_pattern;
+
+    /**
      * @return DomainService
      */
     public function getDomainService()
@@ -52,15 +57,39 @@ class DomainUrlRule extends YiiUrlRule
             throw new InvalidConfigException('DomainUrlRule::pattern or DomainUrlRule::patterns must be set.');
         }
 
-        $this->setPattern();
+        $this->multiplePattern();
 
+        parent::init();
+    }
+
+    /**
+     * Установка патерна по альясу и переинициализация
+     *
+     * @param $alias
+     *
+     * @throws InvalidConfigException
+     */
+    public function reinit($alias)
+    {
+        $this->setPatternByAlias($alias);
+        parent::init();
+    }
+
+    /**
+     * Сброс на оригинальный паттерн
+     *
+     * @throws InvalidConfigException
+     */
+    public function reset()
+    {
+        $this->pattern = $this->origin_pattern;
         parent::init();
     }
 
     /**
      * @throws InvalidConfigException
      */
-    private function setPattern()
+    private function multiplePattern()
     {
         static $domainMap;
 
@@ -87,7 +116,21 @@ class DomainUrlRule extends YiiUrlRule
 //                throw new InvalidConfigException("Route is not registered. ");
 //            }
 
-            $this->pattern = $this->patterns[$alias];
+            $this->setPatternByAlias($alias);
         }
+    }
+
+    /**
+     * Установка паттерна по альясу версии приложения
+     *
+     * @param $alias
+     */
+    private function setPatternByAlias($alias)
+    {
+        if(! $this->origin_pattern) {
+            $this->origin_pattern = $this->patterns[$alias];
+        }
+
+        $this->pattern = $this->patterns[$alias];
     }
 }
