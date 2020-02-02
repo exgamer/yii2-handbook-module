@@ -91,14 +91,41 @@ trait SitemapGeneratorTrait
      */
     public function getSitemapFile()
     {
+        $urlsPerFile = 2;
         $sections = $this->getSections();
-        dump($sections);
         foreach ($sections as $section){
-            $filename = $section;
-            $sitemap = $this->getStaticFileByFilename($filename);
-
             $models = $this->getAllBySection($section);
-            dump($models);
+            if (empty($models)){
+                continue;
+            }
+
+            $modelsMap = [];
+            $i = 1;
+            foreach ($models as $model){
+                $modelsMap[$i][strtotime($model->created_at)] = $model;
+                if ( count($modelsMap[$i]) >= $urlsPerFile ){
+                    $i++;
+                }
+            }
+
+            d($modelsMap);
+
+
+
+            $last_modified_dt = $models[0]->last_modified_dt;
+            $fileCount = (int) ceil(count($models) / $urlsPerFile);
+            $filenames = [];
+            for ($i = 1; $i <= $fileCount; $i++){
+                $filenames[] = $this->getStaticFileByFilename($section . "_part_" . $i);
+            }
+
+
+
+//            $filename = $section;
+//            $sitemap = $this->getStaticFileByFilename($filename);
+
+
+            dump($filenames);
         }
         return;
 
