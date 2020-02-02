@@ -58,6 +58,33 @@ trait SitemapGeneratorTrait
     }
 
     /**
+     * Возвращает static_file по filename
+     *
+     * @param $filename
+     * @return mixed
+     */
+    public function getStaticFileByFilename($filename)
+    {
+        $model = Yii::$app->staticFileService->getOneByCondition([
+            'filename' => $filename,
+            'type' => StaticFileTypeEnum::SITEMAP,
+            'status' => StatusEnum::ACTIVE,
+            'is_deleted' => IsDeletedEnum::NOT_DELETED
+        ]);
+        if (! $model){
+            $form = new StaticFileForm();
+            $form->type = StaticFileTypeEnum::SITEMAP;
+            $form->content = $this->getNewDocument();
+            $form->extension = FileExtensionEnum::XML;
+            $form->filename = $filename;
+            $form->is_hidden = 1;
+            $model = Yii::$app->staticFileService->create($form);
+        }
+
+        return $model;
+    }
+
+    /**
      * Возвращает карту саита
      *
      * @return string
@@ -68,16 +95,7 @@ trait SitemapGeneratorTrait
         dump($sections);
         foreach ($sections as $section){
             $filename = $section;
-            $sitemap = Yii::$app->staticFileService->getOneByCondition(['filename' => $filename, 'type' => StaticFileTypeEnum::SITEMAP, 'status' => StatusEnum::ACTIVE, 'is_deleted' => IsDeletedEnum::NOT_DELETED]);
-            if (! $sitemap){
-                $form = new StaticFileForm();
-                $form->type = StaticFileTypeEnum::SITEMAP;
-                $form->content = $this->getNewDocument();
-                $form->extension = FileExtensionEnum::XML;
-                $form->filename = $filename;
-                $form->is_hidden = 1;
-                Yii::$app->staticFileService->create($form);
-            }
+            $sitemap = $this->getStaticFileByFilename($filename);
 
             $models = $this->getAllBySection($section);
             dump($models);
