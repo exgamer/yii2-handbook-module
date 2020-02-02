@@ -30,6 +30,7 @@ class SettingsService extends Service
     {
         $this->setCurrentDomain($form);
         $this->setCurrentLocale($form);
+        parent::beforeCreate($form);
     }
 
     /**
@@ -48,6 +49,13 @@ class SettingsService extends Service
     /**
      * Переопределено для возможности автоматического добавления настроек, не найденных в БД при вызове catalogValue
      *
+     * @param $key
+     * @param null $from
+     * @param null $to
+     * @param null $condition
+     * @param null $value
+     * @param int $type
+     * @return mixed|null
      * @todo пока рассчитано не небольшое количество настроек, т.к. считывается весь кататлог в статику parent::catalogValue
      * @todo : пахнет от этого метода
      *
@@ -56,13 +64,10 @@ class SettingsService extends Service
      * Для использования у search модели должны быть определены методы
      * getListSearchAttribute и getListSearchKeyAttribute
      *
-     * @param $key
-     * @return mixed|null
-     * @throws Exception
      */
-    public function catalogValue($key, $value = null, $type = SettingsTypeEnum::TEXT)
+    public function catalogValue($key, $from = null, $to = null, $condition = null, $value = null, $type = SettingsTypeEnum::TEXT)
     {
-        $catalogValue = parent::catalogValue($key);
+        $catalogValue = parent::catalogValue($key, $from, $to, $condition);
         if ($catalogValue){
             return $catalogValue;
         }

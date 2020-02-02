@@ -22,6 +22,8 @@ $this->viewHelper()->pushPageHeader();
         ],
         'columns' => [
             'id',
+            'section',
+            'location',
             [
                 'attribute'=>'status',
                 'filter'=> StatusEnum::arrayList(),
@@ -30,7 +32,6 @@ $this->viewHelper()->pushPageHeader();
                 }
             ],
             'created_at',
-            'updated_at',
             [
                 'attribute'=>'is_deleted',
                 'filter'=> IsDeletedEnum::arrayList(),
@@ -40,19 +41,8 @@ $this->viewHelper()->pushPageHeader();
             ],
             [
                 'class'=>'yii\grid\ActionColumn',
-                'template'=>'{view} {update} {activate} {deactivate} {delete}',
+                'template'=>'',
                 'buttons'=>[
-                    'view'=> function ($url, $model) {
-                        return Html::a(
-                            '<i class="icon-file-eye2"></i>' . Yii::t('yii2admin', 'Просмотр'),
-                            ['view', 'id' => $model['id']],
-                            [
-                                'class' => 'dropdown-item',
-                                'title' => Yii::t('yii2admin', 'Просмотр'),
-                                'data-pjax' => '0'
-                            ]
-                        );
-                    },
                     'update'=> function ($url, $model) {
                         if ($model['is_deleted'] == IsDeletedEnum::DELETED){
                             return '';

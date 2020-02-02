@@ -5,16 +5,17 @@ namespace concepture\yii2handbook\web\controllers;
 use concepture\yii2user\enum\UserRoleEnum;
 use concepture\yii2logic\controllers\web\Controller;
 use concepture\yii2logic\actions\web\StatusChangeAction;
-use concepture\yii2logic\actions\web\UndeleteAction;
 use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
 
 /**
- * Контроллер индексных файлов - robots.txt
- *
- * @author kamaelkz <kamaelkz@yandex.kz>
+ * Class SitemapController
+ * @package concepture\yii2handbook\web\controllers
+ * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class RobotsController extends Controller
+class SitemapController extends Controller
 {
+    use ControllerTrait;
+
     /**
      * @inheritDoc
      */
@@ -24,7 +25,6 @@ class RobotsController extends Controller
             [
                 'actions' => [
                     'index',
-                    'view',
                     'create',
                     'update',
                     'delete',
@@ -45,10 +45,14 @@ class RobotsController extends Controller
     public function actions()
     {
         $actions = parent::actions();
+        unset($actions['view']);
+        unset($actions['create']);
+        unset($actions['update']);
+        unset($actions['delete']);
+        unset($actions['view']);
 
         return array_merge($actions,[
-            'status-change' => StatusChangeAction::class,
-            'undelete' => UndeleteAction::class,
+            'status-change' => StatusChangeAction::class
         ]);
     }
 }

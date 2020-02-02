@@ -2,15 +2,15 @@
 
 namespace concepture\yii2handbook\search;
 
+use concepture\yii2handbook\models\Sitemap;
 use yii\db\ActiveQuery;
-use concepture\yii2handbook\models\Robots;
 
 /**
- * Поиск по индексным файлам - robots.txt
- *
- * @author kamaelkz <kamaelkz@yandex.kz>
+ * Class SitemapSearch
+ * @package concepture\yii2handbook\search
+ * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class RobotsSearch extends Robots
+class SitemapSearch extends Sitemap
 {
     /**
      * @inheritDoc
@@ -39,13 +39,13 @@ class RobotsSearch extends Robots
             static::tableName().'.id' => $this->id
         ]);
         $query->andFilterWhere([
-            'status' => $this->status
+            static::tableName().'.status' => $this->status
         ]);
         $query->andFilterWhere([
-            'domain_id' => $this->domain_id
+            static::tableName().'.domain_id' => $this->domain_id
         ]);
         $query->andFilterWhere([
-            'is_deleted' => $this->is_deleted
+            static::tableName().'.is_deleted' => $this->is_deleted
         ]);
     }
 }

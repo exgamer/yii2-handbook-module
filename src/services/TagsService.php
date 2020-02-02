@@ -30,6 +30,7 @@ class TagsService extends Service
         $this->setCurrentUser($form);
         $this->setCurrentDomain($form);
         $this->setCurrentLocale($form);
+        parent::beforeCreate($form);
     }
 
     /**
