@@ -224,7 +224,7 @@ class SitemapService extends Service
                 'is_deleted' => IsDeletedEnum::NOT_DELETED,
                 'section' => $section,
             ]);
-//            $query->orderBy("last_modified_dt");
+            $query->orderBy("created_at");
         });
     }
 }
