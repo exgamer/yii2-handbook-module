@@ -64,18 +64,25 @@ trait SitemapGeneratorTrait
      */
     public function getSitemapFile()
     {
-        $xml = $this->getNewDocument();
+        $sections = $this->getSections();
+        dump($sections);
+        foreach ($sections as $section){
+            $filename = $section;
+            $sitemap = Yii::$app->staticFileService->getOneByCondition(['filename' => $filename, 'type' => StaticFileTypeEnum::SITEMAP, 'status' => StatusEnum::ACTIVE, 'is_deleted' => IsDeletedEnum::NOT_DELETED]);
+            if (! $sitemap){
+                $form = new StaticFileForm();
+                $form->type = StaticFileTypeEnum::SITEMAP;
+                $form->content = $this->getNewDocument();
+                $form->extension = FileExtensionEnum::XML;
+                $form->filename = $filename;
+                $form->is_hidden = 1;
+                Yii::$app->staticFileService->create($form);
+            }
 
-        $form = new StaticFileForm();
-        $form->type = StaticFileTypeEnum::SITEMAP;
-        $form->content = $xml;
-        $form->extension = FileExtensionEnum::XML;
-        $form->filename = "post_part_1";
-        $form->is_hidden = 1;
-        Yii::$app->staticFileService->create($form);
-
-        $sitemap = Yii::$app->staticFileService->getOneByCondition(['filename' => 'post_part_1']);
-
+            $models = $this->getAllBySection($section);
+            dump($models);
+        }
+        return;
 
 
 
@@ -103,12 +110,7 @@ trait SitemapGeneratorTrait
             d($xml);
         }
 
-        $sections = $this->getSections();
-        dump($sections);
-        foreach ($sections as $section){
-            $models = $this->getAllBySection($section);
-            dump($models);
-        }
+
 
         return "";
     }
