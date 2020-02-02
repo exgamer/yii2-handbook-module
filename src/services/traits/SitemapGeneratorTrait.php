@@ -1,6 +1,9 @@
 <?php
 namespace concepture\yii2handbook\services\traits;
 
+use concepture\yii2handbook\enum\FileExtensionEnum;
+use concepture\yii2handbook\enum\StaticFileTypeEnum;
+use concepture\yii2handbook\forms\StaticFileForm;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
 use Exception;
@@ -21,6 +24,50 @@ trait SitemapGeneratorTrait
      */
     public function getSitemapFile()
     {
+        $data = [
+            'name' => 'urlset', // "name" required, all else optional
+            'attributes' => [
+                'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+                'xsi:schemaLocation' => 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd',
+                'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+            ],
+            [
+                'name' => 'url',
+                [
+                    'name' => 'loc',
+                    'value' => 'https://legalbet.ru/best-posts/zhelto-sinij-trend-v-otbore-evro-2016/',
+                ],
+                [
+                    'name' => 'priority',
+                    'value' => '0.55',
+                ],
+            ],
+        ];
+        $doc = new \DOMDocument("1.0", "UTF-8");
+        $xslt = $doc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/sitemap.xsl"');
+        $doc->appendChild($xslt);
+        $child = $this->generate_xml_element( $doc, $data );
+        if ( $child )
+            $doc->appendChild( $child );
+        $doc->formatOutput = true; // Add whitespace to make easier to read XML
+        $xml = $doc->saveXML();
+
+        $form = new StaticFileForm();
+        $form->type = StaticFileTypeEnum::SITEMAP;
+        $form->content = $xml;
+        $form->extension = FileExtensionEnum::XML;
+        $form->filename = "post_part_1";
+        $form->is_hidden = 1;
+        Yii::$app->staticFileService->create($form);
+
+        d($xml);
+        $sections = $this->getSections();
+        dump($sections);
+        foreach ($sections as $section){
+            $models = $this->getAllBySection($section);
+            dump($models);
+        }
+
         return "";
     }
 
