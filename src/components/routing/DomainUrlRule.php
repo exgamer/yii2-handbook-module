@@ -111,10 +111,10 @@ class DomainUrlRule extends YiiUrlRule
             if(! $alias) {
                 throw new InvalidConfigException("Domain alias is not found in domainMap.");
             }
-//
-//            if(! isset($this->patterns[$alias])) {
-//                throw new InvalidConfigException("Route is not registered. ");
-//            }
+
+            if(! isset($this->patterns[$alias])) {
+                throw new InvalidConfigException("Route is not registered. ");
+            }
 
             $this->setPatternByAlias($alias);
         }
