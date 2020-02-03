@@ -339,10 +339,7 @@ trait SitemapGeneratorTrait
     public function generateFile($urls, $section, $filename)
     {
         $host = Url::base(true);
-        $max_date = '';
-        $content = '';
         $document = $this->getNewDocument();
-//        $ids = [];
         foreach($urls as $row){
             $row['last_modified_dt'] = date('c', strtotime($row['last_modified_dt']));
             $row['location'] = $host . $row['location'];
@@ -353,9 +350,6 @@ trait SitemapGeneratorTrait
             $url->appendChild($loc);
             $url->appendChild($priority);
             $parent->appendChild($url);
-//            if(!$row['static_filename']){
-//                $ids[] = $row['id'];
-//            }
         }
 
         $this->saveFile($filename, $document->saveXML());
@@ -368,7 +362,7 @@ trait SitemapGeneratorTrait
             'is_deleted' => IsDeletedEnum::NOT_DELETED,
             'filename' => $filename,
         ]);
-        d($old_data);
+        d($currentFile);
         $edit_dt = date('Y-m-d H:i:s');
         if (! empty($currentFile)){
             $this->sitemaps->saveGeneratedFile($filename, $content, $edit_dt, $locale);
