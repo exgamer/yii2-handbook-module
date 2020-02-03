@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2handbook\enum\FileExtensionEnum;
 use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use concepture\yii2handbook\traits\ServicesTrait;
 use Yii;
@@ -43,6 +44,23 @@ class StaticFileService extends Service
     protected function extendQuery(ActiveQuery $query)
     {
         $this->applyDomain($query);
+    }
+
+    /**
+     * Возвращает все записи по частичному совпадению нахвания секции карты саита
+     * @param $filename
+     * @return array
+     */
+    public function getAllBySitemapSection($sectionNamePart)
+    {
+        return $this->getAllByCondition(function (ActiveQuery $query) use ($sectionNamePart) {
+            $query->andWhere(            [
+                'status' => StatusEnum::ACTIVE,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED,
+                'extension' => FileExtensionEnum::XML,
+            ]);
+            $query->andFilterWhere(['like', "filename", $sectionNamePart]);
+        });
     }
 
     public function getFile($filename)

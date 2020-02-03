@@ -3,7 +3,7 @@
 namespace concepture\yii2handbook\services\traits;
 
 use Yii;
-use concepture\yii2logic\forms\Model;
+use yii\base\Model;
 
 /**
  * Trait HandbookSupportTrait
