@@ -24,7 +24,7 @@ trait SitemapGeneratorTrait
     /**
      * Новый xml документ
      * @param string $rootName
-     * @return string
+     * @return \DOMDocument
      */
     public function getNewDocument($rootName = 'urlset')
     {
@@ -57,7 +57,7 @@ trait SitemapGeneratorTrait
             $doc->appendChild( $child );
         $doc->formatOutput = true; // Add whitespace to make easier to read XML
 
-        return $doc->saveXML();
+        return $doc;
     }
 
     /**
@@ -388,6 +388,10 @@ trait SitemapGeneratorTrait
      */
     protected function getPriority($model)
     {
+        if (is_array($model)){
+            $model = (object) $model;
+        }
+
         /*
            Страницы,	изменившиеся	сегодня	–	приоритет	1.0
            Страницы,	изменившиеся	вчера	–	приоритет	0.9
