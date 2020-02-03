@@ -14,8 +14,6 @@ use concepture\yii2logic\models\traits\IsDeletedTrait;
  */
 class Sitemap extends ActiveRecord
 {
-    public $allow_physical_delete = false;
-
     use StatusTrait;
     use IsDeletedTrait;
 
@@ -58,8 +56,9 @@ class Sitemap extends ActiveRecord
                     'domain_id',
                     'entity_type_id',
                     'entity_id',
-                    'static_file_id',
                     'type',
+                    'static_filename_part',
+                    'static_filename_id',
                 ],
                 'integer',
             ],
@@ -68,6 +67,7 @@ class Sitemap extends ActiveRecord
                     'location',
                     'section',
                     'controller_id',
+                    'static_filename'
                 ],
                 'string',
                 'max' => 255
@@ -103,7 +103,7 @@ class Sitemap extends ActiveRecord
             'id' => Yii::t('handbook','#'),
             'entity_type_id' => Yii::t('handbook','Сущность'),
             'entity_id' => Yii::t('handbook','ИД сущности'),
-            'static_file_id' => Yii::t('handbook','Статический фаил'),
+            'static_filename' => Yii::t('handbook','Статический фаил'),
             'location' => Yii::t('handbook','Адрес'),
             'section' => Yii::t('handbook','Секция'),
             'last_modified_dt' => Yii::t('handbook','Дата последнего изменения'),

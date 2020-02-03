@@ -18,6 +18,8 @@ use concepture\yii2logic\services\traits\StatusTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait as HandbookModifySupportTrait;
 use concepture\yii2handbook\services\traits\ReadSupportTrait as HandbookReadSupportTrait;
 use concepture\yii2logic\enum\StatusEnum;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
@@ -214,17 +216,55 @@ class SitemapService extends Service
      * Возвращает все по секции
      *
      * @param string $section
+     *
+     * Если false - все
+     * Если null - где static_filename не указан
+     * Если true - где static_filename указан
+     * @param bool $filename
      * @return array
      */
-    public function getAllBySection($section)
+    public function getAllBySection($section, $filename = false)
     {
-        return $this->getAllByCondition(function (ActiveQuery $query) use ($section){
+        return $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename){
+            if ($filename === null){
+                $query->andWhere("static_filename IS NULL OR static_filename=''");
+            }
+
+            if ($filename === true){
+                $query->andWhere("static_filename IS NOT NULL");
+            }
+
             $query->andWhere([
                 'status' => StatusEnum::ACTIVE,
                 'is_deleted' => IsDeletedEnum::NOT_DELETED,
                 'section' => $section,
             ]);
-            $query->orderBy("created_at");
+            $query->indexBy('id');
         });
+    }
+
+    /**
+     *  Блок генератора копии с легалбета
+     */
+
+    /**
+     * Возвращает записи секий файлов  количествлом
+     *
+     * @return mixed
+     */
+    public function getRowsSectionCountStat()
+    {
+        $query = new Query();
+        $query->from('sitemap');
+        $query->select(['section', 'static_filename', 'static_filename_part', new Expression('COUNT(0) AS `count`')]);
+        $query->andWhere([
+            'status' => StatusEnum::ACTIVE,
+            'is_deleted' => IsDeletedEnum::NOT_DELETED
+        ]);
+        $query->groupBy(['section', 'static_filename', 'static_filename_part']);
+        $query->orderBy("section, static_filename_part");
+
+
+        return $query->all();
     }
 }

@@ -16,7 +16,9 @@ class SitemapForm extends BaseForm
     public $domain_id;
     public $entity_type_id;
     public $entity_id;
-    public $static_file_id;
+    public $static_filename;
+    public $static_filename_part;
+    public $static_filename_id;
     public $controller_id;
     public $location;
     public $section;
@@ -35,8 +37,7 @@ class SitemapForm extends BaseForm
                     'entity_type_id',
                     'controller_id',
                     'entity_id',
-                    'location',
-                    'section',
+                    'location'
                 ],
                 'required'
             ],
