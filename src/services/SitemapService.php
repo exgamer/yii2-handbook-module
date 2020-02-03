@@ -18,6 +18,8 @@ use concepture\yii2logic\services\traits\StatusTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait as HandbookModifySupportTrait;
 use concepture\yii2handbook\services\traits\ReadSupportTrait as HandbookReadSupportTrait;
 use concepture\yii2logic\enum\StatusEnum;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
@@ -226,5 +228,30 @@ class SitemapService extends Service
             ]);
             $query->orderBy("created_at");
         });
+    }
+
+    /**
+     *  Блок генератора копии с легалбета
+     */
+
+    /**
+     * Возвращает записи секий файлов  количествлом
+     *
+     * @return mixed
+     */
+    public function getRowsSectionCountStat()
+    {
+        $query = new Query();
+        $query->from('sitemap');
+        $query->select(['section', 'static_filename', 'static_filename_part', new Expression('COUNT(0) AS `count`')]);
+        $query->andWhere([
+            'status' => StatusEnum::ACTIVE,
+            'is_deleted' => IsDeletedEnum::NOT_DELETED
+        ]);
+        $query->groupBy(['section', 'static_filename', 'static_filename_part']);
+        $query->orderBy("section, static_filename_part");
+
+
+        return $query->all();
     }
 }
