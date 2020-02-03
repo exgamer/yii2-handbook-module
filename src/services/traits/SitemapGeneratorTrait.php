@@ -363,7 +363,6 @@ trait SitemapGeneratorTrait
             'filename' => $filename,
         ]);
         d($currentFile);
-        $edit_dt = date('Y-m-d H:i:s');
         if (! empty($currentFile)){
             $this->sitemaps->saveGeneratedFile($filename, $content, $edit_dt, $locale);
         }
