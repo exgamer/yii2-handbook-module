@@ -13,6 +13,7 @@ use Exception;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * Trait SitemapGeneratorTrait
@@ -250,6 +251,139 @@ trait SitemapGeneratorTrait
                 'id' => $ids
             ]
         );
+    }
+
+    public function generate()
+    {
+        $this->prepare();
+        /**
+         *  получаем всю карту сайта из базы (только те урлы у которых уже указан файл)
+         */
+        $map = $this->getAllByCondition(function (ActiveQuery $query) {
+            $query->andWhere("static_filename IS NOT NULL");
+            $query->andWhere([
+                'status' => StatusEnum::ACTIVE,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED,
+            ]);
+            $query->orderBy('static_filename ASC, id ASC');
+            $query->asArray();
+        });
+        if (empty($map)){
+            return;
+        }
+
+        $urls = [];
+        $section_files_count = $has_predefined = [];
+        $last_key = null;
+        $last_filename = false;
+        $last_section = false;
+
+        foreach($map as $row) {
+
+            if((!isset($row['section']) || $row['section'] == '') && $row !== null){
+                $has_predefined[] = $row['location'];
+            }
+
+            if ($last_section !== false) {
+                if ($last_filename != $row['static_filename']) {
+
+                    $this->generateFile(array_reverse($urls),
+                        $last_section,
+                        $last_filename
+                    );
+                    $urls = [];
+
+                }
+            }
+
+            $last_section = $row['section'];
+            $last_filename = $row['static_filename'];
+
+            $urls[] = array(
+                'location' => $row['location'],
+                'last_modified_dt' => $row['last_modified_dt'],
+                'priority' => $this->getPriority($row),
+//                'changefreq' => $row['changefreq'],
+                'id' => $row['id'],
+                'static_filename' => $row['static_filename'],
+                'section' => $row['section'],
+            );
+
+
+        }
+//d($urls);
+//        $this->generateIndexFile();
+//
+//        $predefined_url = $this->getPredefinedUrls();
+//
+//        if($predefined_url){
+//            foreach($predefined_url as $url){
+//                if(!in_array($url['loc'], $has_predefined)){
+//                    $row = new Sitemap();
+//                    $row->setLoc($url['loc']);
+//                    $row->setSection('');
+//                    $row->setChangefreq('daily');
+//                    $dt = new \DateTime();
+//                    $dt->setTimestamp(strtotime($url['lastmod']));
+//                    $row->setLastmod($dt);
+//                    $row->setObjectId(0);
+//                    $row->setObjectType(null);
+//                    $this->em->persist($row);
+//                    $this->em->flush();
+//                }
+//            }
+//        }
+
+    }
+
+    public function generateFile($urls, $section, $filename)
+    {
+        $host = Url::base(true);
+        $max_date = '';
+        $content = '';
+        $document = $this->getNewDocument();
+//        $ids = [];
+        foreach($urls as $row){
+            $row['last_modified_dt'] = date('c', strtotime($row['last_modified_dt']));
+            $row['location'] = $host . $row['location'];
+            $parent = $document->getElementsByTagName('urlset')->item(0);
+            $url = $document->createElement("url");
+            $loc = $document->createElement("loc", $row['location']);
+            $priority = $document->createElement("priority", $row['priority']);
+            $url->appendChild($loc);
+            $url->appendChild($priority);
+            $parent->appendChild($url);
+//            if(!$row['static_filename']){
+//                $ids[] = $row['id'];
+//            }
+        }
+
+        $this->saveFile($filename, $document->saveXML());
+    }
+
+    private function saveFile($filename, $content)
+    {
+        $currentFile = Yii::$app->staticFileService->getOneByCondition([
+            'status' => StatusEnum::ACTIVE,
+            'is_deleted' => IsDeletedEnum::NOT_DELETED,
+            'filename' => $filename,
+        ]);
+        d($old_data);
+        $edit_dt = date('Y-m-d H:i:s');
+        if (! empty($currentFile)){
+            $this->sitemaps->saveGeneratedFile($filename, $content, $edit_dt, $locale);
+        }
+
+        return;
+        if(empty($old_data)){
+            if($old_data['text'] != $content){
+                $this->sitemaps->updateSiteMap($filename, $content, $edit_dt, $locale);
+            }else {
+                return;
+            }
+        } else {
+            $this->sitemaps->saveGeneratedFile($filename, $content, $edit_dt, $locale);
+        }
     }
 
     /**
