@@ -254,4 +254,17 @@ class SitemapService extends Service
 
         return $query->all();
     }
+
+    public function getAllBySectionWithoutFilename($section)
+    {
+        return $this->getAllByCondition(function (ActiveQuery $query) use ($section){
+            $query->andWhere('static_filename_id IS NULL');
+            $query->andWhere([
+                'status' => StatusEnum::ACTIVE,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED,
+                'section' => $section,
+            ]);
+            $query->indexBy('id');
+        });
+    }
 }
