@@ -221,11 +221,12 @@ class SitemapService extends Service
      * Если null - где static_filename не указан
      * Если true - где static_filename указан
      * @param bool $filename
+     * @param bool $asArray
      * @return array
      */
-    public function getAllBySection($section, $filename = false)
+    public function getAllBySection($section = null, $filename = false, $asArray = false)
     {
-        return $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename){
+        return $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename, $asArray){
             if ($filename === null){
                 $query->andWhere("static_filename IS NULL OR static_filename=''");
             }
@@ -234,12 +235,18 @@ class SitemapService extends Service
                 $query->andWhere("static_filename IS NOT NULL");
             }
 
+            if ($section){
+                $query->andWhere(['section' => $section]);
+            }
+
             $query->andWhere([
                 'status' => StatusEnum::ACTIVE,
-                'is_deleted' => IsDeletedEnum::NOT_DELETED,
-                'section' => $section,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED
             ]);
             $query->indexBy('id');
+            if ($asArray){
+                $query->asArray();
+            }
         });
     }
 
@@ -254,17 +261,18 @@ class SitemapService extends Service
      */
     public function getRowsSectionCountStat()
     {
-        $query = new Query();
-        $query->from('sitemap');
-        $query->select(['section', 'static_filename', 'static_filename_part', new Expression('COUNT(0) AS `count`')]);
-        $query->andWhere([
-            'status' => StatusEnum::ACTIVE,
-            'is_deleted' => IsDeletedEnum::NOT_DELETED
-        ]);
-        $query->groupBy(['section', 'static_filename', 'static_filename_part']);
-        $query->orderBy("section, static_filename_part");
+        $sql = "SELECT COUNT(0) AS `count`, section, static_filename, static_filename_part
+                from sitemap
+                WHERE status = :STATUS AND is_deleted = :IS_DELETED
+                GROUP BY section, static_filename, static_filename_part
+                ORDER BY section, static_filename_part
+        ";
+        $params = [
+            ':STATUS' => StatusEnum::ACTIVE,
+            ':IS_DELETED' => IsDeletedEnum::NOT_DELETED
+        ];
 
 
-        return $query->all();
+        return $this->queryAll($sql , $params);
     }
 }
