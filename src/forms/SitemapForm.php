@@ -18,6 +18,7 @@ class SitemapForm extends BaseForm
     public $entity_id;
     public $static_filename;
     public $static_filename_part;
+    public $static_filename_id;
     public $controller_id;
     public $location;
     public $section;

@@ -19,6 +19,7 @@ class m200109_042467__sitemap_table_fix extends Migration
     public function safeUp()
     {
         $this->createColumn("static_filename_part", $this->integer());
+        $this->createColumn("static_filename_id", $this->bigInteger());
     }
 
     /**
