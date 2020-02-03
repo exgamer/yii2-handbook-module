@@ -213,44 +213,6 @@ class SitemapService extends Service
     }
 
     /**
-     * Возвращает все по секции
-     *
-     * @param string $section
-     *
-     * Если false - все
-     * Если null - где static_filename не указан
-     * Если true - где static_filename указан
-     * @param bool $filename
-     * @param bool $asArray
-     * @return array
-     */
-    public function getAllBySection($section = null, $filename = false, $asArray = false)
-    {
-        return $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename, $asArray){
-            if ($filename === null){
-                $query->andWhere("static_filename IS NULL OR static_filename=''");
-            }
-
-            if ($filename === true){
-                $query->andWhere("static_filename IS NOT NULL");
-            }
-
-            if ($section){
-                $query->andWhere(['section' => $section]);
-            }
-
-            $query->andWhere([
-                'status' => StatusEnum::ACTIVE,
-                'is_deleted' => IsDeletedEnum::NOT_DELETED
-            ]);
-            $query->indexBy('id');
-            if ($asArray){
-                $query->asArray();
-            }
-        });
-    }
-
-    /**
      *  Блок генератора копии с легалбета
      */
 

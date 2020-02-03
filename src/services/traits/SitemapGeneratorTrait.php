@@ -224,7 +224,17 @@ trait SitemapGeneratorTrait
      */
     public function setFilenameBySection($section, $filename, $static_filename_part, $limit)
     {
-        $models = $this->getAllBySection($section, null);
+        $models = $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename, $limit){
+            $query->andWhere("static_filename IS NULL OR static_filename=''");
+            $query->andWhere(['section' => $section]);
+            $query->andWhere([
+                'status' => StatusEnum::ACTIVE,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED,
+                'section' => $section
+            ]);
+            $query->indexBy('id');
+            $query->limit($limit);
+        });
         if (empty($models)){
             return;
         }
