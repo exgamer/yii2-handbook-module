@@ -12,6 +12,7 @@ use concepture\yii2logic\enum\Enum;
  */
 class SitemapGeneratorEnum extends Enum
 {
+    const DEFAULT_SECTION_NAME = 'main';
     const URLS_PER_FILE = 5000;
     const URLS_PER_FILE_BOOST = 500;
 }
