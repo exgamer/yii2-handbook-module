@@ -3,10 +3,10 @@
 use concepture\yii2logic\console\migrations\Migration;
 
 /**
- * Class m200109_042467__sitemap_table_fix
+ * Class m200109_042469__sitemap_table_fix
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class m200109_042467__sitemap_table_fix extends Migration
+class m200109_042469__sitemap_table_fix extends Migration
 {
     function getTableName()
     {
@@ -18,9 +18,8 @@ class m200109_042467__sitemap_table_fix extends Migration
      */
     public function safeUp()
     {
-        $this->removeColumn('static_file_id');
-        $this->createColumn("static_filename", $this->string(255));
-
+        $this->createColumn("static_filename_part", $this->integer());
+        $this->createColumn("static_filename_id", $this->bigInteger());
     }
 
     /**
