@@ -221,11 +221,12 @@ class SitemapService extends Service
      * Если null - где static_filename не указан
      * Если true - где static_filename указан
      * @param bool $filename
+     * @param bool $asArray
      * @return array
      */
-    public function getAllBySection($section, $filename = false)
+    public function getAllBySection($section, $filename = false, $asArray = false)
     {
-        return $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename){
+        return $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename, $asArray){
             if ($filename === null){
                 $query->andWhere("static_filename IS NULL OR static_filename=''");
             }
@@ -240,6 +241,9 @@ class SitemapService extends Service
                 'section' => $section,
             ]);
             $query->indexBy('id');
+            if ($asArray){
+                $query->asArray();
+            }
         });
     }
 
