@@ -224,7 +224,7 @@ trait SitemapGeneratorTrait
      */
     public function setFilenameBySection($section, $filename, $static_filename_part, $limit)
     {
-        $models = $this->getAllBySectionWithoutFilename($section);
+        $models = $this->getAllBySection($section, null);
         if (empty($models)){
             return;
         }
