@@ -224,7 +224,7 @@ class SitemapService extends Service
      * @param bool $asArray
      * @return array
      */
-    public function getAllBySection($section, $filename = false, $asArray = false)
+    public function getAllBySection($section = null, $filename = false, $asArray = false)
     {
         return $this->getAllByCondition(function (ActiveQuery $query) use ($section, $filename, $asArray){
             if ($filename === null){
@@ -235,10 +235,13 @@ class SitemapService extends Service
                 $query->andWhere("static_filename IS NOT NULL");
             }
 
+            if ($section){
+                $query->andWhere(['section' => $section]);
+            }
+
             $query->andWhere([
                 'status' => StatusEnum::ACTIVE,
-                'is_deleted' => IsDeletedEnum::NOT_DELETED,
-                'section' => $section,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED
             ]);
             $query->indexBy('id');
             if ($asArray){
