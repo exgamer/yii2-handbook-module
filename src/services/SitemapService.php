@@ -254,17 +254,18 @@ class SitemapService extends Service
      */
     public function getRowsSectionCountStat()
     {
-        $query = new Query();
-        $query->from('sitemap');
-        $query->select(['section', 'static_filename', 'static_filename_part', new Expression('COUNT(0) AS `count`')]);
-        $query->andWhere([
-            'status' => StatusEnum::ACTIVE,
-            'is_deleted' => IsDeletedEnum::NOT_DELETED
-        ]);
-        $query->groupBy(['section', 'static_filename', 'static_filename_part']);
-        $query->orderBy("section, static_filename_part");
+        $sql = "SELECT COUNT(0) AS `count`, section, static_filename, static_filename_part
+                from sitemap
+                WHERE status = :STATUS AND is_deleted = :IS_DELETED
+                GROUP BY section, static_filename, static_filename_part
+                ORDER BY section, static_filename_part
+        ";
+        $params = [
+            ':STATUS' => StatusEnum::ACTIVE,
+            ':IS_DELETED' => IsDeletedEnum::NOT_DELETED
+        ];
 
 
-        return $query->all();
+        return $this->queryAll($sql , $params);
     }
 }
