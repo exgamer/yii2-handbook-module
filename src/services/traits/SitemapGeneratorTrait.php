@@ -2,8 +2,10 @@
 namespace concepture\yii2handbook\services\traits;
 
 use concepture\yii2handbook\enum\FileExtensionEnum;
+use concepture\yii2handbook\enum\SitemapGeneratorEnum;
 use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use concepture\yii2handbook\forms\StaticFileForm;
+use concepture\yii2handbook\models\Sitemap;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\helpers\XmlHelper;
@@ -158,6 +160,86 @@ trait SitemapGeneratorTrait
 
 
         return "";
+    }
+
+    /**
+     * @TODO рефактор
+     *
+     * LB почти один в один COPYPAST
+     * Блок генератора копии с легалбета
+     */
+
+    public function prepare()
+    {
+        $stat = $this->getRowsSectionCountStat();
+        if(empty($stat)) {
+            return;
+        }
+
+        $last_row = null;
+        foreach($stat as $row){
+
+
+            if($row['static_filename']){
+                $last_row = $row;
+                continue;
+            }
+
+            if(!$last_row || $last_row['section'] != $row['section']){
+                // новая секция? сделать имя файла из секции
+                $num = 1;
+                $section = $row['section'];
+            }elseif($last_row['count'] < SitemapGeneratorEnum::URLS_PER_FILE){
+                $limit = SitemapGeneratorEnum::URLS_PER_FILE - $last_row['count'] + SitemapGeneratorEnum::URLS_PER_FILE_BOOST;
+                dump($limit);
+                $this->setFilenameBySection($row['section'], $last_row['static_filename'], $last_row['static_filename_part'], $limit);
+                continue;
+            }else{
+                // новый файл, такой же как предыдущий но следующий номер partX
+                $num = $last_row['static_filename_part'] + 1;
+                $section = $row['section'];
+            }
+
+            if(!$section){
+                $file_part_section = SitemapGeneratorEnum::DEFAULT_SECTION_NAME;
+            }else{
+                $file_part_section = str_replace(array('-', '.', ' '), '_', $section);
+            }
+
+            $filename = $file_part_section . '_part' . $num . '.' . FileExtensionEnum::XML;
+
+            $this->setFilenameBySection($section, $filename, $num, SitemapGeneratorEnum::URLS_PER_FILE);
+            $last_row = $row;
+        }
+    }
+
+    /**
+     * Обновляет данные по фаилу записей где не указан фаил
+     *
+     * @param $section
+     * @param $filename
+     * @param $static_filename_part
+     * @param $limit
+     * @return int|void
+     */
+    public function setFilenameBySection($section, $filename, $static_filename_part, $limit)
+    {
+        $models = $this->getAllBySectionWithoutFilename($section);
+        if (empty($models)){
+            return;
+        }
+
+        $ids = array_keys($models);
+
+        return Sitemap::updateAll(
+            [
+                'static_filename' => $filename,
+                'static_filename_part' => $static_filename_part,
+            ],
+            [
+                'id' => $ids
+            ]
+        );
     }
 
     /**
