@@ -175,6 +175,20 @@ return [
     </head>
     ...
 ```
+- подключение доменов ( пример common/config/params-local.php ) параметр hreflang включает домен
+```php
+    return [
+        'yii2handbook' => [
+            'domainMap' => [
+                'alias.loc' => [
+                    'alias' => 'alias',
+                    'locale' => 'ru',
+                    'hreflang' => 'ru-ru'
+                ]
+            ]
+        ]
+    ];
+```
 ## Модуль сортировки для контроллера
 - Создать сущность object (Служебные сущности - таблица `entity_type`)
 - Подключение в контроллере (пример backend\controllers\ObjectController)
