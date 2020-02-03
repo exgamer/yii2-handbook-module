@@ -57,6 +57,7 @@ class Sitemap extends ActiveRecord
                     'entity_type_id',
                     'entity_id',
                     'type',
+                    'static_filename_part',
                 ],
                 'integer',
             ],
