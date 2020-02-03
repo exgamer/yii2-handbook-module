@@ -68,7 +68,8 @@ class HreflangService extends Service
                 $rule->reinit($settings['alias']);
             }
 
-            $result[$settings['hreflang']] = $settings['shema'] . "://{$domain}/" . $rule->createUrl($manager, $route, $params);
+            $schema = $settings['shema'] ?? 'https';
+            $result[$settings['hreflang']] =  "{$schema}://{$domain}/{$rule->createUrl($manager, $route, $params)}";
         }
 
         if($result) {
