@@ -11,4 +11,9 @@ class SitemapController extends Controller
     {
         Yii::$app->sitemapService->generate();
     }
+
+    public function actionReGenerate()
+    {
+        Yii::$app->sitemapService->regenerate();
+    }
 }

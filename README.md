@@ -37,6 +37,10 @@
      
      php yii handbook/sitemap/generate 
      
+полная перегенерация карты саита 
+
+    php yii handbook/sitemap/re-generate
+     
 !!! для получения карты саита в frontend/web должны лежать стили для xml
      
 
