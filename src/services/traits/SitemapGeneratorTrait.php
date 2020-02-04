@@ -25,9 +25,10 @@ trait SitemapGeneratorTrait
     /**
      * Новый xml документ
      * @param string $rootName
+     * @param string $styleFilePath
      * @return \DOMDocument
      */
-    public function getNewDocument($rootName = 'urlset')
+    public function getNewDocument($rootName = 'urlset', $styleFilePath = "/sitemap.xsl")
     {
         $data = [
             'name' => $rootName, // "name" required, all else optional
@@ -51,7 +52,7 @@ trait SitemapGeneratorTrait
         ];
 
         $doc = new \DOMDocument("1.0", "UTF-8");
-        $xslt = $doc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/sitemap.xsl"');
+        $xslt = $doc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' .$styleFilePath. '"');
         $doc->appendChild($xslt);
         $child = XmlHelper::generateXmlElement( $doc, $data );
         if ( $child )
@@ -245,7 +246,7 @@ trait SitemapGeneratorTrait
      */
     public function generateIndexFile($scheme = 'https')
     {
-        $document = $this->getNewDocument('sitemapindex');
+        $document = $this->getNewDocument('sitemapindex', "/sitemapindex.xsl");
         $files = $this->staticFileService()->getSitemapIndexList();
         foreach($files as $row){
             $location = $this->getSitemapAbsoluteUrl("/".$row['filename'] . "." . $row['extension'], $scheme);
