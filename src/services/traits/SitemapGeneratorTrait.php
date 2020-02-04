@@ -8,6 +8,7 @@ use concepture\yii2handbook\forms\StaticFileForm;
 use concepture\yii2handbook\models\Sitemap;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
+use concepture\yii2logic\helpers\ClassHelper;
 use concepture\yii2logic\helpers\XmlHelper;
 use Exception;
 use Yii;
@@ -192,7 +193,6 @@ trait SitemapGeneratorTrait
                 $section = $row['section'];
             }elseif($last_row['count'] < SitemapGeneratorEnum::URLS_PER_FILE){
                 $limit = SitemapGeneratorEnum::URLS_PER_FILE - $last_row['count'] + SitemapGeneratorEnum::URLS_PER_FILE_BOOST;
-                dump($limit);
                 $this->setFilenameBySection($row['section'], $last_row['static_filename'], $last_row['static_filename_part'], $limit);
                 continue;
             }else{
@@ -272,38 +272,36 @@ trait SitemapGeneratorTrait
             return;
         }
 
+        $map[] = ClassHelper::modelToArray(new Sitemap());
         $urls = [];
         $section_files_count = $has_predefined = [];
         $last_key = null;
         $last_filename = false;
         $last_section = false;
-
         foreach($map as $row) {
-
             if((!isset($row['section']) || $row['section'] == '') && $row !== null){
                 $has_predefined[] = $row['location'];
             }
 
-            if ($last_section !== false) {
-                if ($last_filename != $row['static_filename']) {
-
-                    $this->generateFile(array_reverse($urls),
-                        $last_section,
-                        $last_filename
-                    );
-                    $urls = [];
-
+            if ($last_section !== false && $last_filename != $row['static_filename']) {
+                $result = $this->generateFile(array_reverse($urls),
+                    $last_section,
+                    $last_filename
+                );
+                if (! $result){
+                    throw new \yii\db\Exception("file not saved");
                 }
+
+                $urls = [];
             }
 
             $last_section = $row['section'];
             $last_filename = $row['static_filename'];
-
             $urls[] = array(
                 'location' => $row['location'],
                 'last_modified_dt' => $row['last_modified_dt'],
                 'priority' => $this->getPriority($row),
-//                'changefreq' => $row['changefreq'],
+//                'changefreq' => '', // В легале оно было но не использовалось
                 'id' => $row['id'],
                 'static_filename' => $row['static_filename'],
                 'section' => $row['section'],
@@ -352,7 +350,7 @@ trait SitemapGeneratorTrait
             $parent->appendChild($url);
         }
 
-        $this->saveFile($filename, $document->saveXML());
+        return $this->saveFile($filename, $document->saveXML());
     }
 
     private function saveFile($filename, $content)
@@ -362,21 +360,22 @@ trait SitemapGeneratorTrait
             'is_deleted' => IsDeletedEnum::NOT_DELETED,
             'filename' => $filename,
         ]);
-        d($currentFile);
-        if (! empty($currentFile)){
-            $this->sitemaps->saveGeneratedFile($filename, $content, $edit_dt, $locale);
+        if (empty($currentFile)){
+            $form = new StaticFileForm();
+            $form->filename = $filename;
+            $form->extension = FileExtensionEnum::XML;
+            $form->is_hidden = 1;
+            $form->content = $content;
+            $form->type = StaticFileTypeEnum::SITEMAP;
+
+            return Yii::$app->staticFileService->create($form);
         }
 
-        return;
-        if(empty($old_data)){
-            if($old_data['text'] != $content){
-                $this->sitemaps->updateSiteMap($filename, $content, $edit_dt, $locale);
-            }else {
-                return;
-            }
-        } else {
-            $this->sitemaps->saveGeneratedFile($filename, $content, $edit_dt, $locale);
+        if ($currentFile->content == $content){
+            return true;
         }
+
+        return Yii::$app->staticFileService->updateById($currentFile->id, ['content' => $content]);
     }
 
     /**
