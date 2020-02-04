@@ -21,6 +21,7 @@ class StaticFileForm extends Form
     public $filename;
     public $extension;
     public $content;
+    public $last_modified_dt;
 
     /**
      * @see CForm::formRules()

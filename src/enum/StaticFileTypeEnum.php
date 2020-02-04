@@ -15,6 +15,7 @@ class StaticFileTypeEnum extends Enum
     const CUSTOM = 0;
     const SITEMAP = 1;
     const ROBOTS = 2;
+    const SITEMAP_INDEX = 3;
 
     public static function labels($exclude = [])
     {

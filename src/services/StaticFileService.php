@@ -48,7 +48,9 @@ class StaticFileService extends Service
 
     protected function beforeModelSave(Model $form, ActiveRecord $model, $is_new_record)
     {
-        $model->last_modified_dt = Yii::$app->formatter->asDateTime('now', 'php:Y-m-d H:i:s');
+        if (! $model->last_modified_dt) {
+            $model->last_modified_dt = Yii::$app->formatter->asDateTime('now', 'php:Y-m-d H:i:s');
+        }
         parent::beforeModelSave($form, $model, $is_new_record);
     }
 
@@ -100,5 +102,21 @@ class StaticFileService extends Service
             'is_deleted' => IsDeletedEnum::NOT_DELETED,
             'type' => StaticFileTypeEnum::ROBOTS,
         ]);
+    }
+
+    /**
+     * Возвращает список файлов sitemap для индексного фаила
+     *
+     * @return mixed
+     */
+    public function getSitemapIndexList()
+    {
+        return $this->getAllByCondition(function (ActiveQuery $query){
+            $query->andWhere([
+                'status' => StatusEnum::ACTIVE,
+                'is_deleted' => IsDeletedEnum::NOT_DELETED,
+                'type' => StaticFileTypeEnum::SITEMAP,
+            ]);
+        });
     }
 }

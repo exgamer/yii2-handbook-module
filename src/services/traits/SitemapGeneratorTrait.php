@@ -62,106 +62,13 @@ trait SitemapGeneratorTrait
     }
 
     /**
-     * Возвращает static_file по filename
-     *
-     * @param $filename
-     * @return mixed
-     */
-    public function getStaticFileByFilename($filename)
-    {
-        $model = Yii::$app->staticFileService->getOneByCondition([
-            'filename' => $filename,
-            'type' => StaticFileTypeEnum::SITEMAP,
-            'status' => StatusEnum::ACTIVE,
-            'is_deleted' => IsDeletedEnum::NOT_DELETED
-        ]);
-        if (! $model){
-            $form = new StaticFileForm();
-            $form->type = StaticFileTypeEnum::SITEMAP;
-            $form->content = $this->getNewDocument();
-            $form->extension = FileExtensionEnum::XML;
-            $form->filename = $filename;
-            $form->is_hidden = 1;
-            $model = Yii::$app->staticFileService->create($form);
-        }
-
-        return $model;
-    }
-
-    /**
      * Возвращает карту саита
      *
      * @return string
      */
     public function getSitemapFile()
     {
-        $urlsPerFile = 2;
-        $sections = $this->getSections();
-        foreach ($sections as $section){
-            $models = $this->getAllBySection($section);
-            if (empty($models)){
-                continue;
-            }
-
-            $modelsMap = [];
-            $i = 1;
-            foreach ($models as $model){
-                $modelsMap[$i][strtotime($model->created_at)] = $model;
-                if ( count($modelsMap[$i]) >= $urlsPerFile ){
-                    $i++;
-                }
-            }
-
-            d($modelsMap);
-
-
-
-            $last_modified_dt = $models[0]->last_modified_dt;
-            $fileCount = (int) ceil(count($models) / $urlsPerFile);
-            $filenames = [];
-            for ($i = 1; $i <= $fileCount; $i++){
-                $filenames[] = $this->getStaticFileByFilename($section . "_part_" . $i);
-            }
-
-
-
-//            $filename = $section;
-//            $sitemap = $this->getStaticFileByFilename($filename);
-
-
-            dump($filenames);
-        }
-        return;
-
-
-
-        $doc = new \DOMDocument();
-        $doc->loadXML($sitemap->content);
-        $parent = $doc->getElementsByTagName('urlset')->item(0);
-        $url = $doc->createElement("url");
-        $loc = $doc->createElement("loc", "https://legalbet.ru/best-posts/zhelto-sinij-trend-v-otbore-evro-2016/");
-        $priority = $doc->createElement("priority", "0.5");
-        $url->appendChild($loc);
-        $url->appendChild($priority);
-        $parent->appendChild($url);
-
-
-        $xml = $doc->saveXML();
-
-
-        $xml = simplexml_load_string($xml);
-        if ($xml === false) {
-            echo "Failed loading XML: ";
-            foreach(libxml_get_errors() as $error) {
-                echo "<br>", $error->message;
-            }
-        } else {
-            d($xml);
-        }
-
-
-
-        return "";
+        return '';
     }
 
     /**
@@ -171,6 +78,10 @@ trait SitemapGeneratorTrait
      * Блок генератора копии с легалбета
      */
 
+    /**
+     * Получает данные по sitemap генерит названия файлов
+     * и записывает
+     */
     public function prepare()
     {
         $stat = $this->getRowsSectionCountStat();
@@ -253,6 +164,11 @@ trait SitemapGeneratorTrait
         );
     }
 
+    /**
+     * Генерация карты саита
+     *
+     * @throws Exception
+     */
     public function generate()
     {
         $this->prepare();
@@ -309,8 +225,8 @@ trait SitemapGeneratorTrait
 
 
         }
-//d($urls);
-//        $this->generateIndexFile();
+
+        $this->generateIndexFile();
 //
 //        $predefined_url = $this->getPredefinedUrls();
 //
@@ -334,38 +250,81 @@ trait SitemapGeneratorTrait
 
     }
 
-    public function generateFile($urls, $section, $filename)
+    /**
+     * Генерация индексного файла карты саита
+     */
+    public function generateIndexFile()
     {
         $host = Url::base(true);
+        $document = $this->getNewDocument('sitemapindex');
+        $files = $this->staticFileService()->getSitemapIndexList();
+        foreach($files as $row){
+            $location = $this->getSitemapAbsoluteUrl("/".$row['filename'] . "." . $row['extension']);
+            $parent = $document->getElementsByTagName('sitemapindex')->item(0);
+            $sitemap = $document->createElement("sitemap");
+            $loc = $document->createElement("loc", $location);
+            $lastmod = $document->createElement("lastmod", $row['last_modified_dt']);
+            $sitemap->appendChild($loc);
+            $sitemap->appendChild($lastmod);
+            $parent->appendChild($sitemap);
+        }
+
+        $this->saveFile('index.xml', $document->saveXML(), StaticFileTypeEnum::SITEMAP_INDEX);
+    }
+
+    /**
+     * Генерация фаила карты саита
+     * @param $urls
+     * @param $section
+     * @param $filename
+     * @return bool
+     */
+    public function generateFile($urls, $section, $filename)
+    {
+        $max_date = '';
         $document = $this->getNewDocument();
         foreach($urls as $row){
-            $row['location'] = $host . $row['location'];
+            $max_date = $row['last_modified_dt'] > $max_date ? $row['last_modified_dt'] : $max_date;
+            $location = $this->getSitemapAbsoluteUrl($row['location']);
             $parent = $document->getElementsByTagName('urlset')->item(0);
             $url = $document->createElement("url");
-            $loc = $document->createElement("loc", $row['location']);
+            $loc = $document->createElement("loc", $location);
             $priority = $document->createElement("priority", $row['priority']);
             $url->appendChild($loc);
             $url->appendChild($priority);
             $parent->appendChild($url);
         }
 
-        return $this->saveFile($filename, $document->saveXML());
+        return $this->saveFile($filename, $document->saveXML(), StaticFileTypeEnum::SITEMAP, $max_date);
     }
 
-    private function saveFile($filename, $content)
+    /**
+     * Сохранение фаила карты саита
+     *
+     * @param $filename
+     * @param $content
+     * @param int $type
+     * @param null $last_modified_dt
+     * @return bool
+     */
+    private function saveFile($filename, $content ,$type = StaticFileTypeEnum::SITEMAP, $last_modified_dt = null)
     {
+        $filename = str_replace("." . FileExtensionEnum::XML, "", $filename);
         $currentFile = Yii::$app->staticFileService->getOneByCondition([
             'status' => StatusEnum::ACTIVE,
             'is_deleted' => IsDeletedEnum::NOT_DELETED,
             'filename' => $filename,
+            'extension' => FileExtensionEnum::XML,
+            'type' => $type,
         ]);
+
         if (empty($currentFile)){
             $form = new StaticFileForm();
             $form->filename = $filename;
             $form->extension = FileExtensionEnum::XML;
             $form->is_hidden = 1;
             $form->content = $content;
-            $form->type = StaticFileTypeEnum::SITEMAP;
+            $form->type = $type;
 
             return Yii::$app->staticFileService->create($form);
         }
@@ -374,7 +333,24 @@ trait SitemapGeneratorTrait
             return true;
         }
 
-        return Yii::$app->staticFileService->updateById($currentFile->id, ['content' => $content]);
+        $updateParams = ['content' => $content];
+        if ($last_modified_dt){
+            $updateParams['last_modified_dt'] = $last_modified_dt;
+        }
+
+        return Yii::$app->staticFileService->updateById($currentFile->id, $updateParams);
+    }
+
+    /**
+     * Возвращает абсолютную ссылку на саитмап
+     *
+     * @return string
+     */
+    protected function getSitemapAbsoluteUrl($location)
+    {
+        $host = Url::base(true);
+
+        return  $host . '/sitemap' . $location;
     }
 
     /**
@@ -423,4 +399,3 @@ trait SitemapGeneratorTrait
         return '0.55';
     }
 }
-

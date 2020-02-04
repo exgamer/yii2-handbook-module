@@ -97,6 +97,13 @@ class StaticFile extends ActiveRecord
                 'default',
                 'value' => StaticFileTypeEnum::CUSTOM
             ],
+            [
+                [
+                    'last_modified_dt'
+                ],
+                'date',
+                'format' => 'php:Y-m-d H:i:s'
+            ],
         ];
     }
 
