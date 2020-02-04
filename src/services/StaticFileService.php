@@ -105,6 +105,32 @@ class StaticFileService extends Service
     }
 
     /**
+     * Возвращает карту саита
+     *
+     * @param $filename
+     * @return string
+     */
+    public function getSitemapFile($filename)
+    {
+        $parts = explode(".", $filename);
+        $parts = array_flip($parts);
+        $extension = array_pop($parts);
+        $parts = array_flip($parts);
+        $filename = implode(".", $parts);
+        if (count($parts) !== 2){
+            throw  new NotFoundHttpException();
+        }
+
+        return $this->getOneByCondition([
+            'status' => StatusEnum::ACTIVE,
+            'is_deleted' => IsDeletedEnum::NOT_DELETED,
+            'type' => [StaticFileTypeEnum::SITEMAP_INDEX, StaticFileTypeEnum::SITEMAP],
+            'filename' => $filename,
+            'extension' => $extension,
+        ]);
+    }
+
+    /**
      * Возвращает список файлов sitemap для индексного фаила
      *
      * @return mixed

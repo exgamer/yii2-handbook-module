@@ -21,10 +21,10 @@ class SitemapAction extends Action
     /**
      * @inheritDoc
      */
-    public function run()
+    public function run($filename)
     {
         $this->controller->layout = null;
-        $item = $this->sitemapService()->getSitemapFile();
+        $item = $this->staticFileService()->getSitemapFile($filename);
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();

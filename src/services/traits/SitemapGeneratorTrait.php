@@ -62,16 +62,6 @@ trait SitemapGeneratorTrait
     }
 
     /**
-     * Возвращает карту саита
-     *
-     * @return string
-     */
-    public function getSitemapFile()
-    {
-        return '';
-    }
-
-    /**
      * @TODO рефактор
      *
      * LB почти один в один COPYPAST
