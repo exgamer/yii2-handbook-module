@@ -117,12 +117,8 @@ class StaticFileService extends Service
         $extension = array_pop($parts);
         $parts = array_flip($parts);
         $filename = implode(".", $parts);
-        if (count($parts) !== 2){
-            throw  new NotFoundHttpException();
-        }
-
         if ($extension != FileExtensionEnum::XML){
-            throw  new NotFoundHttpException();
+            return null;
         }
 
         return $this->getOneByCondition([
