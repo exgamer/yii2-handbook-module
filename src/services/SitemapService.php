@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\services;
 
 use concepture\yii2handbook\forms\SitemapForm;
 use concepture\yii2handbook\services\traits\SitemapGeneratorTrait;
+use concepture\yii2handbook\services\traits\SitemapModifyTrait;
 use concepture\yii2handbook\traits\ServicesTrait;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\helpers\ClassHelper;
@@ -35,6 +36,7 @@ class SitemapService extends Service
     use HandbookModifySupportTrait;
     use HandbookReadSupportTrait;
     use SitemapGeneratorTrait;
+    use SitemapModifyTrait;
 
     /**
      * @inheritDoc
@@ -57,119 +59,6 @@ class SitemapService extends Service
     {
         $model->last_modified_dt = Yii::$app->formatter->asDateTime('now', 'php:Y-m-d H:i:s');
         parent::beforeModelSave($form, $model, $is_new_record);
-    }
-
-    /**
-     * Добавить в карту саита ссылку
-     *
-     * @param ActiveRecord $model
-     * @param string $controllerId
-     * @param array $urlParamAttrs
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function add($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
-    {
-        $section = $this->getEntityService($model)->getTableName();
-        $location = $this->getLocation($model, $controllerId, $urlParamAttrs);
-        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
-        if(! $entity_type) {
-            throw new Exception("Entity type {$section} not found.");
-        }
-
-        $current = $this->getOneByCondition([
-            'entity_type_id' => $entity_type->id,
-            'entity_id' => $model->id,
-        ]);
-
-        if ($current){
-            throw new \Exception("sitemap with entity_type_id: {$entity_type->id} and entity_id: {$model->id} exists. Please Check");
-        }
-
-        $form = new SitemapForm();
-        $form->entity_type_id = $entity_type->id;
-        $form->controller_id = $controllerId;
-        $form->entity_id = $model->id;
-        $form->location = $location;
-        $form->section = $section;
-
-        return $this->create($form);
-    }
-
-    /**
-     * Обновить карту саита
-     *
-     * @param ActiveRecord $model
-     * @param string $controllerId
-     * @param array $urlParamAttrs
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function refresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
-    {
-        $section = $this->getEntityService($model)->getTableName();
-        $location = $this->getLocation($model, $controllerId, $urlParamAttrs);
-        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
-        if(! $entity_type) {
-            throw new Exception("Entity type {$section} not found.");
-        }
-
-        $current = $this->getOneByCondition([
-            'entity_type_id' => $entity_type->id,
-            'entity_id' => $model->id,
-        ]);
-
-        if (! $current){
-            return $this->add($model, $controllerId, $urlParamAttrs);
-        }
-
-        if ($current->location == $location){
-            return;
-        }
-
-        $data = [];
-        $data['location'] = $location;
-
-        return $this->updateById($current->id, $data);
-    }
-
-    /**
-     * удалить карту саита
-     *
-     * @param ActiveRecord $model
-     *
-     * @return mixed
-     */
-    public function remove($model)
-    {
-        $section = $this->getEntityService($model)->getTableName();
-        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
-        if(! $entity_type) {
-            throw new Exception("Entity type {$section} not found.");
-        }
-
-        $current = $this->getOneByCondition([
-            'entity_type_id' => $entity_type->id,
-            'entity_id' => $model->id,
-        ]);
-        if (! $current){
-            return true;
-        }
-
-        return $this->delete($current);
-    }
-
-    /**
-     * @param $model
-     * @return Service
-     */
-    protected function getEntityService($model)
-    {
-        $serviceName = ClassHelper::getServiceName($model);
-
-        return  Yii::$app->{$serviceName};
     }
 
     /**
