@@ -91,8 +91,6 @@ trait SitemapGeneratorTrait
 
         $last_row = null;
         foreach($stat as $row){
-
-
             if($row['static_filename']){
                 $last_row = $row;
                 continue;
@@ -119,7 +117,6 @@ trait SitemapGeneratorTrait
             }
 
             $filename = $file_part_section . '_part' . $num . '.' . FileExtensionEnum::XML;
-
             $this->setFilenameBySection($section, $filename, $num, SitemapGeneratorEnum::URLS_PER_FILE);
             $last_row = $row;
         }
