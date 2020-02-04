@@ -342,11 +342,17 @@ trait SitemapGeneratorTrait
     /**
      * Возвращает абсолютную ссылку на саитмап
      *
+     * @param $location
+     * @param string $scheme
      * @return string
      */
-    protected function getSitemapAbsoluteUrl($location)
+    protected function getSitemapAbsoluteUrl($location, $scheme = 'https')
     {
         $host = $this->domainService()->getCurrentHost();
+        $parsed = parse_url($host);
+        if (empty($parsed['scheme'])) {
+            $host = $scheme . '://' . ltrim($host, '/');
+        }
 
         return  $host . '/sitemap' . $location;
     }
