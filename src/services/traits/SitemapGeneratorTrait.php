@@ -255,7 +255,6 @@ trait SitemapGeneratorTrait
      */
     public function generateIndexFile($scheme = 'https')
     {
-        $host = Url::base(true);
         $document = $this->getNewDocument('sitemapindex');
         $files = $this->staticFileService()->getSitemapIndexList();
         foreach($files as $row){
