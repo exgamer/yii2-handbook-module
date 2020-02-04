@@ -13,6 +13,13 @@ class Module extends \yii\base\Module
         $this->registerTranslations();
     }
 
+    public function bootstrap($app)
+    {
+        if ($app instanceof \yii\console\Application) {
+            $this->controllerNamespace = 'concepture\yii2handbook\console\controllers';
+        }
+    }
+
     public function registerTranslations()
     {
         Yii::$app->i18n->translations['yii2handbook'] = [
