@@ -8,7 +8,7 @@ use Yii;
  * Trait ReadSupportTrait
  * @package concepture\yii2handbook\services\traits
  */
-trait SitemapSupporttrait
+trait SitemapSupportTrait
 {
     /**
      * Обновление карты саита
