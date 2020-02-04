@@ -22,6 +22,16 @@
          ],
      ],
 
+Подключение модуля для консольного приложения
+
+     'modules' => [
+        'handbook' => [
+            'class' => 'concepture\yii2handbook\Module',
+            'controllerMap' => [
+                'sitemap' => 'concepture\yii2handbook\console\controllers\SitemapController',
+            ]
+        ],
+     ],
 
 Для работы с доменами в common/config/params-local.php добавить
  параметр в котором надо указать соответствие доменов (без http) к альясам из таблицы domains
