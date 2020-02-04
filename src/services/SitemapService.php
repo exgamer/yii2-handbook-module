@@ -226,12 +226,14 @@ class SitemapService extends Service
         $sql = "SELECT COUNT(0) AS `count`, section, static_filename, static_filename_part
                 from sitemap
                 WHERE status = :STATUS AND is_deleted = :IS_DELETED
+                AND domain_id = :DOMAIN_ID OR domain_id IS NULL
                 GROUP BY section, static_filename, static_filename_part
                 ORDER BY section, static_filename_part
         ";
         $params = [
             ':STATUS' => StatusEnum::ACTIVE,
-            ':IS_DELETED' => IsDeletedEnum::NOT_DELETED
+            ':IS_DELETED' => IsDeletedEnum::NOT_DELETED,
+            ':DOMAIN_ID' => Yii::$app->domainService->getCurrentDomainId()
         ];
 
 
