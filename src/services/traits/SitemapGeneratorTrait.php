@@ -249,7 +249,7 @@ trait SitemapGeneratorTrait
         $document = $this->getNewDocument('sitemapindex', "/sitemapindex.xsl");
         $files = $this->staticFileService()->getSitemapIndexList();
         foreach($files as $row){
-            $location = $this->getSitemapAbsoluteUrl("/".$row['filename'] . "." . $row['extension'], $scheme);
+            $location = $this->getSitemapAbsoluteUrl("/sitemap/".$row['filename'] . "." . $row['extension'], $scheme);
             $parent = $document->getElementsByTagName('sitemapindex')->item(0);
             $sitemap = $document->createElement("sitemap");
             $loc = $document->createElement("loc", $location);
@@ -348,7 +348,7 @@ trait SitemapGeneratorTrait
             $host = $scheme . '://' . ltrim($host, '/');
         }
 
-        return  $host . '/sitemap' . $location;
+        return  $host  . $location;
     }
 
     /**
