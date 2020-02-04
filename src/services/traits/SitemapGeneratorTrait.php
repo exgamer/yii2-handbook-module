@@ -339,7 +339,6 @@ trait SitemapGeneratorTrait
         $host = Url::base(true);
         $document = $this->getNewDocument();
         foreach($urls as $row){
-            $row['last_modified_dt'] = date('c', strtotime($row['last_modified_dt']));
             $row['location'] = $host . $row['location'];
             $parent = $document->getElementsByTagName('urlset')->item(0);
             $url = $document->createElement("url");
