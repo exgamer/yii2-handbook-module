@@ -119,7 +119,7 @@ class DomainUrlRule extends YiiUrlRule
             }else{
                 $hostName = $this->getRequest()->getHostName();
             }
-            
+
             $alias = $domainMap[$hostName]['alias'] ?? null;
             $this->locale = $domainMap[$hostName]['locale'] ?? null;
             if(! $alias) {

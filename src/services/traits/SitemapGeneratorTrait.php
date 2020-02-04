@@ -24,11 +24,53 @@ trait SitemapGeneratorTrait
 {
     /**
      * Перегенерация карты саита с нуля
+     * Для работы сервис должен использовать SitemapSupportTrait
      */
-    public function regenerate()
+    public function regenerate($scheme = 'https')
     {
+        Sitemap::deleteAll();
+        $this->staticFileService()->clearSiteMaps();
         $entities = $this->entityTypeService()->catalog('id', 'table_name');
+        foreach ($entities as $entity){
+            $service = $this->getServiceByEntityTable($entity);
+            if (! $service){
+                continue;
+            }
 
+            $traits = ClassHelper::getTraits($service);
+            if (! in_array(SitemapSupportTrait::class, $traits)){
+                continue;
+            }
+
+            /**
+             * @todo тут надо заменить выборку всего на использование  concepture\yii2logic\dataprocessor\DataProcessor
+             * иначе на больших данных умрет
+             */
+            $models = $service->getAllbyCondition(function(ActiveQuery $query) use ($service){
+                $model = $service->getRelatedModel();
+                $where = [];
+                if ($model->hasAttribute('status')){
+                    $where['status'] = StatusEnum::ACTIVE;
+                }
+
+                if ($model->hasAttribute('is_deleted')){
+                    $where['is_deleted'] = IsDeletedEnum::NOT_DELETED;
+                }
+
+                if (! empty($where)){
+                    $query->andWhere($where);
+                }
+            });
+            if (empty($models)){
+                continue;
+            }
+
+            foreach ($models as $model){
+                $service->updateById($model->id, []);
+            }
+        }
+
+        $this->generate($scheme);
     }
 
     /**
