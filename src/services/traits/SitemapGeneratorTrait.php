@@ -322,6 +322,7 @@ trait SitemapGeneratorTrait
             $form->is_hidden = 1;
             $form->content = $content;
             $form->type = $type;
+            $form->last_modified_dt = $last_modified_dt;
 
             return Yii::$app->staticFileService->create($form);
         }
