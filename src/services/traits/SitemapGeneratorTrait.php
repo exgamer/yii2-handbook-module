@@ -23,6 +23,15 @@ use yii\helpers\Url;
 trait SitemapGeneratorTrait
 {
     /**
+     * Перегенерация карты саита с нуля
+     */
+    public function regenerate()
+    {
+        $entities = $this->entityTypeService()->catalog('id', 'table_name');
+
+    }
+
+    /**
      * Новый xml документ
      * @param string $rootName
      * @param string $styleFilePath
@@ -65,7 +74,7 @@ trait SitemapGeneratorTrait
     /**
      * @TODO рефактор
      *
-     * LB почти один в один COPYPAST
+     * LB логика отрефакторенный COPYPAST с легал бета
      * Блок генератора копии с легалбета
      */
 

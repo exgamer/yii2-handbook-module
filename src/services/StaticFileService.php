@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\services;
 
 use concepture\yii2handbook\enum\FileExtensionEnum;
 use concepture\yii2handbook\enum\StaticFileTypeEnum;
+use concepture\yii2handbook\models\StaticFile;
 use concepture\yii2handbook\traits\ServicesTrait;
 use Yii;
 use yii\db\ActiveQuery;
@@ -142,5 +143,18 @@ class StaticFileService extends Service
                 'type' => StaticFileTypeEnum::SITEMAP,
             ]);
         });
+    }
+
+
+    /**
+     * Зачистить все саитмапы
+     *
+     * @return mixed
+     */
+    public function clearSiteMaps()
+    {
+        return StaticFile::deleteAll([
+            'type' => [StaticFileTypeEnum::SITEMAP, StaticFileTypeEnum::SITEMAP_INDEX]
+        ]);
     }
 }
