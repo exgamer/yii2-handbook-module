@@ -164,9 +164,10 @@ trait SitemapGeneratorTrait
     /**
      * Генерация карты саита
      *
+     * @param string $scheme
      * @throws Exception
      */
-    public function generate()
+    public function generate($scheme = 'https')
     {
         $this->prepare();
         /**
@@ -199,7 +200,8 @@ trait SitemapGeneratorTrait
             if ($last_section !== false && $last_filename != $row['static_filename']) {
                 $result = $this->generateFile(array_reverse($urls),
                     $last_section,
-                    $last_filename
+                    $last_filename,
+                    $scheme
                 );
                 if (! $result){
                     throw new \yii\db\Exception("file not saved");
@@ -223,7 +225,7 @@ trait SitemapGeneratorTrait
 
         }
 
-        $this->generateIndexFile();
+        $this->generateIndexFile($scheme);
 //
 //        $predefined_url = $this->getPredefinedUrls();
 //
@@ -249,14 +251,15 @@ trait SitemapGeneratorTrait
 
     /**
      * Генерация индексного файла карты саита
+     * @param string $scheme
      */
-    public function generateIndexFile()
+    public function generateIndexFile($scheme = 'https')
     {
         $host = Url::base(true);
         $document = $this->getNewDocument('sitemapindex');
         $files = $this->staticFileService()->getSitemapIndexList();
         foreach($files as $row){
-            $location = $this->getSitemapAbsoluteUrl("/".$row['filename'] . "." . $row['extension']);
+            $location = $this->getSitemapAbsoluteUrl("/".$row['filename'] . "." . $row['extension'], $scheme);
             $parent = $document->getElementsByTagName('sitemapindex')->item(0);
             $sitemap = $document->createElement("sitemap");
             $loc = $document->createElement("loc", $location);
@@ -274,15 +277,16 @@ trait SitemapGeneratorTrait
      * @param $urls
      * @param $section
      * @param $filename
+     * @param string $scheme
      * @return bool
      */
-    public function generateFile($urls, $section, $filename)
+    public function generateFile($urls, $section, $filename, $scheme = 'https')
     {
         $max_date = '';
         $document = $this->getNewDocument();
         foreach($urls as $row){
             $max_date = $row['last_modified_dt'] > $max_date ? $row['last_modified_dt'] : $max_date;
-            $location = $this->getSitemapAbsoluteUrl($row['location']);
+            $location = $this->getSitemapAbsoluteUrl($row['location'], $scheme);
             $parent = $document->getElementsByTagName('urlset')->item(0);
             $url = $document->createElement("url");
             $loc = $document->createElement("loc", $location);
