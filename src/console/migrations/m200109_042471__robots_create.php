@@ -10,9 +10,9 @@ use concepture\yii2logic\enum\IsDeletedEnum;
 
 
 /**
- * Class m200109_042461__robots_create
+ * Class m200109_042471__robots_create
  */
-class m200109_042461__robots_create extends Migration
+class m200109_042471__robots_create extends Migration
 {
     use ServicesTrait;
     /**
@@ -20,6 +20,13 @@ class m200109_042461__robots_create extends Migration
      */
     public function safeUp()
     {
+        $model = Yii::$app->staticFileService->getOneByCondition([
+            'type' => StaticFileTypeEnum::ROBOTS
+        ]);
+        if ($model){
+            return;
+        }
+
         $form = new StaticFileForm();
         $form->filename = "robots";
         $form->extension = FileExtensionEnum::TXT;
