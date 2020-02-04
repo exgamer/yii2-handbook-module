@@ -113,9 +113,7 @@ class StaticFileService extends Service
     public function getSitemapFile($filename)
     {
         $parts = explode(".", $filename);
-        $parts = array_flip($parts);
         $extension = array_pop($parts);
-        $parts = array_flip($parts);
         $filename = implode(".", $parts);
         if ($extension != FileExtensionEnum::XML){
             return null;
