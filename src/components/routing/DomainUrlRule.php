@@ -114,7 +114,12 @@ class DomainUrlRule extends YiiUrlRule
                 $domainMap = $domainService->getDomainMap();
             }
 
-            $hostName = $this->getRequest()->getHostName();
+            if (! Yii::$app instanceof \yii\web\Application) {
+                $hostName = Yii::$app->domainService->getCurrentHost();
+            }else{
+                $hostName = $this->getRequest()->getHostName();
+            }
+            
             $alias = $domainMap[$hostName]['alias'] ?? null;
             $this->locale = $domainMap[$hostName]['locale'] ?? null;
             if(! $alias) {
