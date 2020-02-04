@@ -176,6 +176,14 @@ class DomainService extends Service
                 return $GLOBALS['VIRTUAL_HOST'];
             }
 
+            /**
+             * Для проектов где используется --alias при вызове консольных команд
+             * должно быть установлена переменная APP_HOST для получения хоста из консольки
+             */
+            if (defined('APP_HOST')){
+                return APP_HOST;
+            }
+
             return null;
         }
 

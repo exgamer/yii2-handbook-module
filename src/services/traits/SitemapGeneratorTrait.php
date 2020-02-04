@@ -346,7 +346,7 @@ trait SitemapGeneratorTrait
      */
     protected function getSitemapAbsoluteUrl($location)
     {
-        $host = Url::base(true);
+        $host = $this->domainService()->getCurrentHost();
 
         return  $host . '/sitemap' . $location;
     }
