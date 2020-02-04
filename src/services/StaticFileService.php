@@ -121,6 +121,10 @@ class StaticFileService extends Service
             throw  new NotFoundHttpException();
         }
 
+        if ($extension != FileExtensionEnum::XML){
+            throw  new NotFoundHttpException();
+        }
+
         return $this->getOneByCondition([
             'status' => StatusEnum::ACTIVE,
             'is_deleted' => IsDeletedEnum::NOT_DELETED,

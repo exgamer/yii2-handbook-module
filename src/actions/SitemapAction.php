@@ -8,6 +8,7 @@ use yii\base\Action;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use yii\web\Response;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class SitemapAction
@@ -31,7 +32,7 @@ class SitemapAction extends Action
         $headers->add('Content-Type', 'text/xml');
 
         if(! $item) {
-            return null;
+            throw  new NotFoundHttpException();
         }
 
         return $item->content;
