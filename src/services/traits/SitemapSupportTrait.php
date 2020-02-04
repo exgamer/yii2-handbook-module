@@ -14,16 +14,17 @@ trait SitemapSupportTrait
      * Обновление карты саита
      *
      * @param $model
+     * @param null $controllerId
+     * @param array $urlParamAttrs
      * @param bool $forceDelete
      * @return mixed
      */
-    public function sitemapRefresh($model, $forceDelete = false)
+    public function sitemapRefresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'], $forceDelete = false)
     {
         if ($forceDelete || $model->status != StatusEnum::ACTIVE){
-            return Yii::$app->sitemapService->remove($model);;
+            return Yii::$app->sitemapService->remove($model,$controllerId, $urlParamAttrs );;
         }
 
         return Yii::$app->sitemapService->refresh($model);
     }
 }
-
