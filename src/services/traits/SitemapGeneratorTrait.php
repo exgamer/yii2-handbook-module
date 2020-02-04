@@ -25,6 +25,8 @@ trait SitemapGeneratorTrait
     /**
      * Перегенерация карты саита с нуля
      * Для работы сервис должен использовать SitemapSupportTrait
+     * @param string $scheme
+     * @throws Exception
      */
     public function regenerate($scheme = 'https')
     {
