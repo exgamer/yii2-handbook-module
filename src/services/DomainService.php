@@ -107,12 +107,14 @@ class DomainService extends Service
 
         $domains = $this->catalog();
         $domains = array_flip($domains);
-        /**
-         * Для проектов где используется --alias при вызове консольных команд
-         * должно быть установлена переменная APP_ALIAS для получения domain_id
-         */
-        if (defined('APP_ALIAS')){
-            return $domains[APP_ALIAS] ?? null;
+        if (! Yii::$app instanceof \yii\web\Application) {
+            /**
+             * Для проектов где используется --alias при вызове консольных команд
+             * должно быть установлена переменная APP_ALIAS для получения domain_id
+             */
+            if (defined('APP_ALIAS')) {
+                return $domains[APP_ALIAS] ?? null;
+            }
         }
 
         $domainMap = $this->getDomainMap();
