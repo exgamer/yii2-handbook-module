@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\actions;
 
+use concepture\yii2handbook\enum\FileExtensionEnum;
 use concepture\yii2handbook\traits\ServicesTrait;
 use Yii;
 use yii\base\Action;
@@ -28,7 +29,7 @@ class StaticFileAction extends Action
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();
-        $headers->add('Content-Type', 'text/' . $item->extension);
+        $headers->add('Content-Type', FileExtensionEnum::getContentType($item->extension));
 
         if(! $item) {
             return null;
