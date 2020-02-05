@@ -35,49 +35,7 @@ $saveButton = Html::submitButton(
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <?= $form->field($model, 'filename')->textInput(['maxlength' => true, 'disabled' => ($model->type == StaticFileTypeEnum::ROBOTS ? true : false )]) ?>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <?= $form
-                        ->field($model, 'extension')
-                        ->dropDownList(FileExtensionEnum::labels(), [
-                            'class' => 'form-control form-control-uniform',
-                            'prompt' => Yii::t('yii2admin', 'Выберите тип фаила'),
-                            'disabled' => ($model->type == StaticFileTypeEnum::ROBOTS ? true : false )
-                        ]);
-                    ?>
-                </div>
-                <!--                    <div class="col-lg-12 col-md-12 col-sm-12">-->
-                <!--                        --><?//= $form
-                //                            ->field($model, 'type')
-                //                            ->dropDownList(StaticFileTypeEnum::labels([StaticFileTypeEnum::SITEMAP, StaticFileTypeEnum::ROBOTS]), [
-                //                                'class' => 'form-control form-control-uniform',
-                //                                'prompt' => Yii::t('yii2admin', 'Выберите тип фаила')
-                //                            ]);
-                //                        ?>
-                <!--                    </div>-->
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <?= $form->field($model, 'content')->textarea(['style' => 'min-height:350px']) ?>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <?= $form
-                        ->field($model, 'status', [
-                            'template' => '
-                                                <div class="form-check form-check-inline mt-2">
-                                                    {input}
-                                                </div>
-                                                {error}
-                                            '
-                        ])
-                        ->checkbox(
-                            [
-                                'label' => Yii::t('yii2admin', 'Активировано'),
-                                'class' => 'form-check-input-styled-primary',
-                                'labelOptions' => ['class' => 'form-check-label control-label']
-                            ],
-                            true
-                        )
-                    ?>
+                    <?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
                 </div>
             </div>
         </div>
