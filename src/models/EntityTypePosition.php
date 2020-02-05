@@ -2,10 +2,10 @@
 
 namespace concepture\yii2handbook\models;
 
+use concepture\yii2logic\validators\DomainBasedUniqueValidator;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\validators\TranslitValidator;
-use concepture\yii2handbook\models\EntityType;
 use concepture\yii2logic\models\traits\StatusTrait;
 
 /**
@@ -84,16 +84,12 @@ class EntityTypePosition extends ActiveRecord
                 TranslitValidator::class,
                 'source' => 'caption'
             ],
-            /**
-             * @TODO с этим есть проблема при валидации на мультидоменных проектах из за того что alias и domain_id не required
-             */
-//            [
-//                [
-//                    'alias',
-//                    'domain_id',
-//                ],
-//                'unique',
-//            ],
+            [
+                [
+                    'alias',
+                ],
+                DomainBasedUniqueValidator::class
+            ],
         ];
     }
 
