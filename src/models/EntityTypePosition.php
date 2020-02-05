@@ -85,7 +85,7 @@ class EntityTypePosition extends ActiveRecord
                 'source' => 'caption'
             ],
             /**
-             * @TODO с этим есть проблема при валидации
+             * @TODO с этим есть проблема при валидации на мультидоменных проектах
              */
 //            [
 //                [
