@@ -21,6 +21,16 @@ class FileExtensionEnum extends Enum
      *   'suffix' => ''
      *   ],
      *
+     * либо в роутере должно быть что то такое
+     *
+     *   $static_file_extensions = FileExtensionEnum::values();
+     *   $static_file_extensions = implode('|', $static_file_extensions);
+     *
+     *  [
+     *   'pattern' =>  "<filename:([a-z_\-\d]+\.({$static_file_extensions}))>",
+     *   'route' => 'site/static-file',
+     *   'suffix' => ''
+     *   ],
      */
 
 
