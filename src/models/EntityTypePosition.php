@@ -84,12 +84,16 @@ class EntityTypePosition extends ActiveRecord
                 TranslitValidator::class,
                 'source' => 'caption'
             ],
-            [
-                [
-                    'alias',
-                ],
-                'unique',
-            ],
+            /**
+             * @TODO с этим есть проблема при валидации
+             */
+//            [
+//                [
+//                    'alias',
+//                    'domain_id',
+//                ],
+//                'unique',
+//            ],
         ];
     }
 
