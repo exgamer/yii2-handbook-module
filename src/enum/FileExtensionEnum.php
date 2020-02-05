@@ -12,6 +12,18 @@ use concepture\yii2logic\enum\Enum;
  */
 class FileExtensionEnum extends Enum
 {
+    /**
+     * При добалении нового расширения фаила
+     * НЕ ЗАБУДЬ ДОБАВИТЬ РАСШИРЕНИЕ В РЕГУЛЯРКУ РОУТА
+     *   [
+     *   'pattern' =>  "<filename:([a-z_\-\d]+\.(xml|txt))>",
+     *   'route' => 'site/static-file',
+     *   'suffix' => ''
+     *   ],
+     *
+     */
+
+
     const XML = "xml";
     const TXT = "txt";
 
