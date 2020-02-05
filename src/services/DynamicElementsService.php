@@ -399,11 +399,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $index++;
         }
 
-        $result = $this->batchInsert(['id', 'value'], $data);
-        $event = new ServiceEvent(['sender' => $form]);
-        $this->trigger(ServiceEventEnum::EVENT_AFTER_BATCH_INSERT, $event);
-
-        return $result;
+        return $this->batchInsert(['id', 'value'], $data);
     }
 
     /**

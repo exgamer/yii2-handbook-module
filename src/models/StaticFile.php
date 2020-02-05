@@ -104,6 +104,14 @@ class StaticFile extends ActiveRecord
                 'date',
                 'format' => 'php:Y-m-d H:i:s'
             ],
+            [
+                [
+                    'filename',
+                    'extension'
+                ],
+                'filter',
+                'filter'=>'strtolower'
+            ],
         ];
     }
 

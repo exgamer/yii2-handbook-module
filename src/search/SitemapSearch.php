@@ -22,6 +22,7 @@ class SitemapSearch extends Sitemap
                 [
                     'id',
                     'status',
+                    'type',
                     'domain_id',
                     'is_deleted',
                 ],
@@ -40,6 +41,9 @@ class SitemapSearch extends Sitemap
         ]);
         $query->andFilterWhere([
             static::tableName().'.status' => $this->status
+        ]);
+        $query->andFilterWhere([
+            static::tableName().'.type' => $this->type
         ]);
         $query->andFilterWhere([
             static::tableName().'.domain_id' => $this->domain_id

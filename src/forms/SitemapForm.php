@@ -34,9 +34,6 @@ class SitemapForm extends BaseForm
         return [
             [
                 [
-                    'entity_type_id',
-                    'controller_id',
-                    'entity_id',
                     'location'
                 ],
                 'required'
