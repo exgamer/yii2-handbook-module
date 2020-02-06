@@ -274,27 +274,6 @@ trait SitemapGeneratorTrait
         $this->generateIndexFile($scheme);
 
         Yii::info('Sitemap generate end...', 'sitemap_generator');
-//
-//        $predefined_url = $this->getPredefinedUrls();
-//
-//        if($predefined_url){
-//            foreach($predefined_url as $url){
-//                if(!in_array($url['loc'], $has_predefined)){
-//                    $row = new Sitemap();
-//                    $row->setLoc($url['loc']);
-//                    $row->setSection('');
-//                    $row->setChangefreq('daily');
-//                    $dt = new \DateTime();
-//                    $dt->setTimestamp(strtotime($url['lastmod']));
-//                    $row->setLastmod($dt);
-//                    $row->setObjectId(0);
-//                    $row->setObjectType(null);
-//                    $this->em->persist($row);
-//                    $this->em->flush();
-//                }
-//            }
-//        }
-
     }
 
     /**
