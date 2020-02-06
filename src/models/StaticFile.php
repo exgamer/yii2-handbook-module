@@ -85,10 +85,12 @@ class StaticFile extends ActiveRecord
             [
                 [
                     'filename',
-                    'extension'
+                    'extension',
+                    'type',
+                    'domain_id',
                 ],
                 'unique',
-                'targetAttribute' => ['filename', 'extension']
+                'targetAttribute' => ['filename', 'extension', 'type', 'domain_id']
             ],
             [
                 [
