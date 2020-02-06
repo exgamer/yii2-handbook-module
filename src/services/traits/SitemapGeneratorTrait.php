@@ -132,6 +132,7 @@ trait SitemapGeneratorTrait
         if(empty($stat)) {
             return;
         }
+        Yii::info(count($stat) . ' sections found', 'sitemap_generator');
 
         $last_row = null;
         foreach($stat as $row){
@@ -213,6 +214,7 @@ trait SitemapGeneratorTrait
      */
     public function generate($scheme = 'https')
     {
+        Yii::info('Sitemap generate start...', 'sitemap_generator');
         $this->prepare();
         /**
          *  получаем всю карту сайта из базы (только те урлы у которых уже указан файл)
@@ -270,6 +272,8 @@ trait SitemapGeneratorTrait
         }
 
         $this->generateIndexFile($scheme);
+
+        Yii::info('Sitemap generate end...', 'sitemap_generator');
 //
 //        $predefined_url = $this->getPredefinedUrls();
 //
@@ -313,6 +317,7 @@ trait SitemapGeneratorTrait
         }
 
         $this->saveFile('index.xml', $document->saveXML(), StaticFileTypeEnum::SITEMAP_INDEX);
+        Yii::info('index file generated', 'sitemap_generator');
     }
 
     /**
