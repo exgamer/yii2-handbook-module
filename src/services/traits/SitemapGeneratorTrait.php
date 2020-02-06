@@ -310,7 +310,8 @@ trait SitemapGeneratorTrait
             $parent = $document->getElementsByTagName('sitemapindex')->item(0);
             $sitemap = $document->createElement("sitemap");
             $loc = $document->createElement("loc", $location);
-            $lastmod = $document->createElement("lastmod", $row['last_modified_dt']);
+            $date = Yii::$app->formatter->asDateTime('now', 'php:Y-m-d\TH:iP');
+            $lastmod = $document->createElement("lastmod", $date);
             $sitemap->appendChild($loc);
             $sitemap->appendChild($lastmod);
             $parent->appendChild($sitemap);
