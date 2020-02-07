@@ -6,6 +6,7 @@ use concepture\yii2logic\services\Service;
 use concepture\yii2logic\traits\ConfigAwareTrait;
 use yii\helpers\Url;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class DomainService
@@ -51,6 +52,29 @@ class DomainService extends Service
     public function getDomainMap()
     {
         return $this->getConfigItem('domainMap');
+    }
+
+    /**
+     * @return integer
+     */
+    public function getLocaleByDomainMap()
+    {
+        $domainMap = $this->getDomainMap();
+        if (empty($domainMap)){
+            return null;
+        }
+
+        $domainMap = ArrayHelper::index($domainMap, 'alias');
+        $currentDomain = $this->getCurrentDomain();
+        if (empty($currentDomain)){
+            throw new \Exception("curernt domain not found");
+        }
+        $locale = $domainMap[$currentDomain->alias]['locale'] ?? null;
+        if (! $locale){
+            throw new \Exception("curerent domain locale unknown");
+        }
+
+        return $locale;
     }
 
     /**

@@ -7,6 +7,7 @@ use concepture\yii2logic\services\Service;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\services\traits\StatusTrait;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class LocaleService
@@ -31,7 +32,14 @@ class LocaleService extends Service
             return $result;
         }
 
-        $locale = Yii::$app->language;
+        /**
+         * Если есть параметр DomainMap тащим язык из него
+         */
+        $locale = Yii::$app->domainService->getLocaleByDomainMap();
+        if (!$locale){
+            $locale = Yii::$app->language;
+        }
+
         if (
             Yii::$app->has('request')
             && Yii::$app->getRequest() instanceof \yii\web\Request
