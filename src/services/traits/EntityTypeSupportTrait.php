@@ -19,6 +19,6 @@ trait EntityTypeSupportTrait
     {
         $tableName = $this->getTableName();
 
-        return Yii::$app->entityTypeService->catalogKey($tableName);
+        return Yii::$app->entityTypeService->catalogKey($tableName, 'id', 'table_name');
     }
 }
