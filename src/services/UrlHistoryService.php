@@ -52,16 +52,17 @@ class UrlHistoryService extends Service
      * Обновить
      *
      * @param ActiveRecord $model
+     * @param null $moduleId
      * @param string $controllerId
+     * @param string $actionId
      * @param array $urlParamAttrs
      *
      * @return mixed
-     * @throws Exception
      */
-    public function refresh($model, $controllerId = null, $actionId = "view", $urlParamAttrs = ['seo_name'])
+    public function refresh($model, $moduleId = null, $controllerId = null, $actionId = "view", $urlParamAttrs = ['seo_name'])
     {
         $tableName = $this->getEntityService($model)->getTableName();
-        $location = UrlHelper::getLocation($model, $urlParamAttrs,  $controllerId, $actionId);
+        $location = UrlHelper::getLocation($model, $urlParamAttrs,  $controllerId, $actionId, $moduleId);
         $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $tableName], true);
         if(! $entity_type) {
             throw new Exception("Entity type {$section} not found.");
