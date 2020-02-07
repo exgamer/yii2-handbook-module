@@ -60,8 +60,9 @@ class UrlHistoryService extends Service
      */
     public function refresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
     {
+        $tableName = $this->getEntityService($model)->getTableName();
         $location = UrlHelper::getLocation($model, $urlParamAttrs,  $controllerId);
-        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
+        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $tableName], true);
         if(! $entity_type) {
             throw new Exception("Entity type {$section} not found.");
         }
@@ -76,7 +77,7 @@ class UrlHistoryService extends Service
             return true;
         }
 
-        $last = $this->getOneByCondition(function(ActiveQuery $query) use($entity_type) {
+        $last = $this->getOneByCondition(function(ActiveQuery $query) use($entity_type, $model) {
             $query->andWhere([
                 'entity_type_id' => $entity_type->id,
                 'entity_id' => $model->id,
