@@ -55,6 +55,8 @@ class DomainService extends Service
     }
 
     /**
+     * Возвращает локаль по domain map
+     *
      * @return integer
      */
     public function getLocaleByDomainMap()
