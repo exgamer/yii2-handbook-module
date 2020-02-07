@@ -2,7 +2,10 @@
 
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2handbook\forms\UrlHistoryForm;
+use concepture\yii2handbook\models\UrlHistory;
 use concepture\yii2handbook\traits\ServicesTrait;
+use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
@@ -42,5 +45,54 @@ class UrlHistoryService extends Service
     protected function extendQuery(ActiveQuery $query)
     {
         $this->applyDomain($query);
+    }
+
+
+    /**
+     * Обновить
+     *
+     * @param ActiveRecord $model
+     * @param string $controllerId
+     * @param array $urlParamAttrs
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function refresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'])
+    {
+        $location = UrlHelper::getLocation($model, $urlParamAttrs,  $controllerId);
+        $entity_type = $this->entityTypeService()->getOneByCondition(['table_name' => $section], true);
+        if(! $entity_type) {
+            throw new Exception("Entity type {$section} not found.");
+        }
+
+        $current = $this->getOneByCondition([
+            'entity_type_id' => $entity_type->id,
+            'entity_id' => $model->id,
+            'location' => $location,
+        ]);
+
+        if ($current){
+            return true;
+        }
+
+        $last = $this->getOneByCondition(function(ActiveQuery $query) use($entity_type) {
+            $query->andWhere([
+                'entity_type_id' => $entity_type->id,
+                'entity_id' => $model->id,
+            ]);
+            $query->orderBy('id DESC');
+        });
+
+        $form = new UrlHistoryForm();
+        $form->entity_type_id = $entity_type->id;
+        $form->controller_id = $controllerId;
+        $form->entity_id = $model->id;
+        $form->location = $location;
+        if ($last){
+            $form->parent_id = $last->id;
+        }
+
+        return $this->create($form);
     }
 }
