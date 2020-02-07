@@ -17,10 +17,8 @@ trait EntityTypeSupportTrait
      */
     public function getEntityTypeId()
     {
-        $modelClass = $this->getRelatedModelClass();
-        $tableName = $modelClass::tableName();
+        $tableName = $this->getTableName();
 
         return Yii::$app->entityTypeService->catalogKey($tableName);
     }
 }
-
