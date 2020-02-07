@@ -4,6 +4,8 @@ namespace concepture\yii2handbook\services;
 
 use concepture\yii2handbook\forms\UrlHistoryForm;
 use concepture\yii2handbook\models\UrlHistory;
+use concepture\yii2handbook\services\interfaces\UrlHistoryInterface;
+use concepture\yii2handbook\services\traits\SitemapSupportTrait;
 use concepture\yii2handbook\traits\ServicesTrait;
 use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
@@ -95,5 +97,50 @@ class UrlHistoryService extends Service
         }
 
         return $this->create($form);
+    }
+
+    public function regenerate()
+    {
+        Yii::info('Url history regenerate start...');
+        $entities = $this->entityTypeService()->catalog('id', 'table_name');
+        foreach ($entities as $entity){
+            $service = $this->getServiceByEntityTable($entity);
+            if (! $service){
+                continue;
+            }
+
+            if (! $entity instanceof UrlHistoryInterface){
+                continue;
+            }
+            Yii::info('Url history regenerate for ' . $entity);
+            /**
+             * @todo тут надо заменить выборку всего на использование  concepture\yii2logic\dataprocessor\DataProcessor
+             * иначе на больших данных умрет
+             */
+            $models = $service->getAllbyCondition(function(ActiveQuery $query) use ($service){
+                $model = $service->getRelatedModel();
+                $where = [];
+                if ($model->hasAttribute('status')){
+                    $where['status'] = StatusEnum::ACTIVE;
+                }
+
+                if ($model->hasAttribute('is_deleted')){
+                    $where['is_deleted'] = IsDeletedEnum::NOT_DELETED;
+                }
+
+                if (! empty($where)){
+                    $query->andWhere($where);
+                }
+            });
+            if (empty($models)){
+                continue;
+            }
+
+            foreach ($models as $model){
+                $service->updateById($model->id, []);
+            }
+        }
+
+        Yii::info('Url history regenerate end...');
     }
 }

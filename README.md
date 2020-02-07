@@ -29,6 +29,7 @@
             'class' => 'concepture\yii2handbook\Module',
             'controllerMap' => [
                 'sitemap' => 'concepture\yii2handbook\console\controllers\SitemapController',
+                'url-history' => 'concepture\yii2handbook\console\controllers\UrlHistoryController',
             ]
         ],
      ],
@@ -40,6 +41,19 @@
 полная перегенерация карты саита 
 
     php yii handbook/sitemap/re-generate
+    
+Для каждой сущности которая должна быть в карте саита в сервисе подключаем треит SitemapSupportTrait
+и реализуем вызов метода sitemapRefresh в afterModelSave и afterDelete
+    
+    
+
+Генерация истории урлов для сущностей
+
+    php yii handbook/url-history/re-generate
+    
+Для каждой сущности которая должна быть в истории в сервисе подключаем интерфеис UrlHistoryInterface
+и реализуем вызов метода refresh в afterModelSave
+    
      
 !!! для получения карты саита в frontend/web должны лежать стили для xml
      
