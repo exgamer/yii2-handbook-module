@@ -3,9 +3,9 @@
 namespace concepture\yii2handbook\services;
 
 use concepture\yii2handbook\forms\UrlHistoryForm;
-use concepture\yii2handbook\models\UrlHistory;
+use concepture\yii2logic\enum\StatusEnum;
+use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2handbook\services\interfaces\UrlHistoryInterface;
-use concepture\yii2handbook\services\traits\SitemapSupportTrait;
 use concepture\yii2handbook\traits\ServicesTrait;
 use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
