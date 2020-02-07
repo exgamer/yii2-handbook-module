@@ -40,6 +40,9 @@ return [
     'sitemapService' => [
         'class' => 'concepture\yii2handbook\services\SitemapService'
     ],
+    'urlHistoryService' => [
+        'class' => 'concepture\yii2handbook\services\UrlHistoryService'
+    ],
     'hreflangService' => [
         'class' => 'concepture\yii2handbook\components\routing\HreflangService'
     ],

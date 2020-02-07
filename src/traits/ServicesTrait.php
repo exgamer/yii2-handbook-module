@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\traits;
 
 use concepture\yii2handbook\services\SitemapService;
 use concepture\yii2handbook\services\StaticFileService;
+use concepture\yii2handbook\services\UrlHistoryService;
 use Yii;
 use concepture\yii2handbook\services\CountryService;
 use concepture\yii2handbook\services\CurrencyService;
@@ -135,6 +136,14 @@ trait ServicesTrait
     public function sitemapService()
     {
         return Yii::$app->sitemapService;
+    }
+
+    /**
+     * @return UrlHistoryService
+     */
+    public function urlHistoryService()
+    {
+        return Yii::$app->urlHistoryService;
     }
 }
 
