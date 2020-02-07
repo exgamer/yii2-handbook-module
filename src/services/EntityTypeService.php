@@ -1,38 +1,70 @@
 <?php
-
 namespace concepture\yii2handbook\services;
 
-use Yii;
+use concepture\yii2handbook\converters\LocaleConverter;
+use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\services\Service;
+use concepture\yii2logic\enum\StatusEnum;
+use concepture\yii2logic\services\traits\StatusTrait;
+use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
- * Class EntityTypeService
- * @package concepture\yii2handbook\services
+ * Class LocaleService
+ * @package concepture\yii2handbook\service
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class EntityTypeService extends Service
+class LocaleService extends Service
 {
-    /**
-     * @see \concepture\yii2logic\services\traits\CatalogTrait
-     */
-    protected function catalogKeyPreAction(&$value, &$catalog)
-    {
-        $value = trim($value, '{}');
-    }
+    use StatusTrait;
 
     /**
-     * @inheritDoc
+     * Возвращает ID текущей локали приложения
      *
-     * @param bool $cache
+     * @param bool $reset
+     * @return int|array
      */
-    public function getOneByCondition($condition = null, $cache = false)
+    public function getCurrentLocaleId($reset = false)
     {
-        if( ! Yii::$app->has('cache') || ! $cache) {
-            return parent::getOneByCondition($condition);
+        static $result;
+
+        if($result && ! $reset) {
+            return $result;
         }
 
-        return $this->getDb()->cache(function () use($condition) {
-            return parent::getOneByCondition($condition);
-        });
+        /**
+         * Если есть параметр DomainMap тащим язык из него
+         * 
+         */
+        if (! empty(Yii::$app->domainService->getDomainMap())){
+            $domainMap = Yii::$app->domainService->getDomainMap();
+            $domainMap = ArrayHelper::index($domainMap, 'alias');
+            $currentDomain = Yii::$app->domainService->getCurrentDomain();
+            if (empty($currentDomain)){
+                throw new \Exception("curernt domain not found");
+            }
+            $locale = $domainMap[$currentDomain->alias]['locale'] ?? null;
+            if (! $locale){
+                throw new \Exception("curerent domain locale unknown");
+            }
+        }else{
+            $locale = Yii::$app->language;
+        }
+
+        if (
+            Yii::$app->has('request')
+            && Yii::$app->getRequest() instanceof \yii\web\Request
+            && Yii::$app->getRequest()->getQueryParam('_locale')
+        ) {
+            $locale = Yii::$app->getRequest()->getQueryParam('_locale');
+        }
+
+        if (is_array($locale)){
+            return $locale;
+        }
+
+        $result =  LocaleConverter::key($locale);
+
+        return $result;
     }
 }
