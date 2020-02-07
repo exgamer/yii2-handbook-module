@@ -87,7 +87,6 @@ class UrlHistoryService extends Service
 
         $form = new UrlHistoryForm();
         $form->entity_type_id = $entity_type->id;
-        $form->controller_id = $controllerId;
         $form->entity_id = $model->id;
         $form->location = $location;
         if ($last){
