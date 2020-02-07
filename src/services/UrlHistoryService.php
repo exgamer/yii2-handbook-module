@@ -110,6 +110,7 @@ class UrlHistoryService extends Service
             }
 
             if (! $entity instanceof UrlHistoryInterface){
+                Yii::info($entity . ' service not instance of UrlHistoryInterface. no processed');
                 continue;
             }
             Yii::info('Url history regenerate for ' . $entity);
