@@ -7,7 +7,7 @@ use yii\helpers\Console;
 
 class UrlHistoryController extends Controller
 {
-    public function actionRegenerate()
+    public function actionReGenerate()
     {
         Yii::$app->urlHistoryService->regenerate();
     }
