@@ -98,10 +98,12 @@ class UrlHistoryService extends Service
         }
 
         $result = $this->create($form);
-        UrlHistory::updateAll(['redirect' => $location], [
-            'entity_type_id' => $form->entity_type_id,
-            'entity_id' => $form->entity_id,
-        ]);
+        if ($last) {
+            UrlHistory::updateAll(['redirect' => $location], [
+                'entity_type_id' => $form->entity_type_id,
+                'entity_id' => $form->entity_id,
+            ]);
+        }
 
 
         return $result;
