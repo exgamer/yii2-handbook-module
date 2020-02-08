@@ -89,6 +89,13 @@ class UrlHistoryService extends Service
             $query->orderBy('id DESC');
         });
 
+        if ($last) {
+            UrlHistory::updateAll(['redirect' => $location], [
+                'entity_type_id' => $entity_type->id,
+                'entity_id' => $model->id,
+            ]);
+        }
+
         $form = new UrlHistoryForm();
         $form->entity_type_id = $entity_type->id;
         $form->entity_id = $model->id;
@@ -97,16 +104,7 @@ class UrlHistoryService extends Service
             $form->parent_id = $last->id;
         }
 
-        $result = $this->create($form);
-        if ($last) {
-            UrlHistory::updateAll(['redirect' => $location], [
-                'entity_type_id' => $form->entity_type_id,
-                'entity_id' => $form->entity_id,
-            ]);
-        }
-
-
-        return $result;
+        return $this->create($form);
     }
 
     public function regenerate()
