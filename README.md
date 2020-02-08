@@ -45,7 +45,7 @@
 Для каждой сущности которая должна быть в карте саита в сервисе подключаем треит SitemapSupportTrait
 и реализуем вызов метода sitemapRefresh в afterModelSave и afterDelete
     
-    
+!!! для получения карты саита в frontend/web должны лежать стили для xml
 
 Генерация истории урлов для сущностей
 
@@ -54,8 +54,9 @@
 Для каждой сущности которая должна быть в истории в сервисе подключаем интерфеис UrlHistoryInterface
 и реализуем вызов метода refresh в afterModelSave
     
+    Yii::$app->urlHistoryService->refresh($model, null, 'site', 'page', ['route' => 'seo_name']);
      
-!!! для получения карты саита в frontend/web должны лежать стили для xml
+
      
 
 Для работы с доменами в common/config/params-local.php добавить
