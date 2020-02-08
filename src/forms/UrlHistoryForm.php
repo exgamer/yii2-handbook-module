@@ -17,6 +17,7 @@ class UrlHistoryForm extends BaseForm
     public $entity_id;
     public $parent_id;
     public $location;
+    public $redirect;
 
     /**
      * @inheritDoc

@@ -56,6 +56,7 @@ class UrlHistory extends ActiveRecord
             [
                 [
                     'location',
+                    'redirect',
                 ],
                 'string',
                 'max' => 255

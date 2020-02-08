@@ -3,6 +3,7 @@
 namespace concepture\yii2handbook\services;
 
 use concepture\yii2handbook\forms\UrlHistoryForm;
+use concepture\yii2handbook\models\UrlHistory;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2handbook\services\interfaces\UrlHistoryInterface;
@@ -96,7 +97,14 @@ class UrlHistoryService extends Service
             $form->parent_id = $last->id;
         }
 
-        return $this->create($form);
+        $result = $this->create($form);
+        UrlHistory::updateAll(['redirect' => $location], [
+            'entity_type_id' => $form->entity_type_id,
+            'entity_id' => $form->entity_id,
+        ]);
+
+
+        return $result;
     }
 
     public function regenerate()
