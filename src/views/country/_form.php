@@ -5,6 +5,8 @@ use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 use kamaelkz\yii2cdnuploader\enum\StrategiesEnum;
 use kamaelkz\yii2cdnuploader\widgets\CdnUploader;
+$saveRedirectButton = Html::saveRedirectButton();
+$saveButton = Html::saveButton();
 ?>
 
 <?php Pjax::begin(['formSelector' => '#locale-form']); ?>
@@ -12,12 +14,8 @@ use kamaelkz\yii2cdnuploader\widgets\CdnUploader;
 <?php $form = ActiveForm::begin(['id' => 'locale-form']); ?>
 <div class="card">
     <div class="card-body text-right">
-        <?=  Html::submitButton(
-            '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),
-            [
-                'class' => 'btn bg-success btn-labeled btn-labeled-left ml-1'
-            ]
-        ); ?>
+        <?=  $saveRedirectButton?>
+        <?=  $saveButton?>
     </div>
     <div class="card-body">
         <div class="row">
@@ -102,12 +100,8 @@ use kamaelkz\yii2cdnuploader\widgets\CdnUploader;
         </div>
     </div>
     <div class="card-body text-right">
-        <?=  Html::submitButton(
-            '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),
-            [
-                'class' => 'btn bg-success btn-labeled btn-labeled-left ml-1'
-            ]
-        ); ?>
+        <?=  $saveRedirectButton?>
+        <?=  $saveButton?>
     </div>
 </div>
 <?php ActiveForm::end(); ?>
