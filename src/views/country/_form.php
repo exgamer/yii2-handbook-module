@@ -27,66 +27,6 @@ use kamaelkz\yii2cdnuploader\widgets\CdnUploader;
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <?= $form->field($model, 'caption')->textInput(['maxlength' => true]) ?>
             </div>
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <?= $form
-                        ->field($model, 'image')
-                        ->widget(CdnUploader::class, [
-                            'model' => $model,
-                            'attribute' => 'image',
-                            'strategy' => StrategiesEnum::BY_REQUEST,
-                            'resizeBigger' => false,
-//                            'width' => 768,
-//                            'height' => 312,
-                            'options' => [
-                                'plugin-options' => [
-                                    # todo: похоже не пашет
-                                    'maxFileSize' => 2000000,
-                                ]
-                            ],
-                            'clientEvents' => [
-                                'fileuploaddone' => new \yii\web\JsExpression('function(e, data) {
-                                                    console.log(e);
-                                                }'),
-                                'fileuploadfail' => new \yii\web\JsExpression('function(e, data) {
-                                                    console.log(e);
-                                                }'),
-                            ],
-                        ])
-                        ->error(false)
-                        ->hint(false);
-                    ?>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <?= $form
-                        ->field($model, 'image_anons')
-                        ->widget(CdnUploader::class, [
-                            'model' => $model,
-                            'attribute' => 'image_anons',
-                            'strategy' => StrategiesEnum::BY_REQUEST,
-                            'resizeBigger' => false,
-//                            'width' => 535,
-//                            'height' => 321,
-                            'options' => [
-                                'plugin-options' => [
-                                    # todo: похоже не пашет
-                                    'maxFileSize' => 2000000,
-                                ]
-                            ],
-                            'clientEvents' => [
-                                'fileuploaddone' => new \yii\web\JsExpression('function(e, data) {
-                                                    console.log(e);
-                                                }'),
-                                'fileuploadfail' => new \yii\web\JsExpression('function(e, data) {
-                                                    console.log(e);
-                                                }'),
-                            ],
-                        ])
-                        ->error(false)
-                        ->hint(false);
-                    ?>
-                </div>
-            </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
             </div>
@@ -97,6 +37,66 @@ use kamaelkz\yii2cdnuploader\widgets\CdnUploader;
                         'class' => 'form-control custom-select',
                         'prompt' => Yii::t('banner', 'Выберите язык')
                     ]);
+                ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <?= $form
+                    ->field($model, 'image')
+                    ->widget(CdnUploader::class, [
+                        'model' => $model,
+                        'attribute' => 'image',
+                        'strategy' => StrategiesEnum::BY_REQUEST,
+                        'resizeBigger' => false,
+//                            'width' => 768,
+//                            'height' => 312,
+                        'options' => [
+                            'plugin-options' => [
+                                # todo: похоже не пашет
+                                'maxFileSize' => 2000000,
+                            ]
+                        ],
+                        'clientEvents' => [
+                            'fileuploaddone' => new \yii\web\JsExpression('function(e, data) {
+                                                    console.log(e);
+                                                }'),
+                            'fileuploadfail' => new \yii\web\JsExpression('function(e, data) {
+                                                    console.log(e);
+                                                }'),
+                        ],
+                    ])
+                    ->error(false)
+                    ->hint(false);
+                ?>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <?= $form
+                    ->field($model, 'image_anons')
+                    ->widget(CdnUploader::class, [
+                        'model' => $model,
+                        'attribute' => 'image_anons',
+                        'strategy' => StrategiesEnum::BY_REQUEST,
+                        'resizeBigger' => false,
+//                            'width' => 535,
+//                            'height' => 321,
+                        'options' => [
+                            'plugin-options' => [
+                                # todo: похоже не пашет
+                                'maxFileSize' => 2000000,
+                            ]
+                        ],
+                        'clientEvents' => [
+                            'fileuploaddone' => new \yii\web\JsExpression('function(e, data) {
+                                                    console.log(e);
+                                                }'),
+                            'fileuploadfail' => new \yii\web\JsExpression('function(e, data) {
+                                                    console.log(e);
+                                                }'),
+                        ],
+                    ])
+                    ->error(false)
+                    ->hint(false);
                 ?>
             </div>
         </div>
