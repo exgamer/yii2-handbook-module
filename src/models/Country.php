@@ -74,6 +74,14 @@ class Country extends ActiveRecord
             ],
             [
                 [
+                    'image',
+                    'image_anons',
+                ],
+                'string',
+                'max'=>1024
+            ],
+            [
+                [
                     'caption'
                 ],
                 'string',
