@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2handbook\services\EntityTypePositionService;
 use Yii;
 use yii\db\ActiveQuery;
 use concepture\yii2logic\forms\Model;
@@ -12,7 +13,6 @@ use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrai
 use concepture\yii2logic\services\traits\UpdateColumnTrait;
 use concepture\yii2logic\services\interfaces\UpdateColumnInterface;
 use concepture\yii2handbook\forms\EntityTypePositionSortForm;
-use concepture\yii2handbook\services\EntityTypePositionService;
 use yii\helpers\ArrayHelper;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookService;
 
@@ -149,8 +149,12 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
                 SELECT max(sort) 
                 FROM {$this->getTableName()} 
                 WHERE entity_type_position_id = {$entity_type_position_id}
-                AND domain_id = {$domain_id}
         ";
+        if ($domain_id) {
+            $sql .= "AND domain_id = {$domain_id}";
+        }else{
+            $sql .= "AND domain_id IS NULL";
+        }
 
         return $this->getDb()->createCommand($sql)->queryScalar();
     }
@@ -168,8 +172,12 @@ class EntityTypePositionSortService extends Service implements UpdateColumnInter
                 SELECT count(sort) 
                 FROM {$this->getTableName()} 
                 WHERE entity_type_position_id = {$entity_type_position_id}
-                AND domain_id = {$domain_id}
         ";
+        if ($domain_id) {
+            $sql .= "AND domain_id = {$domain_id}";
+        }else{
+            $sql .= "AND domain_id IS NULL";
+        }
 
         return $this->getDb()->createCommand($sql)->queryScalar();
     }
