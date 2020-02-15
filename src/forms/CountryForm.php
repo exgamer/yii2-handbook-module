@@ -16,6 +16,8 @@ class CountryForm extends Form
     public $locale;
     public $iso;
     public $caption;
+    public $image;
+    public $image_anons;
 
     /**
      * @see CForm::formRules()

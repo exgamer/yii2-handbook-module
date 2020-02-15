@@ -74,6 +74,14 @@ class Country extends ActiveRecord
             ],
             [
                 [
+                    'image',
+                    'image_anons',
+                ],
+                'string',
+                'max'=>1024
+            ],
+            [
+                [
                     'caption'
                 ],
                 'string',
@@ -97,6 +105,8 @@ class Country extends ActiveRecord
             'locale' => Yii::t('handbook','Язык'),
             'iso' => Yii::t('handbook','ISO код страны'),
             'caption' => Yii::t('handbook','Название'),
+            'image' => Yii::t('handbook','Флаг'),
+            'image_anons' => Yii::t('handbook','Флаг (маленький)'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
