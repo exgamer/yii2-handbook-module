@@ -3,14 +3,14 @@
 use concepture\yii2logic\console\migrations\Migration;
 
 /**
- * Class m200109_042490__static_file_table_fix
+ * Class m200109_042495_url_history_fix
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class m200109_042490__static_file_table_fix extends Migration
+class m200109_042496_dynamic_elements_modify extends Migration
 {
     function getTableName()
     {
-        return 'static_file';
+        return 'dynamic_elements';
     }
 
     /**
@@ -18,13 +18,8 @@ class m200109_042490__static_file_table_fix extends Migration
      */
     public function safeUp()
     {
-        try{
-            $this->removeIndex('uni_filename_extension_type_static_file');
-        }catch (\Exception $ex){
-
-        }
-
-        $this->addUniqueIndex(['filename', 'extension', 'type', 'domain_id']);
+        $this->dropIndex('uni_url_md5_hash_name_seo_settings', $this->getTableName());
+        $this->addUniqueIndex(['url_md5_hash', 'name', 'domain_id']);
     }
 
     /**
