@@ -1,12 +1,14 @@
 <?php
+
 namespace concepture\yii2handbook\services;
 
+use Yii;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use yii\web\Cookie;
 use concepture\yii2handbook\models\Domain;
 use concepture\yii2logic\services\Service;
 use concepture\yii2logic\traits\ConfigAwareTrait;
-use yii\helpers\Url;
-use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class DomainService
@@ -16,6 +18,11 @@ use yii\helpers\ArrayHelper;
 class DomainService extends Service
 {
     use ConfigAwareTrait;
+
+    /**
+     * @var string
+     */
+    public $cookieName = 'current_domain';
 
     /**
      * @inheritDoc
@@ -54,6 +61,33 @@ class DomainService extends Service
         return $this->getConfigItem('domainMap');
     }
 
+
+    /**
+     * Установка куки текущего альяса домена
+     *
+     * @param string $alias
+     */
+    public function setCookie(string $alias)
+    {
+        $cookies = Yii::$app->getResponse()->cookies;
+        $cookies->add(new Cookie([
+            'name' => $this->cookieName,
+            'value' => $alias,
+        ]));
+    }
+
+    /**
+     * Получение куки текущего домена
+     *
+     * @return mixed
+     */
+    public function getCookie()
+    {
+        $cookies = Yii::$app->getRequest()->cookies;
+
+        return $cookies->getValue($this->cookieName);
+    }
+
     /**
      * Возвращает локаль по domain map
      *
@@ -71,12 +105,57 @@ class DomainService extends Service
         if (empty($currentDomain)){
             throw new \Exception("curernt domain not found");
         }
+
         $locale = $domainMap[$currentDomain->alias]['locale'] ?? null;
         if (! $locale){
             throw new \Exception("curerent domain locale unknown");
         }
 
         return $locale;
+    }
+
+    /**
+     * Возвращает атрибуты из карты доменов по альясу
+     *
+     * @param string $alias
+     * @return array
+     * @throws DomainServiceException
+     */
+    public function getAttributesByAlias($alias)
+    {
+        $domainMap = $this->getDomainMap();
+        if (empty($domainMap)){
+            throw new DomainServiceException('Params yii2handbook domainMap must be set');
+        }
+
+        $items = [];
+        foreach ($domainMap as $host => $settings) {
+            $items[$settings['alias']] = ArrayHelper::merge(['host' => $host], $settings);
+        }
+
+        if(! isset($items[$alias]) ) {
+            throw new DomainServiceException('yii2handbook DomainMap alias is not found.');
+        }
+
+        return $items[$alias];
+    }
+
+    /**
+     * Возвращает атрибут из карты доменов по альясу
+     *
+     * @param string $alias
+     * @param string $attribute
+     * @throws DomainServiceException
+     */
+    public function getAttributeByAlias($alias, $attribute)
+    {
+        $items = $this->getAttributesByAlias($alias);
+
+        if(! isset($items[$attribute])) {
+            throw new DomainServiceException('Attribute is not found.');
+        }
+
+        return $items[$attribute];
     }
 
     /**
@@ -241,4 +320,14 @@ class DomainService extends Service
 
         return $result;
     }
+}
+
+/**
+ * Исключение сервиса
+ *
+ * @author kamaelkz <kamaelkz@yandex.kz>
+ */
+class DomainServiceException extends \Exception
+{
+
 }
