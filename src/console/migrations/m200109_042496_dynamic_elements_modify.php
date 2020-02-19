@@ -18,7 +18,12 @@ class m200109_042496_dynamic_elements_modify extends Migration
      */
     public function safeUp()
     {
-        $this->dropIndex('uni_url_md5_hash_name_seo_settings', $this->getTableName());
+        try {
+            $this->dropIndex('uni_url_md5_hash_name_seo_settings', $this->getTableName());
+        }catch (Exception $e){
+
+        }
+
         $this->addUniqueIndex(['url_md5_hash', 'name', 'domain_id']);
     }
 
