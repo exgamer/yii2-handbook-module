@@ -123,7 +123,7 @@ class DynamicElementsController extends Controller
     {
         if($domainAlias && $domainAlias !== $this->getDomainService()->getCookie()) {
             $this->getDomainService()->setCookie($domainAlias);
-            
+
             return $this->redirect(['update', 'hash' => $hash], 301);
         }
 

@@ -32,7 +32,6 @@ class DomainUrlManager extends YiiUrlManager
      */
     public $normalizer = [
         'class' => 'yii\web\UrlNormalizer',
-        'action' => UrlNormalizer::ACTION_REDIRECT_TEMPORARY
     ];
 
     /**

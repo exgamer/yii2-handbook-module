@@ -49,9 +49,13 @@ class HreflangService extends Service
             throw new HreflangServiceException('domainMap is not defined.');
         }
 
+        $result = [];
         $manager = Yii::$app->urlManager;
         $rule = $manager->getCurrentRule();
-        $result = [];
+        if(! $rule) {
+            return $result;
+        }
+
         list($route, $params) = $rule->parseRequest($manager, Yii::$app->getRequest());
         foreach ($domainMap as $domain => $settings) {
             if(
