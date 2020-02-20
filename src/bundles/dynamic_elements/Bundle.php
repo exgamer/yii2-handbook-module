@@ -20,6 +20,6 @@ class Bundle extends CoreBundle
     ];
 
     public $depends = [
-        'yii\web\YiiAsset',
+        'yii\web\JqueryAsset',
     ];
 }
