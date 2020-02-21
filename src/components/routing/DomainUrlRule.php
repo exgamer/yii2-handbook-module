@@ -14,6 +14,11 @@ use concepture\yii2handbook\services\DomainService;
 class DomainUrlRule extends YiiUrlRule
 {
     /**
+     * Фиктивный суфикс для реализации закрывающегося / в конце адреса
+     */
+    const PATTERN_SUFFIX = '/?';
+
+    /**
      * @var array массив правил по доменам
      */
     public $patterns;
@@ -49,7 +54,6 @@ class DomainUrlRule extends YiiUrlRule
      */
     public function init()
     {
-
         if(
             ! $this->patterns
             && ! $this->pattern
@@ -103,6 +107,8 @@ class DomainUrlRule extends YiiUrlRule
         static $domainMap;
 
         if(! $this->patterns) {
+            $this->addSuffix();
+
             return true;
         }
 
@@ -133,7 +139,22 @@ class DomainUrlRule extends YiiUrlRule
             $this->setPatternByAlias($alias);
         }
 
+        $this->addSuffix();
+
         return true;
+    }
+
+    /**
+     * Добавление суфикса к правилу, для / в конце
+     */
+    private function addSuffix()
+    {
+        # главная страница
+        if($this->pattern === '/') {
+            return;
+        }
+
+        $this->pattern .= self::PATTERN_SUFFIX;
     }
 
     /**

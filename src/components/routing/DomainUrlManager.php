@@ -3,8 +3,11 @@
 namespace concepture\yii2handbook\components\routing;
 
 use Yii;
+use yii\base\Event;
+use yii\web\Application;
 use yii\web\UrlManager as YiiUrlManager;
 use yii\web\UrlNormalizer;
+use yii\helpers\Url;
 use concepture\yii2handbook\components\routing\DomainUrlRule;
 
 /**
@@ -25,13 +28,24 @@ class DomainUrlManager extends YiiUrlManager
     /**
      * @var string
      */
-    public $suffix = '/';
+    public $suffix = '';
+
+    /**
+     * @var array
+     */
+    public $trailingSlashDeniedStatuses = [
+        301,
+        302,
+        404,
+        500,
+    ];
 
     /**
      * @var array
      */
     public $normalizer = [
         'class' => 'yii\web\UrlNormalizer',
+        'normalizeTrailingSlash' => false
     ];
 
     /**
@@ -42,12 +56,12 @@ class DomainUrlManager extends YiiUrlManager
     ];
 
     /**
-     * @var UrlRule
+     * @var DomainUrlRule
      */
     private $currentRule;
 
     /**
-     * @return UrlRule
+     * @return DomainUrlRule
      */
     public function getCurrentRule()
     {
@@ -57,11 +71,34 @@ class DomainUrlManager extends YiiUrlManager
     /**
      * @inheritDoc
      */
+    public function init()
+    {
+        parent::init();
+        Event::on(Application::class, Application::EVENT_AFTER_REQUEST, function($event) {
+            $app = $event->sender;
+            $response = $app->getResponse();
+            $request = $app->getRequest();
+            if(! in_array($response->statusCode, $this->trailingSlashDeniedStatuses) ) {
+                $pathInfo = $request->getPathInfo() ;
+                $queryParams = trim(str_replace($pathInfo, null, $request->getUrl()), '/');
+                $slash = substr($pathInfo, -1);
+                if($pathInfo !== '' && $slash !== '/') {
+                    $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);
+                }
+            }
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function createUrl($params)
     {
+        $this->suffix = '/';
         # todo: место узкое - если действие по умолчанию не index
         $defaultRoute = Yii::$app->defaultRoute . '/index';
         $result = ltrim(parent::createUrl($params), '/');
+        $this->suffix = '';
         if(trim($params[0], '/') === $defaultRoute) {
             return $result;
         }
@@ -70,7 +107,7 @@ class DomainUrlManager extends YiiUrlManager
             throw new \Exception("Pattern for route {$params[0]} is not defined");
         }
 
-        return "/{$result}";
+        return str_replace(DomainUrlRule::PATTERN_SUFFIX, '', "/{$result}");
     }
 
     /**
@@ -113,6 +150,7 @@ class DomainUrlManager extends YiiUrlManager
             if ($this->normalizer !== false) {
                 $pathInfo = $this->normalizer->normalizePathInfo($pathInfo, $suffix, $normalized);
             }
+
             if ($suffix !== '' && $pathInfo !== '') {
                 $n = strlen($this->suffix);
                 if (substr_compare($pathInfo, $this->suffix, -$n, $n) === 0) {
