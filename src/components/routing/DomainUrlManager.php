@@ -94,11 +94,18 @@ class DomainUrlManager extends YiiUrlManager
      */
     public function createUrl($params)
     {
-        $this->suffix = '/';
+        # отрубаем для админки
+        $admin = strpos($params[0], 'admin/') !== false;
+        if(! $admin) {
+            $this->suffix = '/';
+        }
         # todo: место узкое - если действие по умолчанию не index
         $defaultRoute = Yii::$app->defaultRoute . '/index';
         $result = ltrim(parent::createUrl($params), '/');
-        $this->suffix = '';
+        if(! $admin) {
+            $this->suffix = '';
+        }
+
         if(trim($params[0], '/') === $defaultRoute) {
             return $result;
         }
