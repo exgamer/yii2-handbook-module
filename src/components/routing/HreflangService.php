@@ -14,6 +14,37 @@ use yii\helpers\Html;
 class HreflangService extends Service
 {
     /**
+     * @var bool признак активности
+     */
+    private $_active = true;
+
+    /**
+     * Включение вывода элементов
+     */
+    public function enable()
+    {
+        $this->_active = true;
+    }
+
+    /**
+     * Выключение вывода элементов
+     */
+    public function disable()
+    {
+        $this->_active = false;
+    }
+
+    /**
+     * Список локалей для отображения элементов
+     *
+     * @param array $array
+     */
+    public function allowLocales($items)
+    {
+        # todo : реализовать
+    }
+
+    /**
      * Возвращает сформированные HTML тэги
      *
      * @return string|null
@@ -21,6 +52,10 @@ class HreflangService extends Service
      */
     public function getTags()
     {
+        if(! $this->_active) {
+            return null;
+        }
+
         $items = $this->getItems();
         if(! $items) {
             return null;
