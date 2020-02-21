@@ -154,7 +154,7 @@ class DomainUrlRule extends YiiUrlRule
             return;
         }
 
-        $this->pattern .= self::PATTERN_SUFFIX;
+//        $this->pattern .= self::PATTERN_SUFFIX;
     }
 
     /**

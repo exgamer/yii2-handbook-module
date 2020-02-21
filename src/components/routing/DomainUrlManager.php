@@ -28,7 +28,7 @@ class DomainUrlManager extends YiiUrlManager
     /**
      * @var string
      */
-    public $suffix = '';
+    public $suffix = '/';
 
     /**
      * @var array
@@ -45,7 +45,7 @@ class DomainUrlManager extends YiiUrlManager
      */
     public $normalizer = [
         'class' => 'yii\web\UrlNormalizer',
-        'normalizeTrailingSlash' => false
+//        'normalizeTrailingSlash' => false
     ];
 
     /**
@@ -93,7 +93,9 @@ class DomainUrlManager extends YiiUrlManager
             throw new \Exception("Pattern for route {$params[0]} is not defined");
         }
 
-        return str_replace(DomainUrlRule::PATTERN_SUFFIX, '', "/{$result}");
+//        return str_replace(DomainUrlRule::PATTERN_SUFFIX, '', "/{$result}");
+
+        return "/{$result}";
     }
 
     /**
@@ -102,7 +104,7 @@ class DomainUrlManager extends YiiUrlManager
     public function parseRequest($request)
     {
         if ($this->enablePrettyUrl) {
-            $this->registerRedirectEvent();
+//            $this->registerRedirectEvent();
             /* @var $rule DomainUrlRule */
             foreach ($this->rules as $rule) {
                 try {
