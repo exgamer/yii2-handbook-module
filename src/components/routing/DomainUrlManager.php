@@ -74,13 +74,19 @@ class DomainUrlManager extends YiiUrlManager
     public function init()
     {
         parent::init();
-        Event::on(Application::class, Application::EVENT_AFTER_REQUEST, function($event) {
+        $request = Yii::$app->getRequest();
+        $url = $request->getUrl();
+        if(strpos($url, 'admin/') !== false) {
+            return;
+        }
+
+        Event::on(Application::class, Application::EVENT_AFTER_REQUEST, function($event) use($request, $url) {
             $app = $event->sender;
             $response = $app->getResponse();
-            $request = $app->getRequest();
+
             if(! in_array($response->statusCode, $this->trailingSlashDeniedStatuses) ) {
                 $pathInfo = $request->getPathInfo() ;
-                $queryParams = trim(str_replace($pathInfo, null, $request->getUrl()), '/');
+                $queryParams = trim(str_replace($pathInfo, null, $url), '/');
                 $slash = substr($pathInfo, -1);
                 if($pathInfo !== '' && $slash !== '/') {
                     $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);
