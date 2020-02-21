@@ -16,7 +16,7 @@ class DomainUrlRule extends YiiUrlRule
     /**
      * Фиктивный суфикс для реализации закрывающегося / в конце адреса
      */
-    const PATTERN_SUFFIX = '/?';
+    const PATTERN_SUFFIX = '/?+';
 
     /**
      * @var array массив правил по доменам
@@ -154,7 +154,7 @@ class DomainUrlRule extends YiiUrlRule
             return;
         }
 
-//        $this->pattern .= self::PATTERN_SUFFIX;
+        $this->pattern .= self::PATTERN_SUFFIX;
     }
 
     /**
