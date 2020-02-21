@@ -184,9 +184,15 @@ class DomainUrlManager extends YiiUrlManager
             }
 
             $pathInfo = $request->getPathInfo() ;
+            $urlManager = Yii::$app->getUrlManager();
             $queryParams = trim(str_replace($pathInfo, null, $url), '/');
             $slash = substr($pathInfo, -1);
-            if($pathInfo !== '' && $slash !== '/') {
+            if(
+                $pathInfo !== ''
+                && $slash !== '/'
+                && $urlManager->getCurrentRule()
+                && $urlManager->getCurrentRule()->normalizeTrailingSlash === true
+            ) {
                 $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);
             }
         });

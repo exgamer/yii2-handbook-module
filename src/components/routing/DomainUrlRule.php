@@ -29,6 +29,11 @@ class DomainUrlRule extends YiiUrlRule
     public $locale;
 
     /**
+     * @var bool
+     */
+    public $normalizeTrailingSlash = true;
+
+    /**
      * @var string
      */
     private $origin_pattern;
