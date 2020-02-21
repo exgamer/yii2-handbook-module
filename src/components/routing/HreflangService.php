@@ -39,7 +39,7 @@ class HreflangService extends Service
      *
      * @param array $array
      */
-    public function allowLocales($items)
+    public function allowedLocales($items)
     {
         # todo : реализовать
     }
