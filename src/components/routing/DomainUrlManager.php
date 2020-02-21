@@ -71,33 +71,6 @@ class DomainUrlManager extends YiiUrlManager
     /**
      * @inheritDoc
      */
-    public function init()
-    {
-        parent::init();
-        $request = Yii::$app->getRequest();
-        $url = $request->getUrl();
-        if(strpos($url, 'admin/') !== false) {
-            return;
-        }
-
-        Event::on(Application::class, Application::EVENT_AFTER_REQUEST, function($event) use($request, $url) {
-            $app = $event->sender;
-            $response = $app->getResponse();
-
-            if(! in_array($response->statusCode, $this->trailingSlashDeniedStatuses) ) {
-                $pathInfo = $request->getPathInfo() ;
-                $queryParams = trim(str_replace($pathInfo, null, $url), '/');
-                $slash = substr($pathInfo, -1);
-                if($pathInfo !== '' && $slash !== '/') {
-                    $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);
-                }
-            }
-        });
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function createUrl($params)
     {
         # отрубаем для админки
@@ -129,6 +102,7 @@ class DomainUrlManager extends YiiUrlManager
     public function parseRequest($request)
     {
         if ($this->enablePrettyUrl) {
+            $this->registerRedirectEvent();
             /* @var $rule DomainUrlRule */
             foreach ($this->rules as $rule) {
                 try {
@@ -193,5 +167,28 @@ class DomainUrlManager extends YiiUrlManager
         }
 
         return [(string) $route, []];
+    }
+
+    /**
+     * Регистрация cобытие перенаправления с адреса без слеша на адрес с слешем
+     */
+    private function registerRedirectEvent()
+    {
+        Event::on(Application::class, Application::EVENT_AFTER_REQUEST, function($event) {
+            $app = $event->sender;
+            $request = $app->getRequest();
+            $url = $request->getUrl();
+            $response = $app->getResponse();
+            if(in_array($response->statusCode, $this->trailingSlashDeniedStatuses) ) {
+                return true;
+            }
+
+            $pathInfo = $request->getPathInfo() ;
+            $queryParams = trim(str_replace($pathInfo, null, $url), '/');
+            $slash = substr($pathInfo, -1);
+            if($pathInfo !== '' && $slash !== '/') {
+                $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);
+            }
+        });
     }
 }
