@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\components\routing;
 
 use Yii;
 use concepture\yii2logic\services\Service;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
@@ -85,13 +86,13 @@ class HreflangService extends Service
         }
 
         $result = [];
-        $manager = Yii::$app->urlManager;
-        $rule = $manager->getCurrentRule();
+        $urlManager = Yii::$app->urlManager;
+        $rule = $urlManager->getCurrentRule();
         if(! $rule) {
             return $result;
         }
 
-        list($route, $params) = $rule->parseRequest($manager, Yii::$app->getRequest());
+        list($route, $params) = $rule->parseRequest($urlManager, Yii::$app->getRequest());
         foreach ($domainMap as $domain => $settings) {
             if(
                 ! isset($settings['hreflang'])
@@ -108,7 +109,8 @@ class HreflangService extends Service
             }
 
             $schema = $settings['shema'] ?? 'https';
-            $result[$settings['hreflang']] =  "{$schema}://{$domain}/{$rule->createUrl($manager, $route, $params)}";
+            $url = $urlManager->createUrl(ArrayHelper::merge([$route], $params));
+            $result[$settings['hreflang']] =  "{$schema}://{$domain}{$url}";
         }
 
         if($result) {
