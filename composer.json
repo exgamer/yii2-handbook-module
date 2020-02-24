@@ -6,7 +6,8 @@
     "require": {
         "php": ">=5.6.0",
         "yiisoft/yii2": "2.0.29",
-        "yiisoft/yii2-jui": "~2.0.0"
+        "yiisoft/yii2-jui": "~2.0.0",
+        "udokmeci/yii2-beanstalk": "^1.0"
     },
     "minimum-stability": "dev",
     "authors": [
