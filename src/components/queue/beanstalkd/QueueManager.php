@@ -15,7 +15,7 @@ use Pheanstalk\PheanstalkInterface;
  * 'components' => [
  *      ...
  *      'queue'=>[
- *          'class' => 'concepture\yii2handbook\components\queue\beanstalkd\QueueService',
+ *          'class' => 'concepture\yii2handbook\components\queue\beanstalkd\QueueManager',
  *          'host' => '127.0.0.1', // default host
  *          'port' => 11300, //default port
  *          'connectTimeout' => 1,
@@ -27,7 +27,7 @@ use Pheanstalk\PheanstalkInterface;
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class QueueService extends Component
+class QueueManager extends Component
 {
     /**
      * @var string

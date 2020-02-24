@@ -283,7 +283,7 @@ return [
   ...
     'components' => [
       ...
-           'class' => 'concepture\yii2handbook\components\queue\beanstalkd\QueueService',
+           'class' => 'concepture\yii2handbook\components\queue\beanstalkd\QueueManager',
            'host' => '127.0.0.1', 
            'port' => 11300,
            'connectTimeout' => 1,
