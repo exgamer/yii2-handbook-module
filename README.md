@@ -276,3 +276,20 @@ return [
     );
 ...
 ```
+
+## Менеджер очередей Beanstalk
+- Подключение (например common\config\main.php)
+```php
+  ...
+    'components' => [
+      ...
+           'class' => 'concepture\yii2handbook\components\queue\beanstalkd\QueueService',
+           'host' => '127.0.0.1', 
+           'port' => 11300,
+           'connectTimeout' => 1,
+           'sleep' => false, 
+           'enumClass' => 'common\enum\TubeEnum'
+      ...
+    ],
+  ...
+```
