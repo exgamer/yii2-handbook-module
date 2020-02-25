@@ -69,29 +69,28 @@ class QueueManager extends Component
     {
         parent::init();
         if(! $this->_pheanstalk) {
-            $this->_pheanstalk = Yii::createObject(
-                Beanstalk::class,
-                [
-                    'host' => $this->host,
-                    'port' => $this->port,
-                    'connectTimeout' => $this->connectTimeout,
-                    'connected' => $this->connected,
-                    'sleep' => $this->sleep,
-                ]
-            );
+            $config =                 [
+                'class' => Beanstalk::class,
+                'host' => $this->host,
+                'port' => $this->port,
+                'connectTimeout' => $this->connectTimeout,
+                'connected' => $this->connected,
+                'sleep' => $this->sleep,
+            ];
+            $this->_pheanstalk = Yii::createObject($config);
         }
 
         $reflection = new \ReflectionClass($this->enumClass);
         $parrentClass = $reflection->getParentClass()->name ?? null;
         if(null === $parrentClass || $parrentClass !== BaseTubeEnum::class) {
-            throw new QueueServiceException("`enumClass` must be instance of \common\components\queue\beanstalkd\QueueEnum but instance of {$parrentClass}");
+            throw new QueueManagerException("`enumClass` must be instance of \common\components\queue\beanstalkd\QueueEnum but instance of {$parrentClass}");
         }
     }
 
     /**
      * @return PheanstalkInterface
      */
-    protected function getPheanstalk()
+    public function getPheanstalk()
     {
         return $this->_pheanstalk;
     }
@@ -117,14 +116,14 @@ class QueueManager extends Component
      * @param int $ttr
      * @param int $delay
      *
-     * @throws QueueServiceException
+     * @throws QueueManagerException
      */
     public function putIn(string $tube, array $payload, $priority = 1024, $ttr = 0,  $delay = 0)
     {
         $enumClass = $this->enumClass;
         $allowedTubes = $enumClass::values();
         if(! in_array($tube, $allowedTubes)) {
-            throw new QueueServiceException("Tube constant is not declarate in `{$enumClass}`");
+            throw new QueueManagerException("Tube constant is not declarate in `{$enumClass}`");
         }
 
         if (! isset($payload['alias'])) {
@@ -132,8 +131,12 @@ class QueueManager extends Component
         }
 
         $payload = Json::encode($payload);
+        $result = $this->getPheanstalk()->putInTube($tube, $payload, $priority, $delay, $ttr);
+        if(! $result) {
+            throw new QueueManagerException('Failed to put the task into the tube.');
+        }
 
-        $this->getPheanstalk()->putInTube($tube, $payload, $priority, $delay, $ttr);
+        return $result;
     }
 
     /**
@@ -166,4 +169,4 @@ class QueueManager extends Component
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class QueueServiceException extends \Exception {}
+class QueueManagerException extends \Exception {}
