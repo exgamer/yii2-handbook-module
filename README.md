@@ -346,3 +346,4 @@ return [
     ],
   ...
 ```
+- Пример вызова `php yii queue/put test a::a,c::c,e::e`
