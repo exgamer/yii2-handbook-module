@@ -12,6 +12,7 @@
         "ramsey/uuid": "^3.9"
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Olzhas Kulzhambekov",
