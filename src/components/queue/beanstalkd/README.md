@@ -1,4 +1,4 @@
-- Подключение (например common\config\main.php)
+- Подключение (пример common\config\main.php)
 ```php
   ...
     'components' => [
@@ -10,13 +10,22 @@
            'connectTimeout' => 1,
            'sleep' => false, 
            'enumClass' => 'common\enum\TubeEnum'
+        ],
+        // при работе со стримом обязательно подключить хранилище, реализующее интерфейс \yii\caching\CacheInterface
+        'workerStorage' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => 'redis',
+                'port' => 6379,
+                'database' => 2,
+            ]
         ]
       ...
     ],
   ...
 ```
--Воркер должен быть унаследован от класса `concepture\yii2handbook\components\queue\beanstalkd\worker\BaseWorker `
- и реализовывать его функции. Один воркер на одну трубу - (например `console\components\worker\TestWorker`)
+-Воркер должен быть унаследован от класса `concepture\yii2handbook\components\queue\beanstalkd\worker\BaseWorker`
+ и реализовывать его функции. Один воркер на одну трубу - (пример `console\components\worker\TestWorker`)
  ```php
     namespace console\components\worker;
     
@@ -46,24 +55,30 @@
         }
     }
  ```
-- Подключение воркеров (например console\config\main.php)
+- Подключение воркеров (пример console\config\main.php)
 ```php
   ...
     'controllerMap' => [
-        'worker:test' => [
-            'class' => 'console\components\worker\TestWorker'
-        ],
+        ...
+        TestWorker::getCommandName() => [
+            'class' => TestWorker::class,
+            'stream' => true // признак обработки в отдельном потоке или в общем, true по умолчанию
+        ]
+        ...
     ],
   ...
 ```
-- Подключение консольной команды для работы с менеджером очередей (например console\config\main.php)
+- Пример вызова `php yii worker:test --alias=alias -l=20` - выполняет 20 задач из очереди test и умирает, по умолчанию ограничения нет;
+- Подключение консольной команды для работы с менеджером очередей (пример console\config\main.php)
 ```php
   ...
     'controllerMap' => [
+        ...
         'queue' => [
             'class' => 'concepture\yii2handbook\components\queue\beanstalkd\QueueCommand'
-        ]
+        ],
+        ...
     ],
   ...
 ```
-- Пример вызова `php yii queue/put test a::a,c::c,e::e`
+- Пример вызова `php yii queue/put test a::a,c::c,e::e` - закидываем тестовую задачу в трубу test;
