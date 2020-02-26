@@ -276,4 +276,5 @@ return [
     );
 ...
 ```
-[Менеджер очередей Beanstalk](src/components/queue/beanstalkd/README.md)
+## Менеджер очередей Beanstalk
+[Подробнее](src/components/queue/beanstalkd/README.md)
