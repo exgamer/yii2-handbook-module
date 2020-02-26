@@ -6,7 +6,6 @@ use yii\helpers\Json;
 use yii\caching\CacheInterface;
 use Symfony\Component\Process\Process;
 use Ramsey\Uuid\Uuid;
-use yii\helpers\VarDumper;
 
 /**
  * Сервис для работы воркера через отдельный поток
