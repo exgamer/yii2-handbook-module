@@ -13,8 +13,10 @@ use concepture\yii2logic\forms\Form;
 class CurrencyForm extends Form
 {
     public $status;
-    public $iso;
-    public $caption;
+    public $code;
+    public $name;
+    public $symbol;
+    public $symbol_native;
 
     /**
      * @see CForm::formRules()
@@ -24,8 +26,10 @@ class CurrencyForm extends Form
         return [
             [
                 [
-                    'iso',
-                    'caption',
+                    'code',
+                    'name',
+                    'symbol',
+                    'symbol_native',
                 ],
                 'required'
             ],

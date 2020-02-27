@@ -76,8 +76,10 @@ class Currency extends ActiveRecord
         return [
             'id' => Yii::t('handbook','#'),
             'status' => Yii::t('handbook','Статус'),
-            'iso' => Yii::t('handbook',' Код'),
-            'caption' => Yii::t('handbook','Метка'),
+            'code' => Yii::t('handbook','Код'),
+            'name' => Yii::t('handbook','Метка'),
+            'symbol' => Yii::t('handbook','Метка'),
+            'symbol_native' => Yii::t('handbook','Метка'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
