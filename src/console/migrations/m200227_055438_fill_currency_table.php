@@ -16,7 +16,9 @@ class m200227_055438_fill_currency_table extends Migration
      */
     public function safeUp()
     {
+        $this->execute("SET foreign_key_checks = 0;");
         $this->truncateTable($this->tableName);
+        $this->execute("SET foreign_key_checks = 1;");
         $this->renameColumn($this->tableName, 'iso', 'code');
         $this->alterColumn($this->tableName, 'caption', 'varchar(100)');
         $this->renameColumn($this->tableName, 'caption', 'name');
