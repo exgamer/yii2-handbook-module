@@ -20,7 +20,7 @@ class SitemapBootstrap implements BootstrapInterface
     {
         Event::on(Service::class, Service::EVENT_AFTER_MODIFY, function ($event) {
             $this->extendBefore();
-            # логика рефреша
+
             $this->extendAfter();
         });
     }
