@@ -314,7 +314,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 ['url_md5_hash' => $hash],
                 ['url' => '']
             ]);
-            $query->orderBy('url_md5_hash, id');
+            $query->orderBy('is_general', 'url_md5_hash, id');
         });
     }
 
@@ -503,10 +503,18 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     private function getUpdateUrl($anchor = null)
     {
+        $domain = $this->getDomainService()->getCurrentDomain();
+        $alias = null;
+        if( isset($domain)) {
+            $alias = $domain->alias;
+        }
+
         $url = [
             'admin/handbook/dynamic-elements/update',
-            'hash' => $this->getCurrentUlrHash()
+            'hash' => $this->getCurrentUlrHash(),
+            'domainAlias' => $alias
         ];
+
         if($anchor) {
             $url['#'] = $anchor;
         }

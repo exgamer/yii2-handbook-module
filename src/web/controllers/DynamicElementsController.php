@@ -10,6 +10,7 @@ use concepture\yii2user\enum\UserRoleEnum;
 use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 use concepture\yii2handbook\search\DynamicElementsSearch;
 use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
+use concepture\yii2handbook\services\DomainService;
 
 /**
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
@@ -76,6 +77,14 @@ class DynamicElementsController extends Controller
     }
 
     /**
+     * @return DomainService
+     */
+    private function getDomainService()
+    {
+        return Yii::$app->domainService;
+    }
+
+    /**
      * @inheritDoc
      */
     public function actions()
@@ -108,9 +117,16 @@ class DynamicElementsController extends Controller
      * Редактирование пачкой
      *
      * @param string $hash
+     * @param string $domainAlias
      */
-    public function actionUpdate($hash)
+    public function actionUpdate($hash, $domainAlias = null)
     {
+        if($domainAlias && $domainAlias !== $this->getDomainService()->getCookie()) {
+            $this->getDomainService()->setCookie($domainAlias);
+
+            return $this->redirect(['update', 'hash' => $hash], 301);
+        }
+
         $form = new DynamicElementsMultipleForm();
         $items = $this->getDynamicElementsService()->getAllByHash((string) $hash);
         foreach ($items as $item) {

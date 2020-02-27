@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\components\routing;
 
 use Yii;
 use concepture\yii2logic\services\Service;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
@@ -14,6 +15,37 @@ use yii\helpers\Html;
 class HreflangService extends Service
 {
     /**
+     * @var bool признак активности
+     */
+    private $_active = true;
+
+    /**
+     * Включение вывода элементов
+     */
+    public function enable()
+    {
+        $this->_active = true;
+    }
+
+    /**
+     * Выключение вывода элементов
+     */
+    public function disable()
+    {
+        $this->_active = false;
+    }
+
+    /**
+     * Список локалей для отображения элементов
+     *
+     * @param array $array
+     */
+    public function allowedLocales($items)
+    {
+        # todo : реализовать
+    }
+
+    /**
      * Возвращает сформированные HTML тэги
      *
      * @return string|null
@@ -21,6 +53,10 @@ class HreflangService extends Service
      */
     public function getTags()
     {
+        if(! $this->_active) {
+            return null;
+        }
+
         $items = $this->getItems();
         if(! $items) {
             return null;
@@ -49,10 +85,14 @@ class HreflangService extends Service
             throw new HreflangServiceException('domainMap is not defined.');
         }
 
-        $manager = Yii::$app->urlManager;
-        $rule = $manager->getCurrentRule();
         $result = [];
-        list($route, $params) = $rule->parseRequest($manager, Yii::$app->getRequest());
+        $urlManager = Yii::$app->urlManager;
+        $rule = $urlManager->getCurrentRule();
+        if(! $rule) {
+            return $result;
+        }
+
+        list($route, $params) = $rule->parseRequest($urlManager, Yii::$app->getRequest());
         foreach ($domainMap as $domain => $settings) {
             if(
                 ! isset($settings['hreflang'])
@@ -69,7 +109,8 @@ class HreflangService extends Service
             }
 
             $schema = $settings['shema'] ?? 'https';
-            $result[$settings['hreflang']] =  "{$schema}://{$domain}/{$rule->createUrl($manager, $route, $params)}";
+            $url = $urlManager->createUrl(ArrayHelper::merge([$route], $params));
+            $result[$settings['hreflang']] =  "{$schema}://{$domain}{$url}";
         }
 
         if($result) {

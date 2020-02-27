@@ -3,8 +3,11 @@
 namespace concepture\yii2handbook\components\routing;
 
 use Yii;
+use yii\base\Event;
+use yii\web\Application;
 use yii\web\UrlManager as YiiUrlManager;
 use yii\web\UrlNormalizer;
+use yii\helpers\Url;
 use concepture\yii2handbook\components\routing\DomainUrlRule;
 
 /**
@@ -25,14 +28,24 @@ class DomainUrlManager extends YiiUrlManager
     /**
      * @var string
      */
-    public $suffix = '/';
+    public $suffix = '';
+
+    /**
+     * @var array
+     */
+    public $trailingSlashDeniedStatuses = [
+        301,
+        302,
+        404,
+        500,
+    ];
 
     /**
      * @var array
      */
     public $normalizer = [
         'class' => 'yii\web\UrlNormalizer',
-        'action' => UrlNormalizer::ACTION_REDIRECT_TEMPORARY
+        'normalizeTrailingSlash' => false
     ];
 
     /**
@@ -43,12 +56,12 @@ class DomainUrlManager extends YiiUrlManager
     ];
 
     /**
-     * @var UrlRule
+     * @var DomainUrlRule
      */
     private $currentRule;
 
     /**
-     * @return UrlRule
+     * @return DomainUrlRule
      */
     public function getCurrentRule()
     {
@@ -60,9 +73,18 @@ class DomainUrlManager extends YiiUrlManager
      */
     public function createUrl($params)
     {
+        # отрубаем для админки
+        $admin = strpos($params[0], 'admin/') !== false;
+        if(! $admin) {
+            $this->suffix = '/';
+        }
         # todo: место узкое - если действие по умолчанию не index
         $defaultRoute = Yii::$app->defaultRoute . '/index';
         $result = ltrim(parent::createUrl($params), '/');
+        if(! $admin) {
+            $this->suffix = '';
+        }
+
         if(trim($params[0], '/') === $defaultRoute) {
             return $result;
         }
@@ -71,7 +93,7 @@ class DomainUrlManager extends YiiUrlManager
             throw new \Exception("Pattern for route {$params[0]} is not defined");
         }
 
-        return "/{$result}";
+        return str_replace(DomainUrlRule::PATTERN_SUFFIX, '', "/{$result}");
     }
 
     /**
@@ -80,6 +102,7 @@ class DomainUrlManager extends YiiUrlManager
     public function parseRequest($request)
     {
         if ($this->enablePrettyUrl) {
+            $this->registerRedirectEvent();
             /* @var $rule DomainUrlRule */
             foreach ($this->rules as $rule) {
                 try {
@@ -114,6 +137,7 @@ class DomainUrlManager extends YiiUrlManager
             if ($this->normalizer !== false) {
                 $pathInfo = $this->normalizer->normalizePathInfo($pathInfo, $suffix, $normalized);
             }
+
             if ($suffix !== '' && $pathInfo !== '') {
                 $n = strlen($this->suffix);
                 if (substr_compare($pathInfo, $this->suffix, -$n, $n) === 0) {
@@ -143,5 +167,34 @@ class DomainUrlManager extends YiiUrlManager
         }
 
         return [(string) $route, []];
+    }
+
+    /**
+     * Регистрация cобытие перенаправления с адреса без слеша на адрес с слешем
+     */
+    private function registerRedirectEvent()
+    {
+        Event::on(Application::class, Application::EVENT_AFTER_REQUEST, function($event) {
+            $app = $event->sender;
+            $request = $app->getRequest();
+            $url = $request->getUrl();
+            $response = $app->getResponse();
+            if(in_array($response->statusCode, $this->trailingSlashDeniedStatuses) ) {
+                return true;
+            }
+
+            $pathInfo = $request->getPathInfo() ;
+            $urlManager = Yii::$app->getUrlManager();
+            $queryParams = trim(str_replace($pathInfo, null, $url), '/');
+            $slash = substr($pathInfo, -1);
+            if(
+                $pathInfo !== ''
+                && $slash !== '/'
+                && $urlManager->getCurrentRule()
+                && $urlManager->getCurrentRule()->normalizeTrailingSlash === true
+            ) {
+                $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);
+            }
+        });
     }
 }
