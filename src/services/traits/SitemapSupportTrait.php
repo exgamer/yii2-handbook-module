@@ -5,7 +5,6 @@ use concepture\yii2logic\enum\StatusEnum;
 use Yii;
 
 /**
- * @deprecated
  * 
  * Trait ReadSupportTrait
  * @package concepture\yii2handbook\services\traits
