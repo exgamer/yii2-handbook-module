@@ -6,6 +6,7 @@ use concepture\yii2handbook\enum\SitemapGeneratorEnum;
 use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use concepture\yii2handbook\forms\StaticFileForm;
 use concepture\yii2handbook\models\Sitemap;
+use concepture\yii2handbook\services\interfaces\SitemapServiceInterface;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\helpers\ClassHelper;
@@ -24,7 +25,7 @@ trait SitemapGeneratorTrait
 {
     /**
      * Перегенерация карты саита с нуля
-     * Для работы сервис должен использовать SitemapSupportTrait
+     * Для работы сервис должен использовать интефеис SitemapServiceInterface
      * @param string $scheme
      * @throws Exception
      */
@@ -39,8 +40,7 @@ trait SitemapGeneratorTrait
                 continue;
             }
 
-            $traits = ClassHelper::getTraits($service);
-            if (! in_array(SitemapSupportTrait::class, $traits)){
+            if (! $service instanceof SitemapServiceInterface){
                 continue;
             }
 

@@ -62,6 +62,25 @@ class SitemapService extends Service
     }
 
     /**
+     * Обновление карты саита
+     *
+     * @param $model
+     * @param null $controllerId
+     * @param array $urlParamAttrs
+     * @param bool $forceDelete
+     * @return mixed
+     * @throws \Exception
+     */
+    public function sitemapRefresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'], $forceDelete = false)
+    {
+        if ($forceDelete || $model->status != StatusEnum::ACTIVE){
+            return $this->remove($model);;
+        }
+
+        return $this->refresh($model, $controllerId, $urlParamAttrs );
+    }
+
+    /**
      * @param $model
      * @param $controllerId
      * @param $urlParamAttrs
