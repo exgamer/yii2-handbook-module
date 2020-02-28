@@ -40,13 +40,33 @@ final class QueueCollection
      *
      * @param string $tube
      * @param array $payload
-     * @param int $ttr
-     * @param int $delay
      * @param int $priority
+     * @param int $delay
+     * @param int $ttr
      */
     public function push(string $tube, array $payload, $priority = 1024, $delay = 0, $ttr = 0)
     {
         self::$collection[$tube][] = [
+            'payload' => $payload,
+            'priority' => $priority,
+            'delay' => $delay,
+            'ttr' => $ttr
+        ];
+    }
+
+    /**
+     * Добавление в коллекцию c установкой ключа
+     *
+     * @param string $key
+     * @param string $tube
+     * @param array $payload
+     * @param int $priority
+     * @param int $delay
+     * @param int $ttr
+     */
+    public function pushByKey(string $key, string $tube, array $payload, $priority = 1024, $delay = 0, $ttr = 0)
+    {
+        self::$collection[$tube][$key] = [
             'payload' => $payload,
             'priority' => $priority,
             'delay' => $delay,
@@ -69,9 +89,9 @@ final class QueueCollection
      *
      * @return bool
      */
-    public function count() : bool
+    public function count()
     {
-        return count(self::$collection);
+        return count($this->get());
     }
 
     /**

@@ -146,7 +146,7 @@ class QueueManager extends Component
      */
     public function flushCollection()
     {
-        if(! $this->getQueueCollection()->count()) {
+        if(! $this->getCollection()->count()) {
             return false;
         }
 
