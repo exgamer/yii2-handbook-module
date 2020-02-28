@@ -25,7 +25,7 @@ trait SitemapGeneratorTrait
 {
     /**
      * Перегенерация карты саита с нуля
-     * Для работы сервис должен использовать интефеис SitemapServiceInterface
+     * Для работы сервис должен использовать SitemapSupportTrait
      * @param string $scheme
      * @throws Exception
      */
@@ -40,7 +40,8 @@ trait SitemapGeneratorTrait
                 continue;
             }
 
-            if (! $service instanceof SitemapServiceInterface){
+            $traits = ClassHelper::getTraits($service);
+            if (! in_array(SitemapSupportTrait::class, $traits) && ! $service instanceof SitemapServiceInterface){
                 continue;
             }
 

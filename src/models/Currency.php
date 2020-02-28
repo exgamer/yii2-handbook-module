@@ -56,14 +56,16 @@ class Currency extends ActiveRecord
             ],
             [
                 [
-                    'caption'
+                    'name'
                 ],
                 'string',
                 'max'=>20
             ],
             [
                 [
-                    'iso'
+                    'code',
+                    'symbol',
+                    'symbol_native',
                 ],
                 'string',
                 'max'=>10
@@ -76,8 +78,10 @@ class Currency extends ActiveRecord
         return [
             'id' => Yii::t('handbook','#'),
             'status' => Yii::t('handbook','Статус'),
-            'iso' => Yii::t('handbook',' Код'),
-            'caption' => Yii::t('handbook','Метка'),
+            'code' => Yii::t('handbook','Код'),
+            'name' => Yii::t('handbook','Наименование'),
+            'symbol' => Yii::t('handbook','Символ'),
+            'symbol_native' => Yii::t('handbook','Родной символ'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
