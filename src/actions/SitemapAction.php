@@ -26,14 +26,14 @@ class SitemapAction extends Action
     {
         $this->controller->layout = null;
         $item = $this->staticFileService()->getSitemapFile($filename);
+        if(! $item) {
+            throw  new NotFoundHttpException();
+        }
+
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();
         $headers->add('Content-Type', 'text/xml');
-
-        if(! $item) {
-            throw  new NotFoundHttpException();
-        }
 
         return $item->content;
     }
