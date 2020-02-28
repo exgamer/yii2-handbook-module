@@ -15,4 +15,16 @@ use Yii;
 class CurrencyService extends Service
 {
     use StatusTrait;
+
+    /**
+     * Каталог 'code' => 'name (symbol)'
+     * @return array
+     * @throws \Exception
+     */
+    public function getCatalogWithCurrencySymbol()
+    {
+        return $this->catalog('code', function ($model) {
+            return "{$model->name} ({$model->symbol_native})";
+        });
+    }
 }
