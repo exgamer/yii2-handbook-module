@@ -18,24 +18,35 @@ class CurrencySearch extends Currency
     public function rules()
     {
         return [
-            [['id'], 'integer']
+            [['id'], 'integer'],
+            [['code'], 'safe'],
         ];
     }
 
+    /**
+     * @param ActiveQuery $query
+     */
     public function extendQuery(ActiveQuery $query)
     {
         $query->andFilterWhere([
-            'id' => $this->id
+            'id' => $this->id,
+            'code' => $this->code,
         ]);
     }
 
+    /**
+     * @return string
+     */
     public static function getListSearchKeyAttribute()
     {
         return 'id';
     }
 
+    /**
+     * @return string
+     */
     public static function getListSearchAttribute()
     {
-        return 'iso';
+        return 'code';
     }
 }

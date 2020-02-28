@@ -30,7 +30,7 @@ class Currency extends ActiveRecord
      */
     public function toString()
     {
-        return $this->caption;
+        return $this->name;
     }
 
 
