@@ -14,21 +14,21 @@ class m191125_101555_add_currency extends Migration
      */
     public function safeUp()
     {
-        $form = new CurrencyForm();
-        $form->iso = "RUR";
-        $form->caption = "Рубль";
-        $form->status = 1;
-        Yii::$app->currencyService->create($form);
-        $form = new CurrencyForm();
-        $form->iso = "KZT";
-        $form->caption = "Тенге";
-        $form->status = 1;
-        Yii::$app->currencyService->create($form);
-        $form = new CurrencyForm();
-        $form->iso = "USD";
-        $form->caption = "Американский доллар";
-        $form->status = 1;
-        Yii::$app->currencyService->create($form);
+//        $form = new CurrencyForm();
+//        $form->iso = "RUR";
+//        $form->caption = "Рубль";
+//        $form->status = 1;
+//        Yii::$app->currencyService->create($form);
+//        $form = new CurrencyForm();
+//        $form->iso = "KZT";
+//        $form->caption = "Тенге";
+//        $form->status = 1;
+//        Yii::$app->currencyService->create($form);
+//        $form = new CurrencyForm();
+//        $form->iso = "USD";
+//        $form->caption = "Американский доллар";
+//        $form->status = 1;
+//        Yii::$app->currencyService->create($form);
     }
 
     /**
