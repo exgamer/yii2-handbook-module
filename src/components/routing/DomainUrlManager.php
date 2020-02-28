@@ -190,7 +190,7 @@ class DomainUrlManager extends YiiUrlManager
             if(
                 $pathInfo !== ''
                 && $slash !== '/'
-                && $urlManager->getCurrentRule()
+                && $urlManager->getCurrentRule() instanceof DomainUrlRule
                 && $urlManager->getCurrentRule()->normalizeTrailingSlash === true
             ) {
                 $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);

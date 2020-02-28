@@ -26,14 +26,14 @@ class StaticFileAction extends Action
     {
         $this->controller->layout = null;
         $item = $this->staticFileService()->getFile($filename);
+        if(! $item) {
+            throw  new NotFoundHttpException();
+        }
+
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_RAW;
         $headers = $response->getHeaders();
         $headers->add('Content-Type', FileExtensionEnum::getContentType($item->extension));
-
-        if(! $item) {
-            return null;
-        }
 
         return $item->content;
     }
