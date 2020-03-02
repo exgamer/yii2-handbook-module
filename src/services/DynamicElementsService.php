@@ -353,6 +353,12 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         $result = Yii::$app->getRequest()->getPathInfo();
+
+        // TODO обсудить с Илюхой, нужно на списках с пагинацией брать одни и те же элементы
+        if (array_key_exists('page', Yii::$app->getRequest()->getQueryParams())) {
+            $result = Url::toRoute(Yii::$app->requestedRoute);
+        }
+
         $result = trim($result, '/');
         # главная страница
         if (! $result){
