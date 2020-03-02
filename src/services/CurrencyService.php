@@ -23,7 +23,7 @@ class CurrencyService extends Service
      */
     public function getCatalogWithCurrencySymbol()
     {
-        return $this->catalog('code', function ($model) {
+        return $this->catalog('id', function ($model) {
             return "{$model->name} ({$model->symbol_native})";
         });
     }
