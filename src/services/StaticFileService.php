@@ -149,7 +149,8 @@ class StaticFileService extends Service
     public function clearSiteMaps()
     {
         return StaticFile::deleteAll([
-            'type' => [StaticFileTypeEnum::SITEMAP, StaticFileTypeEnum::SITEMAP_INDEX]
+            'type' => [StaticFileTypeEnum::SITEMAP, StaticFileTypeEnum::SITEMAP_INDEX],
+            'domain_id' => $this->domainService()->getCurrentDomainId()
         ]);
     }
 }

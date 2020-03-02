@@ -31,7 +31,9 @@ trait SitemapGeneratorTrait
      */
     public function regenerate($scheme = 'https')
     {
-        Sitemap::deleteAll();
+        Sitemap::deleteAll([
+            'domain_id' => $this->domainService()->getCurrentDomainId()
+        ]);
         $this->staticFileService()->clearSiteMaps();
         $entities = $this->entityTypeService()->catalog('id', 'table_name');
         foreach ($entities as $entity){
