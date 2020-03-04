@@ -451,7 +451,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         return Html::tag(
-            'div',
+            'span',
             $value,
             [
                 'class' => $class,
