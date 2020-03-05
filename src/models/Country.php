@@ -1,4 +1,5 @@
 <?php
+
 namespace concepture\yii2handbook\models;
 
 use Yii;
@@ -94,6 +95,14 @@ class Country extends ActiveRecord
                 'unique'
             ]
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLocale()
+    {
+        return $this->hasOne(Locale::class, ['id' => 'locale']);
     }
 
     public function attributeLabels()
