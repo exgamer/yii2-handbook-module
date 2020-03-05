@@ -100,7 +100,7 @@ class Country extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLocale()
+    public function getLanguage()
     {
         return $this->hasOne(Locale::class, ['id' => 'locale']);
     }
