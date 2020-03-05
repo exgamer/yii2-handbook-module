@@ -98,6 +98,7 @@ class Country extends ActiveRecord
     }
 
     /**
+     * @todo костыль так как поле называется locale, в будущем избавиться - переименовать в locale_id
      * @return \yii\db\ActiveQuery
      */
     public function getLanguage()
