@@ -3,10 +3,10 @@
 namespace concepture\yii2handbook\components\queue\beanstalkd;
 
 use Yii;
-use yii\base\Component;
 use yii\helpers\Json;
 use udokmeci\yii2beanstalk\Beanstalk;
 use Pheanstalk\PheanstalkInterface;
+use concepture\yii2handbook\components\queue\BaseQueueManager;
 
 /**
  * Сервис для работы с очередями через менеджер - beanstalkd
@@ -27,7 +27,7 @@ use Pheanstalk\PheanstalkInterface;
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-class QueueManager extends Component
+class QueueManager extends BaseQueueManager
 {
     /**
      * @var string
@@ -126,18 +126,18 @@ class QueueManager extends Component
             throw new QueueManagerException("Tube constant is not declarate in `{$enumClass}`");
         }
 
-        if (! isset($payload['alias'])) {
-            $payload['alias'] = APP_ALIAS;
-        }
-
-        $payload = Json::encode($payload);
-        $result = $this->getPheanstalk()->putInTube($tube, $payload, $priority, $delay, $ttr);
+        $data = Json::encode($payload);
+        $this->beforeSend($tube, $payload);
+        $result = $this->getPheanstalk()->putInTube($tube, $data, $priority, $delay, $ttr);
         if(! $result) {
             throw new QueueManagerException('Failed to put the task into the tube.');
         }
 
+        $this->afterSend($tube, $payload);
+
         return $result;
     }
+
 
     /**
      * Освобождение коллекции задачь

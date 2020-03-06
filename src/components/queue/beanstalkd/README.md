@@ -24,7 +24,15 @@
     ],
   ...
 ```
--Воркер должен быть унаследован от класса `concepture\yii2handbook\components\queue\beanstalkd\worker\BaseWorker`
+- Закинуть задачу в очередь :
+```php
+    $payload = [
+        'foo' => 'bar'
+    ];
+    
+    Yii::$app->queue->putIn(TubeEnum::TEST, $payload);
+```
+- Воркер должен быть унаследован от класса `concepture\yii2handbook\components\queue\beanstalkd\worker\BaseWorker`
  и реализовывать его функции. Один воркер на одну трубу - (пример `console\components\worker\TestWorker`)
  ```php
     namespace console\components\worker;
