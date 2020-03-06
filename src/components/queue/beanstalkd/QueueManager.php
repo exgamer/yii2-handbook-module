@@ -126,8 +126,8 @@ class QueueManager extends BaseQueueManager
             throw new QueueManagerException("Tube constant is not declarate in `{$enumClass}`");
         }
 
-        $data = Json::encode($payload);
         $this->beforeSend($tube, $payload);
+        $data = Json::encode($payload);
         $result = $this->getPheanstalk()->putInTube($tube, $data, $priority, $delay, $ttr);
         if(! $result) {
             throw new QueueManagerException('Failed to put the task into the tube.');

@@ -18,7 +18,7 @@ interface QueueManagerEventInterface
      * @param string $queueName
      * @param string $payload
      */
-    function beforeSend($queueName, $payload);
+    function beforeSend($queueName, &$payload);
 
     /**
      * Событие после отправкой задачи в очередь
@@ -26,5 +26,5 @@ interface QueueManagerEventInterface
      * @param string $queueName
      * @param string $payload
      */
-     function afterSend($queueName, $payload);
+     function afterSend($queueName, &$payload);
 }

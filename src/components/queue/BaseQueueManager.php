@@ -20,13 +20,18 @@ abstract class BaseQueueManager extends Component implements QueueManagerEventIn
      *
      * @param string $queueName
      * @param string $payload
+     *
+     * @return BeforeSendEvent
      */
-    public function beforeSend($queueName, $payload)
+    public function beforeSend($queueName, &$payload)
     {
         $event = new BeforeSendEvent();
         $event->queueName = $queueName;
         $event->payload = $payload;
         $this->trigger(self::EVENT_BEFORE_SEND, $event);
+        $payload = $event->payload;
+
+        return $event;
     }
 
     /**
@@ -34,12 +39,17 @@ abstract class BaseQueueManager extends Component implements QueueManagerEventIn
      *
      * @param string $queueName
      * @param string $payload
+     *
+     * @return AfterSendEvent
      */
-    public function afterSend($queueName, $payload)
+    public function afterSend($queueName, &$payload)
     {
         $event = new AfterSendEvent();
         $event->queueName = $queueName;
         $event->payload = $payload;
         $this->trigger(self::EVENT_AFTER_SEND, $event);
+        $payload = $event->payload;
+
+        return $event;
     }
 }
