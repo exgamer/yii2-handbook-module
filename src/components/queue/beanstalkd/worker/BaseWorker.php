@@ -200,8 +200,9 @@ abstract class BaseWorker extends BeanstalkController implements WorkerInterface
     protected function actionExecute(Job $job)
     {
         $payload = $job->getData();
+        $payload = json_decode(json_encode($payload), JSON_OBJECT_AS_ARRAY);
         try {
-            $this->execute((array) $payload);
+            $this->execute($payload);
             $this->stdout("Payload : ", Console::FG_GREEN);
             $this->stdout(Json::encode($payload) , Console::FG_YELLOW);
             $this->stdout( " successfully completed." . "\n", Console::FG_GREEN);
