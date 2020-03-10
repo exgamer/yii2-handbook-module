@@ -180,7 +180,7 @@ abstract class BaseWorker extends BeanstalkController implements WorkerInterface
 
             $this->getStreamService()->removeData($storageKey);
             $payload = Json::decode($data);
-            $this->execute($payload);
+            $this->execute((array) $payload);
             $this->stdout("Payload : ", Console::FG_GREEN);
             $this->stdout(Json::encode($payload) , Console::FG_YELLOW);
             $this->stdout( " successfully completed." . "\n", Console::FG_GREEN);
@@ -201,7 +201,7 @@ abstract class BaseWorker extends BeanstalkController implements WorkerInterface
     {
         $payload = $job->getData();
         try {
-            $this->execute($payload);
+            $this->execute((array) $payload);
             $this->stdout("Payload : ", Console::FG_GREEN);
             $this->stdout(Json::encode($payload) , Console::FG_YELLOW);
             $this->stdout( " successfully completed." . "\n", Console::FG_GREEN);
