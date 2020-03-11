@@ -17,7 +17,7 @@ trait DomainTrait
     public function getDomainName()
     {
         if (isset($this->domain)){
-            return $this->domain->domain;
+            return $this->domain->alias;
         }
 
         return null;
