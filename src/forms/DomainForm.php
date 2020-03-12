@@ -14,7 +14,6 @@ class DomainForm extends Form
 {
     public $sort;
     public $status;
-    public $domain;
     public $caption;
     public $alias;
     public $description;
@@ -28,7 +27,7 @@ class DomainForm extends Form
             [
                 [
                     'caption',
-                    'domain',
+                    'alias',
                 ],
                 'required'
             ],
