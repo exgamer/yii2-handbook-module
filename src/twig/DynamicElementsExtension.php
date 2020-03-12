@@ -24,11 +24,15 @@ class DynamicElementsExtension extends AbstractExtension
     public function __construct()
     {
         $view = Yii::$app->getView();
-        Bundle::register($view);
+        if($this->getDynamicElementsService()->canManage()) {
+            Bundle::register($view);
+            $view->on(View::EVENT_END_BODY, [$this->getDynamicElementsService(), 'renderManagePanel']);
+        }
+
         $view->on(View::EVENT_BEGIN_PAGE, function() {
             return $this->getDynamicElementsService()->apply();
         });
-        $view->on(View::EVENT_END_BODY, [$this->getDynamicElementsService(), 'renderManagePanel']);
+
         $view->on(View::EVENT_AFTER_RENDER, function() {
             return $this->getDynamicElementsService()->writeElements();
         });

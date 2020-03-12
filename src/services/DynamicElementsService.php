@@ -533,7 +533,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      *
      * @return bool
      */
-    private function canManage()
+    public function canManage()
     {
         static $result;
 
