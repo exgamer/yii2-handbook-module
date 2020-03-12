@@ -26,6 +26,7 @@ use concepture\yii2handbook\enum\DynamicElementsEnum;
 use concepture\yii2logic\events\ServiceEvent;
 use concepture\yii2logic\enum\ServiceEventEnum;
 use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
+use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
 
 /**
  * Сервис динамическх элементов
@@ -471,6 +472,8 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return null;
         }
 
+        Bundle::register(Yii::$app->getView());
+
         echo $this->view->render('@concepture/yii2handbook/views/dynamic-elements/include/manage_panel', [
             'url' => $this->getUpdateUrl(),
             'count' => count($this->existsItems),
@@ -501,6 +504,24 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * Возвращает признак возможности управления настройками с внешней части
+     *
+     * @return bool
+     */
+    public function canManage()
+    {
+        static $result;
+
+        if($result) {
+            return $result;
+        }
+        # todo: пока не имеем RBAC
+        $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
+
+        return $result;
+    }
+
+    /**
      * Ссылка на редактирование настроек
      *
      * @param string|null $anchor
@@ -526,24 +547,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         return Url::to($url);
-    }
-
-    /**
-     * Возвращает признак возможности управления настройками с внешней части
-     *
-     * @return bool
-     */
-    public function canManage()
-    {
-        static $result;
-
-        if($result) {
-            return $result;
-        }
-        # todo: пока не имеем RBAC
-        $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
-
-        return $result;
     }
 
     /**
