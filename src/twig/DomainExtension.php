@@ -28,7 +28,7 @@ class DomainExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            # получение
+            # атрибут текущего домена приложения
             new TwigFunction('currentDomainAttribute', function($attribute = 'alias') {
                     $domain = $this->getDomainService()->getCurrentDomain();
 
