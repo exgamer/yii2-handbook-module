@@ -93,24 +93,28 @@ class HreflangService extends Service
         }
 
         list($route, $params) = $rule->parseRequest($urlManager, Yii::$app->getRequest());
-        foreach ($domainMap as $domain => $settings) {
-            if(
-                ! isset($settings['hreflang'])
-                || (! $rule->pattern && ! isset($rule->patterns[$settings['alias']]))
-            ) {
-                continue;
-            }
+        try {
+            foreach ($domainMap as $domain => $settings) {
+                if(
+                    ! isset($settings['hreflang'])
+                    || ($rule->patterns && ! isset($rule->patterns[$settings['alias']]))
+                ) {
+                    continue;
+                }
 
-            if(
-                is_array($rule->patterns)
-                && count($rule->patterns) > 1
-            ) {
-                $rule->reinit($settings['alias']);
-            }
+                if(
+                    is_array($rule->patterns)
+                    && count($rule->patterns) > 1
+                ) {
+                    $rule->reinit($settings['alias']);
+                }
 
-            $schema = $settings['shema'] ?? 'https';
-            $url = $urlManager->createUrl(ArrayHelper::merge([$route], $params));
-            $result[$settings['hreflang']] =  "{$schema}://{$domain}{$url}";
+                $schema = $settings['shema'] ?? 'https';
+                $url = $urlManager->createUrl(ArrayHelper::merge([$route], $params));
+                $result[$settings['hreflang']] =  "{$schema}://{$domain}{$url}";
+            }
+        } catch (\Exception $e) {
+
         }
 
         if($result) {
