@@ -2,7 +2,6 @@
 
 namespace concepture\yii2handbook\services;
 
-use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use Yii;
 use yii\base\Event;
 use yii\db\ActiveQuery;
@@ -26,6 +25,7 @@ use concepture\yii2handbook\enum\DynamicElementsEnum;
 use concepture\yii2logic\events\ServiceEvent;
 use concepture\yii2logic\enum\ServiceEventEnum;
 use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
+use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
 
 /**
@@ -81,6 +81,21 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @var string
      */
     private $text;
+
+    /**
+     * @var array стек вызова элементов
+     */
+    private $callStack = [];
+
+    /**
+     * @var array стек моделей concepture\yii2handbook\models\DynamicElements
+     */
+    private $modelStack = [];
+
+    /**
+     * @var string
+     */
+    private $currentUrlHash = null;
 
     /**
      * @inheritDoc
@@ -156,6 +171,24 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * Возвращает стек вызова элементов
+     *
+     * @return array
+     */
+    public function getCallStack()
+    {
+        return $this->callStack;
+    }
+
+    /**
+     * Очистка стека вызова
+     */
+    public function clearCallStack()
+    {
+        $this->callStack = [];
+    }
+
+    /**
      * @inheritDoc
      */
     protected function beforeCreate(Model $form)
@@ -196,17 +229,19 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $attribute = strtolower($name);
         # если такой настройки нет, записываем в массив для записи
         if(! isset($dataSet->{$attribute})) {
-            $this->writeItems[$name] = [
-                'url' => $this->getCurrentUrl($is_general),
-                'url_md5_hash' => $this->getCurrentUlrHash($is_general),
-                'domain_id' => $this->getDomainService()->getCurrentDomainId(),
-                'locale' => $this->getLocaleService()->getCurrentLocaleId(),
-                'type' => $type,
-                'name' => $name,
-                'value' => $value,
-                'caption' => $caption,
-                'is_general' => $is_general,
-            ];
+            try {
+                $this->writeItems[$name] = [
+                    'url' => $this->getCurrentUrl($is_general),
+                    'url_md5_hash' => $this->getCurrentUlrHash($is_general),
+                    'domain_id' => $this->getDomainService()->getCurrentDomainId(),
+                    'locale' => $this->getLocaleService()->getCurrentLocaleId(),
+                    'type' => $type,
+                    'name' => $name,
+                    'value' => $value,
+                    'caption' => $caption,
+                    'is_general' => $is_general,
+                ];
+            } catch (\Exception $e) {}
 
             $event->value = $value;
             $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
@@ -216,6 +251,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
 
         $event->value = ( $dataSet->{$attribute} ?? null);
         $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
+        if(isset($this->modelStack[$name])) {
+            $this->callStack[$name] = $this->modelStack[$name]['id'];
+            unset($this->modelStack[$name]);
+        }
 
         return $event->value;
     }
@@ -267,6 +306,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             foreach ($items as $item) {
                 $dataSet->setVirtualAttribute($item->name, $item->value);
                 $this->existsItems[$item->name] = $item->getAttributes();
+                $this->modelStack[$item->name] = $item;
             }
         }
 
@@ -378,12 +418,27 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function getCurrentUlrHash($is_general = false)
     {
+        if($this->currentUrlHash) {
+
+            return $this->currentUrlHash;
+        }
+
         if($is_general) {
 
             return md5('');
         }
 
         return md5($this->getCurrentUrl());
+    }
+
+    /**
+     * Установка хэша текущего урла страницы
+     *
+     * @param string $hash
+     */
+    public function setCurrentUlrHash($hash)
+    {
+        $this->currentUrlHash = $hash;
     }
 
     /**
@@ -441,10 +496,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return null;
         }
 
-        $interactiveMode = $this->getInteractiveMode();
         if( ! $this->canManage()) {
             return $value;
         }
+
+        $interactiveMode = $this->getInteractiveMode();
 
         $class = 'yii2-handbook-dynamic-elements-manage-control ' . ($interactiveMode ? 'yii2-handbook-dynamic-elements-interactive-mode' : null);
         if($is_general) {
@@ -512,10 +568,14 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     {
         static $result;
 
+        if(! Yii::$app instanceof Application) {
+            return false;
+        }
+
         if($result) {
             return $result;
         }
-        # todo: пока не имеем RBAC
+
         $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
 
         return $result;
