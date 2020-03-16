@@ -11,7 +11,9 @@ use concepture\yii2logic\services\Service;
 use concepture\yii2logic\traits\ConfigAwareTrait;
 
 /**
- * Class DomainService
+ * @todo перевести функции работающие с domainMap в статику
+ * @todo избавиться от AppHelper в common, логика должна быть в этом классе, статические методы
+ *
  * @package concepture\yii2handbook\service
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
