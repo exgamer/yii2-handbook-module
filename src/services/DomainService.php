@@ -13,6 +13,8 @@ use concepture\yii2logic\traits\ConfigAwareTrait;
 /**
  * @todo перевести функции работающие с domainMap в статику
  * @todo избавиться от AppHelper в common, логика должна быть в этом классе, статические методы
+ * @todo возможность указать хэлпер из конфига, единый интерфейс для конфига
+ * @todo чтобы не распылять по двум классам
  *
  * @package concepture\yii2handbook\service
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
