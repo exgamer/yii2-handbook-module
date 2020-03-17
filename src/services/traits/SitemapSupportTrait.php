@@ -23,7 +23,7 @@ trait SitemapSupportTrait
     public function sitemapRefresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'], $forceDelete = false)
     {
         if ($forceDelete || $model->status != StatusEnum::ACTIVE){
-            return Yii::$app->sitemapService->remove($model);;
+            return Yii::$app->sitemapService->remove($model);
         }
 
         return Yii::$app->sitemapService->refresh($model, $controllerId, $urlParamAttrs );
