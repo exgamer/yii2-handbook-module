@@ -10,7 +10,6 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\base\Model as YiiModel;
 use yii\base\InvalidConfigException;
-use yii\web\Application;
 use concepture\yii2handbook\search\DynamicElementsSearch;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
@@ -29,7 +28,6 @@ use concepture\yii2logic\enum\ServiceEventEnum;
 use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
 use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
-use Common\Helpers\ArrayHelper;
 
 
 /**
@@ -229,9 +227,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     {
         $event = $this->elementsGetEvent($type, $name, $caption, $value, $is_general);
         $this->trigger(static::EVENT_BEFORE_GET_ELEMENT, $event);
-        $dataSet = $this->getDataSet();
+        $reset = (! Yii::$app instanceof \yii\web\Application);
+        $dataSet = $this->getDataSet(null, $reset);
         $attribute = strtolower($name);
-        # если такой настройки нет, записываем в массив для записи
+        # если такого элемента нет, заполняем массив для записи в бд
         if(! isset($dataSet->{$attribute})) {
             try {
                 $this->writeItems[$name] = [
@@ -257,7 +256,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
         if(isset($this->modelStack[$name])) {
             $this->callStack[$name] = $this->modelStack[$name]['id'];
-            unset($this->modelStack[$name]);
         }
 
         return $event->value;
@@ -296,17 +294,17 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @return SeoData|mixed
      * @throws InvalidConfigException
      */
-    public function getDataSet($model = null)
+    public function getDataSet($model = null, $reset = false)
     {
         static $dataSet;
 
-        if($dataSet && ! $model) {
+        if($dataSet && ! $model && ! $reset) {
             return $dataSet;
         }
 
-        if(! $dataSet) {
+        if($reset || ! $dataSet) {
             $dataSet = new SeoData();
-            $items = $this->getElementsForCurrentUrl();
+            $items = $this->getElementsForCurrentUrl($reset);
             foreach ($items as $item) {
                 $dataSet->setVirtualAttribute($item->name, $item->value);
                 $this->existsItems[$item->name] = $item->getAttributes();
@@ -327,11 +325,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @return array
      * @throws InvalidConfigException
      */
-    public function getElementsForCurrentUrl()
+    public function getElementsForCurrentUrl($reset = false)
     {
         static $items;
 
-        if($items) {
+        if($items && ! $reset) {
             return $items;
         }
 
@@ -609,7 +607,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     {
         static $result;
 
-        if(! Yii::$app instanceof Application) {
+        if(! Yii::$app instanceof \yii\web\Application) {
             return false;
         }
 
