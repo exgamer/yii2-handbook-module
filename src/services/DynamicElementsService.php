@@ -15,6 +15,8 @@ use concepture\yii2handbook\search\DynamicElementsSearch;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
 use concepture\yii2logic\services\Service;
+use concepture\yii2logic\services\events\modify\AfterModifyEvent;
+use concepture\yii2logic\services\events\modify\AfterBatchInsertEvent;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
@@ -27,6 +29,8 @@ use concepture\yii2logic\enum\ServiceEventEnum;
 use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
 use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
+use Common\Helpers\ArrayHelper;
+
 
 /**
  * Сервис динамическх элементов
@@ -449,19 +453,56 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function updateMultiple(DynamicElementsMultipleForm $form)
     {
+        $ids = [];
+        $formData = [];
         $index = 0;
-        $data = [];
         $attributes = $form->getAttributes();
         foreach ($attributes as $key => $value) {
             if($key === 'ids') {
+                $ids = $value;
+
                 continue;
             }
 
-            $data[] = [$form->ids[$index] ,$value];
-            $index++;
+            $formData[] = [$form->ids[$index] ,$value];
+            $index ++;
+        }
+        # находим исходные элементы и проверяем изменялись они или нет
+        $items = $this->getAllByCondition(function( ActiveQuery $query ) use ($ids) {
+            $query->addSelect(['id', 'value']);
+            $query->andWhere(['id' => $ids]);
+            $query->asArray();
+            $query->indexBy('id');
+        });
+        $insertData = [];
+        foreach ($formData as $key => $data) {
+            list($id, $value) = $data;
+            if(
+                ! isset($items[$id])
+                || ($items[$id]['value'] === $value)
+            ) {
+                continue;
+            }
+
+            $insertData[$key] = $data;
         }
 
-        return $this->batchInsert(['id', 'value'], $data);
+        if(! $insertData) {
+            return true;
+        }
+
+        return $this->batchInsert(['id', 'value'], $insertData);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function afterBatchInsert($fields, $rows)
+    {
+        $this->trigger(static::EVENT_AFTER_BATCH_INSERT, new AfterBatchInsertEvent(['fields' => $fields, 'rows' => $rows]));
+        $event = new AfterModifyEvent();
+        $event->modifyData = $rows;
+        $this->trigger(static::EVENT_AFTER_MODIFY, $event);
     }
 
     /**
