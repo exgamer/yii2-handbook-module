@@ -2,6 +2,7 @@
 namespace concepture\yii2handbook\services\traits;
 
 use concepture\yii2handbook\forms\SitemapForm;
+use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
 use Exception;
 use Yii;
@@ -77,6 +78,10 @@ trait SitemapModifyTrait
 
         if (! $current){
             return $this->add($model, $controllerId, $urlParamAttrs);
+        }
+
+        if ($current->hasAttribute('is_deleted') && $current->is_deleted == IsDeletedEnum::DELETED){
+            $current->undelete();
         }
 
         if ($current->location == $location){
