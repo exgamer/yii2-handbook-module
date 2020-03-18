@@ -278,3 +278,5 @@ return [
 ```
 ## Менеджер очередей Beanstalk
 [Подробнее](src/components/queue/beanstalkd/README.md)
+## Компонент кэша
+[Подробнее](src/components/cache/README.md)
