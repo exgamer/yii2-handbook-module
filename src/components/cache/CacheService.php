@@ -70,7 +70,12 @@ class CacheService extends Component
      * @var string
      */
     public $env;
-	
+
+    /**
+     * @var boolean
+     */
+    private $disabled = false;
+
 	public function init()
 	{
 	    parent::init();
@@ -91,6 +96,22 @@ class CacheService extends Component
 		$this->prefix_callback .= $this->prefix;
 		$this->nocache = (bool)getenv('NOCACHE') || isset($_GET['nocache']);
 	}
+
+    /**
+     * @param bool $value
+     */
+	public function setDisabled(bool $value)
+    {
+        $this->disabled = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->disabled;
+    }
 
 	public function getClient()
     {
@@ -133,6 +154,10 @@ class CacheService extends Component
 	
 	public function set($key, $val, $ttl = 0)
 	{
+	    if($this->isDisabled()) {
+	        return ;
+        }
+
 		if($ttl < 1 && $this->ttl > 0) {
 			$ttl = $this->ttl;
 		}
@@ -203,7 +228,7 @@ class CacheService extends Component
 	public function get($key)
 	{
 		// тут нужно именно $_GET т.к. может не быть симфониевского $request-а
-		if($this->nocache) {
+		if($this->nocache || $this->isDisabled()) {
 			return null;
 		}
 

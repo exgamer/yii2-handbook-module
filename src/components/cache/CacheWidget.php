@@ -102,19 +102,8 @@ abstract class CacheWidget extends Widget
     public function run($cache = true)
     {
         parent::run();
-        # не кешировать для авторизованного
-        # todo: проверка на админа в дальнейшем
-        if(
-            Yii::$app instanceof \yii\web\Application
-            && Yii::$app->has('user')
-            && ! Yii::$app->getUser()->getIsGuest()
-        ) {
-            $cache = false;
-            $this->options['cache'] = false;
-        }
 
         return $this->getResult($cache);
-        
     }
 
     /**
