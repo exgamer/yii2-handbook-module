@@ -8,6 +8,12 @@
     ...
     'components' => [
       ...
+      'urlManager' => [
+          'class' => 'concepture\yii2handbook\components\routing\DomainUrlManager',
+          'baseUrl' => '',
+          'rules' => require dirname(__DIR__ ) . '/../frontend/config/routes.php',
+      ]
+      ...
         CacheService::COMPONENT_NAME => [
             'class' => CacheService::class,
             'cacheComponent' => 'redis',
