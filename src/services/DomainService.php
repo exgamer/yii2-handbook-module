@@ -201,7 +201,7 @@ class DomainService extends Service
      *
      * @return int|null
      */
-    public function getCurrentDomainId($reset = false, $onlyRealDomain = false)
+    public function getCurrentDomainId($reset = false)
     {
         if ($this->getVirtualDomainId()){
             return $this->getVirtualDomainId();
@@ -231,7 +231,7 @@ class DomainService extends Service
             return null;
         }
 
-        $host = $this->getCurrentHost($onlyRealDomain);
+        $host = $this->getCurrentHost();
         if(! $host) {
             return null;
         }
@@ -273,7 +273,7 @@ class DomainService extends Service
      *
      * @return string
      */
-    public function getCurrentHost($onlyRealDomain = false)
+    public function getCurrentHost()
     {
         static $result;
 
@@ -311,7 +311,7 @@ class DomainService extends Service
      *
      * @return Domain
      */
-    public function getCurrentDomain($reset = false, $onlyRealDomain = false)
+    public function getCurrentDomain($reset = false)
     {
         static $result;
 
@@ -319,7 +319,7 @@ class DomainService extends Service
             return $result;
         }
 
-        $currentDomainId = $this->getCurrentDomainId($reset, $onlyRealDomain);
+        $currentDomainId = $this->getCurrentDomainId();
         $result = $this->getCatalogModel($currentDomainId);
 
         return $result;
