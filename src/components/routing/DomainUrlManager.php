@@ -78,15 +78,14 @@ class DomainUrlManager extends YiiUrlManager
         if(! $admin) {
             $this->suffix = '/';
         }
-        # todo: место узкое - если действие по умолчанию не index
-        $defaultRoute = Yii::$app->defaultRoute . '/index';
+
         $result = ltrim(parent::createUrl($params), '/');
         if(! $admin) {
             $this->suffix = '';
         }
 
-        if(trim($params[0], '/') === $defaultRoute) {
-            return $result;
+        if($result == "") {
+            return '/';
         }
 
         if(! $result) {
@@ -184,14 +183,13 @@ class DomainUrlManager extends YiiUrlManager
             }
 
             $pathInfo = $request->getPathInfo() ;
-            $urlManager = Yii::$app->getUrlManager();
             $queryParams = trim(str_replace($pathInfo, null, $url), '/');
             $slash = substr($pathInfo, -1);
             if(
                 $pathInfo !== ''
                 && $slash !== '/'
-                && $urlManager->getCurrentRule() instanceof DomainUrlRule
-                && $urlManager->getCurrentRule()->normalizeTrailingSlash === true
+                && $this->getCurrentRule() instanceof DomainUrlRule
+                && $this->getCurrentRule()->normalizeTrailingSlash === true
             ) {
                 $response->redirect(Url::to('/' . trim($pathInfo, '/') . '/') . $queryParams, UrlNormalizer::ACTION_REDIRECT_PERMANENT);
             }
