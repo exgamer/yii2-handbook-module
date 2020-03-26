@@ -346,6 +346,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * @deprecated
      * @param string hash
      * @return \yii\data\ActiveDataProvider
      */

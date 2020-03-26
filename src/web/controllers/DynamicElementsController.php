@@ -3,6 +3,7 @@
 namespace concepture\yii2handbook\web\controllers;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\filters\VerbFilter;
 use concepture\yii2user\enum\UserRoleEnum;
@@ -117,6 +118,8 @@ class DynamicElementsController extends Controller
     }
 
     /**
+     * Обновление одно записи
+     *
      * @param integer $id
      * @param null|string $domainAlias
      * @return string|\yii\web\Response
@@ -163,7 +166,7 @@ class DynamicElementsController extends Controller
     }
 
     /**
-     * Редактирование пачкой
+     * Редактирование пачкой со страницы
      *
      * @param string $ids
      * @param string $domainAlias
@@ -182,7 +185,10 @@ class DynamicElementsController extends Controller
             throw new BadRequestHttpException('Bad Request');
         }
 
-        $items = $this->getDynamicElementsService()->getAllByCondition(['id' => $ids]);
+        $items = $this->getDynamicElementsService()->getAllByCondition(function(ActiveQuery $query) use($ids) {
+            $query->andWhere(['id' => $ids]);
+            $query->orderBy('is_general', 'id');
+        });
         foreach ($items as $item) {
             $form->setVirtualAttribute($item->name, $item->value);
             $form->setStringValidator($item->name, $item->caption);
