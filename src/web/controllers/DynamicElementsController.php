@@ -2,7 +2,6 @@
 
 namespace concepture\yii2handbook\web\controllers;
 
-use concepture\yii2handbook\services\DynamicElementsService;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\filters\VerbFilter;
@@ -11,6 +10,9 @@ use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 use concepture\yii2handbook\search\DynamicElementsSearch;
 use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
 use concepture\yii2handbook\services\DomainService;
+use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
+use concepture\yii2handbook\services\DynamicElementsService;
 
 /**
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
@@ -27,7 +29,8 @@ class DynamicElementsController extends Controller
             [
                 [
                     'actions' => [
-                        'interactive-mode'
+                        'interactive-mode',
+                        'update-multiple',
                     ],
                     'allow' => true,
                     'roles' => [
@@ -105,7 +108,7 @@ class DynamicElementsController extends Controller
     {
         $searchModel = Yii::createObject(DynamicElementsSearch::class);
         $searchModel->load(Yii::$app->request->queryParams);
-        $dataProvider =  $this->getDynamicElementsService()->getDataProviderGroupByHash($searchModel);
+        $dataProvider =  $this->getDynamicElementsService()->getDataProvider([], [], $searchModel);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -114,12 +117,58 @@ class DynamicElementsController extends Controller
     }
 
     /**
+     * @param integer $id
+     * @param null|string $domainAlias
+     * @return string|\yii\web\Response
+     * @throws \Exception
+     */
+    public function actionUpdate($id, $domainAlias = null)
+    {
+        if($domainAlias && $domainAlias !== $this->getDomainService()->getCookie()) {
+            $this->getDomainService()->setCookie($domainAlias);
+
+            return $this->redirect(['update', 'id' => $id], 301);
+        }
+
+        $service = $this->getService();
+        $originModel = $service->findById($id);
+        if (! $originModel){
+            throw new NotFoundHttpException();
+        }
+
+        $model = $service->getRelatedForm();
+        $model->setAttributes($originModel->attributes, false);
+        if (method_exists($model, 'customizeForm')) {
+            $model->customizeForm($originModel);
+        }
+
+        if ($model->load(Yii::$app->request->post())) {
+            $originModel->setAttributes($model->attributes);
+            if ($model->validate(null, true, $originModel)) {
+                if (($result = $service->update($model, $originModel)) != false) {
+
+                    if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
+                        return $this->redirect(['index']);
+                    }
+                }
+            }
+
+            $model->addErrors($originModel->getErrors());
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'originModel' => $originModel,
+        ]);
+    }
+
+    /**
      * Редактирование пачкой
      *
-     * @param string $hash
+     * @param string $ids
      * @param string $domainAlias
      */
-    public function actionUpdate($hash, $domainAlias = null)
+    public function actionUpdateMultiple($ids, $domainAlias = null)
     {
         if($domainAlias && $domainAlias !== $this->getDomainService()->getCookie()) {
             $this->getDomainService()->setCookie($domainAlias);
@@ -128,7 +177,12 @@ class DynamicElementsController extends Controller
         }
 
         $form = new DynamicElementsMultipleForm();
-        $items = $this->getDynamicElementsService()->getAllByHash((string) $hash);
+        $ids = explode(',', $ids);
+        if(! $ids || ! is_array($ids)) {
+            throw new BadRequestHttpException('Bad Request');
+        }
+
+        $items = $this->getDynamicElementsService()->getAllByCondition(['id' => $ids]);
         foreach ($items as $item) {
             $form->setVirtualAttribute($item->name, $item->value);
             $form->setStringValidator($item->name, $item->caption);
@@ -142,7 +196,7 @@ class DynamicElementsController extends Controller
             }
         }
 
-        return $this->render('update', [
+        return $this->render('update-multiple', [
             'items' => $items,
             'model' => $form,
         ]);

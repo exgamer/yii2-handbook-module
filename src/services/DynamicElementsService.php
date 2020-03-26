@@ -362,6 +362,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * @deprecated
      * @param DynamicElementsSearch $searchModel
      * @return \yii\data\ActiveDataProvider
      */
@@ -535,7 +536,12 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return null;
         }
 
-        if( ! $this->canManage()) {
+        $id = null;
+        if(isset($this->modelStack[$name])) {
+            $id = $this->modelStack[$name]['id'];
+        }
+
+        if(! $id || ! $this->canManage()) {
             return $value;
         }
 
@@ -551,7 +557,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $value,
             [
                 'class' => $class,
-                'data-url' => $this->getUpdateUrl($name),
+                'data-url' => $this->getUpdateUrl($id),
                 'data-title' => $caption,
                 'is_general' => $is_general,
             ]
@@ -569,8 +575,13 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
 
         Bundle::register(Yii::$app->getView());
 
+        $ids = [];
+        foreach ($this->modelStack as $model) {
+            $ids[] = $model->id;
+        }
+
         echo $this->view->render('@concepture/yii2handbook/views/dynamic-elements/include/manage_panel', [
-            'url' => $this->getUpdateUrl(),
+            'url' => $this->getUpdateUrl($ids),
             'count' => count($this->existsItems),
             'interactiveMode' => $this->getInteractiveMode()
         ]);
@@ -623,11 +634,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     /**
      * Ссылка на редактирование настроек
      *
-     * @param string|null $anchor
+     * @param integer|array $id
      *
      * @return string
      */
-    private function getUpdateUrl($anchor = null)
+    private function getUpdateUrl($id)
     {
         $domain = $this->getDomainService()->getCurrentDomain();
         $alias = null;
@@ -635,14 +646,18 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $alias = $domain->alias;
         }
 
-        $url = [
-            'admin/handbook/dynamic-elements/update',
-            'hash' => $this->getCurrentUlrHash(),
-            'domainAlias' => $alias
-        ];
-
-        if($anchor) {
-            $url['#'] = $anchor;
+        if(is_array($id)) {
+            $url = [
+                'admin/handbook/dynamic-elements/update-multiple',
+                'ids' => implode(',', $id),
+                'domainAlias' => $alias
+            ];
+        } else {
+            $url = [
+                'admin/handbook/dynamic-elements/update',
+                'id' => $id,
+                'domainAlias' => $alias
+            ];
         }
 
         return Url::to($url);
