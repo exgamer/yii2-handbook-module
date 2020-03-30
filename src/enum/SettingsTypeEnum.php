@@ -15,6 +15,7 @@ class SettingsTypeEnum extends Enum
     const TEXT = 0;
     const TEXT_AREA = 1;
     const TEXT_EDITOR = 2;
+    const CHECKBOX = 3;
 
     public static function labels()
     {
@@ -22,6 +23,7 @@ class SettingsTypeEnum extends Enum
             self::TEXT => Yii::t('handbook', "Текст"),
             self::TEXT_AREA => Yii::t('handbook', "Многострочный текст"),
             self::TEXT_EDITOR => Yii::t('handbook', "Текстовый редактор"),
+            self::CHECKBOX => Yii::t('handbook', "Чекбокс"),
         ];
     }
 }
