@@ -23,3 +23,25 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
         'label' => $label ?? $model->getAttributeLabel('values')
     ]) ?>
 <?php endif;?>
+<?php if ($originModel->type == SettingsTypeEnum::CHECKBOX) : ?>
+    <?= $form
+        ->field($model, $attribute, [
+            'template' => '
+            <div class="form-check form-check-inline mt-2">
+                {input}
+            </div>
+            {error}
+                                        '
+        ])
+        ->checkbox(
+            [
+                'class' => 'form-check-input-styled-primary',
+                'labelOptions' => [
+                    'class' => 'form-check-label control-label',
+                ],
+                'label' => $label ?? $model->getAttributeLabel('values')
+            ],
+            true
+        );
+    ?>
+<?php endif;?>
