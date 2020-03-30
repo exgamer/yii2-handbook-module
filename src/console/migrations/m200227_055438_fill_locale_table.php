@@ -1,6 +1,7 @@
 <?php
 
 use concepture\yii2logic\console\migrations\Migration;
+use concepture\yii2logic\enum\StatusEnum;
 
 /**
  * Class m200227_055438_fill_locale_table
@@ -17,6 +18,7 @@ class m200227_055438_fill_locale_table extends Migration
      */
     public function safeUp()
     {
+        $usedLocales = Yii::$app->domainService->getDomainMapLocales();
         $connection = $this->getDb();
         if (! $this->isColumnExists("old_locale")) {
             $this->createColumn("old_locale", $this->string(2));
@@ -33,7 +35,6 @@ class m200227_055438_fill_locale_table extends Migration
             'kz' => 'kk',
             'ua' => 'uk',
             'us' => 'en',
-            'uk' => 'en',
             'ng' => 'en',
             'za' => 'en',
             'ke' => 'en',
@@ -54,15 +55,26 @@ class m200227_055438_fill_locale_table extends Migration
         /**
          * запрос для конвертации id удаленных локалей в новую после обьединения
          *
-         * UPDATE table SET locale='en' WHERE locale IN('us', 'uk', 'ng', 'za', 'ke', 'au')
+         * UPDATE table SET locale='en' WHERE locale IN('us', 'ng', 'za', 'ke', 'au')
          * UPDATE table SET locale=2 WHERE locale IN(6,7,8,9,10,11)
          * UPDATE table SET locale='es' WHERE locale IN ('co', 'mx')
          * UPDATE table SET locale=12 WHERE locale IN(13,14)
          *
+         * UPDATE table SET locale='be' WHERE locale IN ('by')
+         *
+         * UPDATE table SET locale='sv' WHERE locale IN ('se')
+         *
+         * UPDATE table SET locale='da' WHERE locale IN ('dk')
+         *
+         *
+         * UPDATE table SET locale='el' WHERE locale IN ('gr')
+         *
+         * UPDATE table SET locale='ka' WHERE locale IN ('ge')
+         *
          */
 
         $this->execute("SET foreign_key_checks = 0;");
-        $this->execute("DELETE FROM locale WHERE locale IN ('us', 'uk', 'ng', 'za', 'ke', 'au', 'co', 'mx')");
+        $this->execute("DELETE FROM locale WHERE locale IN ('us', 'ng', 'za', 'ke', 'au', 'co', 'mx')");
         $this->execute("SET foreign_key_checks = 1;");
         foreach ($rows as $locale => $id){
             if (! isset($currentLocales[$locale])){
@@ -87,7 +99,7 @@ class m200227_055438_fill_locale_table extends Migration
             $insertData[] = [
                 'locale' => $iso,
                 'caption' => $caption,
-                'status' => \concepture\yii2logic\enum\StatusEnum::ACTIVE,
+                'status' => isset($usedLocales[$iso]) ? StatusEnum::ACTIVE : StatusEnum::INACTIVE,
             ];
         }
 

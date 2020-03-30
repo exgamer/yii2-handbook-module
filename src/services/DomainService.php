@@ -65,6 +65,26 @@ class DomainService extends Service
         return $this->getConfigItem('domainMap');
     }
 
+    public function getDomainMapLocales()
+    {
+        $result = [];
+        $map =  $this->getDomainMap();
+        if (! $map){
+            return $result;
+        }
+
+        foreach ($map as $host => $data){
+            if (! is_array($data)){
+                continue;
+            }
+
+            if (isset($data['locale'])){
+                $result[$data['locale']] = $data['locale'];
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * Установка куки текущего альяса домена
