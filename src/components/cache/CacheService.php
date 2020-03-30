@@ -245,8 +245,8 @@ class CacheService extends Component
             $this->addLog("KEY IS NOT EXISTS: ". $this->prefix . $key); 
         }
         */
-        
-		$result = htmlspecialchars_decode($this->getClient()->get($this->prefix . $key)) ?? null;
+        # todo: убрал htmlspecialchars_decode - помониторить
+		$result = $this->getClient()->get($this->prefix . $key) ?? null;
 		$result = !$result ? null : $result;
 		
 		if($result !== null && php_sapi_name() != "cli") {
