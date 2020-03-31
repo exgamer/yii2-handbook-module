@@ -30,7 +30,7 @@ $saveRedirectButton = Html::submitButton(
 ?>
 
 <?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
-    <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form']); ?>
+    <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form', 'model' => new DynamicElements()]); ?>
         <div class="card">
             <div class="card-body text-right">
                 <?= $saveRedirectButton; ?>
