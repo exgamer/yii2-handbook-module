@@ -74,7 +74,7 @@ class m200227_055438_fill_locale_table extends Migration
          */
 
         $this->execute("SET foreign_key_checks = 0;");
-        $this->execute("DELETE FROM locale WHERE locale IN ('us', 'ng', 'za', 'ke', 'au', 'co', 'mx')");
+        $this->execute("DELETE FROM locale WHERE locale IN ('us', 'ng', 'uk','za', 'ke', 'au', 'co', 'mx')");
         $this->execute("SET foreign_key_checks = 1;");
         foreach ($rows as $locale => $id){
             if (! isset($currentLocales[$locale])){
