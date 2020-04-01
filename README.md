@@ -42,7 +42,8 @@
 
     php yii handbook/sitemap/re-generate
     
-Для каждой сущности которая должна быть в карте саита в сервисе implements SitemapServiceInterface
+Для каждой сущности которая должна быть в карте саита в сервисе 
+добаялем треит concepture\yii2handbook\services\traits\SitemapSupportTrait;
 и реализуем вызов метода sitemapRefresh в afterModelSave и afterDelete
     
 !!! для получения карты саита в frontend/web должны лежать стили для xml
