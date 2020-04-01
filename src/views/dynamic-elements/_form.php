@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use concepture\yii2handbook\enum\SettingsTypeEnum;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
+use concepture\yii2handbook\models\DynamicElements;
 
 $saveButton = Html::saveButton();
 $saveRedirectButton = Html::saveRedirectButton();
@@ -11,7 +12,7 @@ $saveRedirectButton = Html::saveRedirectButton();
 ?>
 
 <?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
-    <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form']); ?>
+    <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form', 'model' => new DynamicElements()]); ?>
         <div class="card">
 <!--            <div class="card-body">-->
 <!--                <div class="row">-->

@@ -210,7 +210,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     protected function extendQuery(ActiveQuery $query)
     {
         $this->applyDomain($query);
-        $this->applyLocale($query);
+//        $this->applyLocale($query);
     }
 
     /**

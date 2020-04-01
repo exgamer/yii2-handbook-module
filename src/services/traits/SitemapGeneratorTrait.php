@@ -3,6 +3,7 @@ namespace concepture\yii2handbook\services\traits;
 
 use concepture\yii2handbook\enum\FileExtensionEnum;
 use concepture\yii2handbook\enum\SitemapGeneratorEnum;
+use concepture\yii2handbook\enum\SitemapTypeEnum;
 use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use concepture\yii2handbook\forms\StaticFileForm;
 use concepture\yii2handbook\models\Sitemap;
@@ -32,7 +33,8 @@ trait SitemapGeneratorTrait
     public function regenerate($scheme = 'https')
     {
         Sitemap::deleteAll([
-            'domain_id' => $this->domainService()->getCurrentDomainId()
+            'domain_id' => $this->domainService()->getCurrentDomainId(),
+            'type'=> SitemapTypeEnum::DYNAMIC
         ]);
         $this->staticFileService()->clearSiteMaps();
         $entities = $this->entityTypeService()->catalog('id', 'table_name');
