@@ -266,13 +266,20 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      *
      * @param YiiModel $model
      */
-    public function apply(YiiModel $model = null)
+    public function apply(YiiModel $model = null, $titleAttribute = 'header')
     {
         $data = $this->getDataSet($model);
         $event = new Event();
         $event->data = $data;
         $this->trigger(static::EVENT_BEFORE_APPLY, $event);
-        $this->title = ($data->seo_title ?? $data->title ?? $this->view->title);
+        if(! $model && ! $this->title ) {
+            $this->title = ( $data->seo_title ?? $data->title ?? $this->view->title);
+        }
+
+        if($model) {
+            $this->title = $data->seo_title ?? $model->{$titleAttribute};
+        }
+
         $this->description = $data->seo_description ?? $data->description ?? null;
         $this->keywords = $data->seo_keywords ?? $data->keywords ?? null;
 
