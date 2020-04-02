@@ -46,4 +46,7 @@ return [
     'hreflangService' => [
         'class' => 'concepture\yii2handbook\components\routing\HreflangService'
     ],
+    'seoBlockService' => [
+        'class' => 'concepture\yii2handbook\services\SeoBlockService'
+    ],
 ];
