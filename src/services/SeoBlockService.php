@@ -41,8 +41,17 @@ class SeoBlockService extends \concepture\yii2logic\services\Service implements 
         $this->applyDomain($query);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getDataProvider($queryParams = [], $config = [], $searchModel = null, $formName = null, $condition = null)
     {
+        if(! $condition) {
+            $condition = function (ActiveQuery $query) {
+                $query->orderBy(['sort' => SORT_ASC,'id' => SORT_DESC]);
+            };
+        }
+
         return parent::getDataProvider($queryParams, $config, $searchModel, $formName, $condition);
     }
 
@@ -65,8 +74,8 @@ class SeoBlockService extends \concepture\yii2logic\services\Service implements 
                 'status' => StatusEnum::ACTIVE
             ]);
             $query->orderBy([
-                'position' => 'SORT_ASC',
-                'sort' => 'SORT_ASC'
+                'position' => SORT_ASC,
+                'sort' => SORT_ASC
             ]);
             $query->asArray();
         });
