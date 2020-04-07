@@ -4,12 +4,22 @@ use yii\helpers\Html;
 use \concepture\yii2handbook\models\DynamicElements;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
+use kamaelkz\yii2admin\v1\modules\audit\services\AuditService;
+use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
 use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 
 $this->setTitle(Yii::t('yii2admin', 'Редактирование'));
 $this->pushBreadcrumbs(['label' => DynamicElements::label(), 'url' => ['index']]);
 $this->pushBreadcrumbs($this->title);
 $this->viewHelper()->pushPageHeader(['index'], DynamicElements::label(),'icon-list');
+
+if (AuditService::isAuditAllowed(DynamicElements::class)) {
+    $this->viewHelper()->pushPageHeader(
+        [AuditDynamicElementsAction::actionName(), 'ids' => Yii::$app->request->get('ids')],
+        Yii::t('yii2admin', 'Аудит'),
+        'icon-eye'
+    );
+}
 
 $saveButton = Html::submitButton(
     '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),

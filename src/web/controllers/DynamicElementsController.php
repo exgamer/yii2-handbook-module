@@ -14,6 +14,8 @@ use concepture\yii2handbook\services\DomainService;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use concepture\yii2handbook\services\DynamicElementsService;
+use kamaelkz\yii2admin\v1\modules\audit\actions\AuditRollbackAction;
+use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
 
 /**
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
@@ -32,10 +34,22 @@ class DynamicElementsController extends Controller
                     'actions' => [
                         'interactive-mode',
                         'update-multiple',
+                        AuditDynamicElementsAction::actionName(),
+                        AuditRollbackAction::actionName(),
                     ],
                     'allow' => true,
                     'roles' => [
                         UserRoleEnum::ADMIN
+                    ],
+                ],
+                [
+                    'actions' => [
+                        AuditDynamicElementsAction::actionName(),
+                        AuditRollbackAction::actionName(),
+                    ],
+                    'allow' => true,
+                    'roles' => [
+                        UserRoleEnum::SUPER_ADMIN
                     ],
                 ]
             ]
@@ -97,7 +111,10 @@ class DynamicElementsController extends Controller
 
         unset($actions['index'], $actions['update'], $actions['view']);
 
-        return $actions;
+        return array_merge($actions,[
+            AuditDynamicElementsAction::actionName() => AuditDynamicElementsAction::class,
+            AuditRollbackAction::actionName() => AuditRollbackAction::class,
+        ]);
     }
 
     /**
