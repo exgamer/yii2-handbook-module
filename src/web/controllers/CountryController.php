@@ -32,6 +32,7 @@ class CountryController extends Controller
     public function actions()
     {
         $actions = parent::actions();
+        unset($actions['delete']);
 
         return array_merge($actions,[
             'status-change' => StatusChangeAction::class
