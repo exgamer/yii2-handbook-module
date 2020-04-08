@@ -54,7 +54,7 @@ class SeoBlockController extends Controller
     {
         $actions = parent::actions();
 
-        return array_merge($actions,[
+        return ArrayHelper::merge($actions,[
             'status-change' => StatusChangeAction::class,
             'undelete' => UndeleteAction::class,
             EditableColumnAction::actionName() => EditableColumnAction::class,
