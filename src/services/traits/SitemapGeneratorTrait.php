@@ -12,6 +12,9 @@ use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\helpers\ClassHelper;
 use concepture\yii2logic\helpers\XmlHelper;
+use concepture\yii2logic\models\traits\HasLocalizationTrait;
+use concepture\yii2logic\models\traits\v2\property\HasDomainPropertyTrait;
+use concepture\yii2logic\models\traits\v2\property\HasLocalePropertyTrait;
 use Exception;
 use Yii;
 use yii\db\ActiveQuery;
@@ -55,13 +58,45 @@ trait SitemapGeneratorTrait
              */
             $models = $service->getAllbyCondition(function(ActiveQuery $query) use ($service){
                 $model = $service->getRelatedModel();
+                $statusAlias = "";
+                $deletedAlias = "";
+                $traits = ClassHelper::getTraits($model);
+                /**
+                 * Потому что статус и is_deleted могут быть в локализациях
+                 */
+                if (in_array(HasDomainPropertyTrait::class, $traits) ||
+                    in_array(HasLocalePropertyTrait::class, $traits)){
+                    $propModelClass = $model::getPropertyModelClass();
+                    $propModel = Yii::createObject($propModelClass);
+                    if ($propModel->hasAttribute('status')){
+                        $statusAlias = $model::propertyAlias() . ".";
+                    }
+
+                    if ($propModel->hasAttribute('is_deleted')){
+                        $deletedAlias = $model::propertyAlias() . ".";
+                    }
+                }
+
+                if (in_array(HasLocalizationTrait::class, $traits)){
+                    $propModelClass = $model::getLocalizationModelClass();
+                    $propModel = Yii::createObject($propModelClass);
+                    if ($propModel->hasAttribute('status')){
+                        $statusAlias = $model::localizationAlias() . ".";
+                    }
+
+                    if ($propModel->hasAttribute('is_deleted')){
+                        $deletedAlias = $model::propertyAlias() . ".";
+                    }
+                }
+
+
                 $where = [];
                 if ($model->hasAttribute('status')){
-                    $where['status'] = StatusEnum::ACTIVE;
+                    $where[$statusAlias . 'status'] = StatusEnum::ACTIVE;
                 }
 
                 if ($model->hasAttribute('is_deleted')){
-                    $where['is_deleted'] = IsDeletedEnum::NOT_DELETED;
+                    $where[$deletedAlias . 'is_deleted'] = IsDeletedEnum::NOT_DELETED;
                 }
 
                 if (! empty($where)){
