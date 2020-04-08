@@ -14,6 +14,7 @@ use concepture\yii2logic\controllers\web\Controller;
 use concepture\yii2logic\actions\web\StatusChangeAction;
 use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -30,20 +31,23 @@ class SitemapController extends Controller
      */
     protected function getAccessRules()
     {
-        return [
+        return ArrayHelper::merge(
+            parent::getAccessRules(),
             [
-                'actions' => [
-                    'index',
-                    'create',
-                    'update',
-                    'delete',
+                [
+                    'actions' => [
+                        'index',
+                        'create',
+                        'update',
+                        'delete',
+                    ],
+                    'allow' => true,
+                    'roles' => [
+                        UserRoleEnum::ADMIN
+                    ],
                 ],
-                'allow' => true,
-                'roles' => [
-                    UserRoleEnum::ADMIN
-                ],
-            ]
-        ];
+            ],
+        );
     }
 
     /**

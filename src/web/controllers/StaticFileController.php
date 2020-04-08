@@ -7,6 +7,7 @@ use concepture\yii2logic\controllers\web\Controller;
 use concepture\yii2logic\actions\web\StatusChangeAction;
 use concepture\yii2logic\actions\web\UndeleteAction;
 use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class RobotsController
@@ -22,22 +23,25 @@ class StaticFileController extends Controller
      */
     protected function getAccessRules()
     {
-        return [
+        return ArrayHelper::merge(
+            parent::getAccessRules(),
             [
-                'actions' => [
-                    'index',
-                    'create',
-                    'update',
-                    'delete',
-                    'undelete',
-                    'status-change'
-                ],
-                'allow' => true,
-                'roles' => [
-                    UserRoleEnum::ADMIN
-                ],
-            ]
-        ];
+                [
+                    'actions' => [
+                        'index',
+                        'create',
+                        'update',
+                        'delete',
+                        'undelete',
+                        'status-change'
+                    ],
+                    'allow' => true,
+                    'roles' => [
+                        UserRoleEnum::ADMIN
+                    ],
+                ]
+            ],
+        );
     }
 
     /**

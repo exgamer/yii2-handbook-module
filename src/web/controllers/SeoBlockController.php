@@ -9,6 +9,7 @@ use concepture\yii2logic\actions\web\StatusChangeAction;
 use concepture\yii2logic\actions\web\UndeleteAction;
 use kamaelkz\yii2admin\v1\actions\EditableColumnAction;
 use kamaelkz\yii2admin\v1\actions\SortAction;
+use yii\helpers\ArrayHelper;
 
 /**
  * Контроллер сео блоков
@@ -24,23 +25,26 @@ class SeoBlockController extends Controller
      */
 	protected function getAccessRules()
     {
-        return [
+        return ArrayHelper::merge(
+            parent::getAccessRules(),
             [
-                'actions' => [
-                    'index',
-                    'view',
-                    'create',
-                    'update',
-                    'delete',
-                    'undelete',
-                    'status-change',
-                    EditableColumnAction::actionName(),
-                    SortAction::actionName(),
+                [
+                    'actions' => [
+                        'index',
+                        'view',
+                        'create',
+                        'update',
+                        'delete',
+                        'undelete',
+                        'status-change',
+                        EditableColumnAction::actionName(),
+                        SortAction::actionName(),
+                    ],
+                    'allow' => true,
+                    'roles' => [UserRoleEnum::ADMIN],
                 ],
-                'allow' => true,
-                'roles' => [UserRoleEnum::ADMIN],
-            ]
-        ];
+            ],
+        );
     }
 
     /**
@@ -50,7 +54,7 @@ class SeoBlockController extends Controller
     {
         $actions = parent::actions();
 
-        return array_merge($actions,[
+        return ArrayHelper::merge($actions,[
             'status-change' => StatusChangeAction::class,
             'undelete' => UndeleteAction::class,
             EditableColumnAction::actionName() => EditableColumnAction::class,
