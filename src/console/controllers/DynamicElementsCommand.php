@@ -30,34 +30,17 @@ class DynamicElementsCommand extends ConsoleCommand
      */
     public function actionReplacement($fromUrl , $toUrl)
     {
-        if($fromUrl !== '/') {
-            $from = trim($fromUrl, '/');
-        } else {
-            $from = '/';
-        }
-
-        if($toUrl !== '/') {
-            $to = trim($toUrl, '/');
-        } else {
-            $to = '/';
-        }
-
-        $models = $this->getDynamicElementsService()->getAllByHash(md5($from), false);
-        if(! $models) {
-            return $this->outputDone("Items for url `{$fromUrl}` is not found");
-        }
-
-        foreach ($models as $model) {
-            $form = new DynamicElementsForm();
-            $form->setAttributes($model->attributes, false);
-            if (method_exists($form, 'customizeForm')) {
-                $form->customizeForm($model);
+        try {
+            $messages = $this->getDynamicElementsService()->replacementUrl($fromUrl, $toUrl);
+            if(! $messages || ! is_array($messages)) {
+                return;
             }
 
-            $form->url = $to;
-            $form->url_md5_hash = md5($to);
-            $this->getDynamicElementsService()->update($form, $model);
-            $this->outputSuccess("Item `{$model->id}` successfully replaced.");
+            foreach ($messages as $message) {
+                $this->outputSuccess($message);
+            }
+        } catch (\Exception $e) {
+            $this->outputDone($e->getMessage());
         }
     }
 }

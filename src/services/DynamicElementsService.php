@@ -23,8 +23,6 @@ use concepture\yii2logic\forms\Model;
 use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
 use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
 use concepture\yii2handbook\enum\DynamicElementsEnum;
-use concepture\yii2logic\events\ServiceEvent;
-use concepture\yii2logic\enum\ServiceEventEnum;
 use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
 use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
@@ -639,6 +637,50 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
+
+        return $result;
+    }
+
+    /**
+     * Замена урла элемента
+     *
+     * @param string $fromUrl
+     * @param string $toUrl
+     * @return array
+     * @throws \Exception
+     */
+    public function replacementUrl($fromUrl , $toUrl)
+    {
+        $result = [];
+        if($fromUrl !== '/') {
+            $from = trim($fromUrl, '/');
+        } else {
+            $from = '/';
+        }
+
+        if($toUrl !== '/') {
+            $to = trim($toUrl, '/');
+        } else {
+            $to = '/';
+        }
+
+        $models = $this->getAllByHash(md5($from), false);
+        if(! $models) {
+            throw new \Exception("Elements for url `{$fromUrl}` is not found");
+        }
+
+        foreach ($models as $model) {
+            $form = $this->getRelatedForm();
+            $form->setAttributes($model->attributes, false);
+            if (method_exists($form, 'customizeForm')) {
+                $form->customizeForm($model);
+            }
+
+            $form->url = $to;
+            $form->url_md5_hash = md5($to);
+            $this->update($form, $model);
+            $result[] = "Element `NAME: {$model->name}`, `ID: {$model->id}` successfully replaced.";
+        }
 
         return $result;
     }
