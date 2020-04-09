@@ -353,18 +353,22 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
-     * @deprecated
-     * @param string hash
-     * @return \yii\data\ActiveDataProvider
+     * Получения всех записей по хэшу
+     *
+     * @param string $hash
+     * @param boolean $is_general
+     *
+     * @return array
      */
-    public function getAllByHash(string $hash)
+    public function getAllByHash(string $hash, $is_general = true)
     {
-        return $this->getAllByCondition(function(ActiveQuery $query) use($hash) {
+        return $this->getAllByCondition(function(ActiveQuery $query) use($hash, $is_general) {
             $query->andWhere([
                 'OR',
                 ['url_md5_hash' => $hash],
                 ['url' => '']
             ]);
+            $query->andWhere(['is_general' => $is_general]);
             $query->orderBy('is_general', 'url_md5_hash, id');
         });
     }

@@ -91,7 +91,6 @@ return [
 
 
 ## Динамические элементы
-
 - Для получения настроек сео для страницы вызываем
     ```php
    Yii::$app->dynamicElementsService->getDataSet($model = null);
@@ -115,6 +114,27 @@ return [
         {{ de(de_constant('SettingsTypeEnum::TEXT_AREA'), 'MY_TEXT_AREA', 'Произвольный текст', 'Некий текст') }}
         {{ de(de_constant('SettingsTypeEnum::TEXT_EDITOR'), 'MY_EDITOR', 'Произвольный текст', 'Некий текст 2') }}
     ```
+- Консольные команды
+    - Подключение (например console\config\main.php)
+        ```php
+          [
+              ...
+              'modules' => [
+                  ...
+                      'handbook' => [
+                          'class' => 'concepture\yii2handbook\Module',
+                          'controllerMap' => [
+                              ...
+                              'dynamic-elements' => 'concepture\yii2handbook\console\controllers\DynamicElementsCommand',
+                              ...
+                          ]
+                      ],
+                  ...
+              ]
+              ...
+          ]
+        ```
+    - Пример вызова `php yii handbook/dynamic-elements/replacement / /replacement --alias=alias`
 ## Динамический индексируемый файл (robots.txt)
 Подключение :
 - В необходимом контроллере подключается действие (например frontend\controllers\SiteController.php)
