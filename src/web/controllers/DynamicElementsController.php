@@ -14,11 +14,14 @@ use concepture\yii2handbook\services\DomainService;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use concepture\yii2handbook\services\DynamicElementsService;
+# todo: разобраться
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditRollbackAction;
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
 
 /**
- * @author Olzhas Kulzhambekov <exgamer@live.ru>
+ * Динамические элементы
+ *
+ * @author kamaelkz <kamaelkz@yandex.kz>
  */
 class DynamicElementsController extends Controller
 {
@@ -27,8 +30,10 @@ class DynamicElementsController extends Controller
      */
     protected function getAccessRules()
     {
+        $rules = parent::getAccessRules();
+
         return ArrayHelper::merge(
-            parent::getAccessRules(),
+            $rules,
             [
                 [
                     'actions' => [

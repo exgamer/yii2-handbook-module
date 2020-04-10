@@ -2,22 +2,18 @@
 
 namespace concepture\yii2handbook\web\controllers;
 
+use yii\helpers\ArrayHelper;
 use concepture\yii2user\enum\UserRoleEnum;
-use concepture\yii2logic\controllers\web\Controller;
 use concepture\yii2logic\actions\web\StatusChangeAction;
 use concepture\yii2logic\actions\web\UndeleteAction;
-use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
-use yii\helpers\ArrayHelper;
 
 /**
- * Class RobotsController
- * @package concepture\yii2handbook\web\controllers
+ * Статические файлы
+ *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
 class StaticFileController extends Controller
 {
-    use ControllerTrait;
-
     /**
      * @inheritDoc
      */
@@ -28,10 +24,6 @@ class StaticFileController extends Controller
             [
                 [
                     'actions' => [
-                        'index',
-                        'create',
-                        'update',
-                        'delete',
                         'undelete',
                         'status-change'
                     ],
@@ -52,9 +44,15 @@ class StaticFileController extends Controller
         $actions = parent::actions();
         unset($actions['view']);
 
-        return array_merge($actions,[
-            'status-change' => StatusChangeAction::class,
-            'undelete' => UndeleteAction::class,
-        ]);
+        return array_merge(
+            $actions,
+            [
+                'status-change' => [
+                    'class' => StatusChangeAction::class,
+                    'redirect' => false
+                ],
+                'undelete' => UndeleteAction::class,
+            ]
+        );
     }
 }

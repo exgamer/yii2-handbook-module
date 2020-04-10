@@ -2,25 +2,33 @@
 
 namespace concepture\yii2handbook\web\controllers;
 
+use yii\helpers\ArrayHelper;
 use concepture\yii2logic\actions\web\AutocompleteListAction;
 use concepture\yii2user\enum\UserRoleEnum;
 use concepture\yii2logic\actions\web\UndeleteAction;
-use yii\helpers\ArrayHelper;
 
 /**
- * Class TagsController
- * @package concepture\yii2handbook\web\controllers
+ * Тэги
+ *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
 class TagsController extends Controller
 {
+    /**
+     * @inheritDoc
+     */
     protected function getAccessRules()
     {
+        $rules = parent::getAccessRules();
+
         return ArrayHelper::merge(
-            parent::getAccessRules(),
+            $rules,
             [
                 [
-                    'actions' => ['index', 'create','update', 'view','delete', 'undelete', 'list'],
+                    'actions' => [
+                        'undelete',
+                        'list'
+                    ],
                     'allow' => true,
                     'roles' => [UserRoleEnum::ADMIN],
                 ]
@@ -28,13 +36,20 @@ class TagsController extends Controller
         );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function actions()
     {
         $actions = parent::actions();
 
-        return array_merge($actions,[
-            'undelete' => UndeleteAction::class,
-            'list' => AutocompleteListAction::class,
-        ]);
+        return array_merge(
+            $actions,
+            [
+                'undelete' => UndeleteAction::class,
+                # todo: не интуитивно
+                'list' => AutocompleteListAction::class,
+            ]
+        );
     }
 }

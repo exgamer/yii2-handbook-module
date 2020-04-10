@@ -2,54 +2,23 @@
 
 namespace concepture\yii2handbook\web\controllers;
 
+use Yii;
+use yii\db\ActiveRecord;
+use yii\web\NotFoundHttpException;
 use concepture\yii2handbook\enum\SitemapGeneratorEnum;
 use concepture\yii2handbook\forms\SitemapForm;
 use kamaelkz\yii2admin\v1\helpers\RequestHelper;
-use Yii;
 use concepture\yii2handbook\enum\SitemapTypeEnum;
 use concepture\yii2handbook\search\SitemapSearch;
 use concepture\yii2logic\enum\IsDeletedEnum;
-use concepture\yii2user\enum\UserRoleEnum;
-use concepture\yii2logic\controllers\web\Controller;
-use concepture\yii2logic\actions\web\StatusChangeAction;
-use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
-use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 /**
- * Class SitemapController
- * @package concepture\yii2handbook\web\controllers
+ * Карта сайта
+ *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
 class SitemapController extends Controller
 {
-    use ControllerTrait;
-
-    /**
-     * @inheritDoc
-     */
-    protected function getAccessRules()
-    {
-        return ArrayHelper::merge(
-            parent::getAccessRules(),
-            [
-                [
-                    'actions' => [
-                        'index',
-                        'create',
-                        'update',
-                        'delete',
-                    ],
-                    'allow' => true,
-                    'roles' => [
-                        UserRoleEnum::ADMIN
-                    ],
-                ],
-            ],
-        );
-    }
-
     /**
      * @inheritDoc
      */

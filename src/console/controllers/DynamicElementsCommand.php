@@ -2,7 +2,6 @@
 
 namespace concepture\yii2handbook\console\controllers;
 
-use concepture\yii2handbook\forms\DynamicElementsForm;
 use Yii;
 use concepture\yii2logic\controllers\console\ConsoleCommand;
 use concepture\yii2handbook\services\DynamicElementsService;

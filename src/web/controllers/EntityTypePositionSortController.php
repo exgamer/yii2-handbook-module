@@ -5,10 +5,8 @@ namespace concepture\yii2handbook\web\controllers;
 use Yii;
 use yii\web\NotFoundHttpException;
 use concepture\yii2handbook\services\EntityTypePositionSortService;
-use kamaelkz\yii2admin\v1\controllers\traits\ControllerTrait;
-use kamaelkz\yii2admin\v1\enum\FlashAlertEnum;
 use concepture\yii2logic\filters\AjaxFilter;
-
+use kamaelkz\yii2admin\v1\enum\FlashAlertEnum;
 
 /**
  * Контроллер сортировки сущностей по позиции на сайте
@@ -17,7 +15,13 @@ use concepture\yii2logic\filters\AjaxFilter;
  */
 class EntityTypePositionSortController extends Controller
 {
-    use ControllerTrait;
+    /**
+     * @return EntityTypePositionSortService
+     */
+    public function getService()
+    {
+        return Yii::$app->entityTypePositionSortService;
+    }
 
     /**
      * @inheritDoc
@@ -44,14 +48,6 @@ class EntityTypePositionSortController extends Controller
         ];
 
         return $behaviors;
-    }
-
-    /**
-     * @return EntityTypePositionSortService
-     */
-    public function getService()
-    {
-        return Yii::$app->entityTypePositionSortService;
     }
 
     /**
