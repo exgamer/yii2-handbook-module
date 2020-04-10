@@ -78,7 +78,7 @@ class LocaleService extends Service
                 $query->orderBy(['id' => SORT_ASC]);
             };
         }
-        
+
         return parent::catalog(null, null, $condition, false, true);
     }
 }
