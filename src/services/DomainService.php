@@ -65,21 +65,45 @@ class DomainService extends Service
         return $this->getConfigItem('domainMap');
     }
 
+    /**
+     * Возвращает локали из списка доменов
+     *
+     * @return array
+     */
     public function getDomainMapLocales()
+    {
+        return $this->getDomainMapAttributes('locale');
+    }
+
+    /**
+     * Получение всех атрибутов из домен мапы
+     *
+     * @param string $attribute
+     *
+     * @return array
+     */
+    public function getDomainMapAttributes($attribute)
     {
         $result = [];
         $map =  $this->getDomainMap();
-        if (! $map){
+        if (! $map) {
             return $result;
         }
 
-        foreach ($map as $host => $data){
-            if (! is_array($data)){
+        foreach ($map as $host => $data) {
+            if (
+                ! is_array($data)
+                || ! isset($data[$attribute])
+            ) {
                 continue;
             }
 
-            if (isset($data['locale'])){
-                $result[$data['locale']] = $data['locale'];
+            if(! is_array($data[$attribute])) {
+                $result[$data[$attribute]] = $data[$attribute];
+            } else {
+                foreach ($data[$attribute] as $value) {
+                    $result[$value] = $value;
+                }
             }
         }
 

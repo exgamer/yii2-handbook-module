@@ -1,13 +1,12 @@
 <?php
+
 namespace concepture\yii2handbook\services;
 
-use concepture\yii2handbook\converters\LocaleConverter;
-use concepture\yii2logic\models\ActiveRecord;
-use concepture\yii2logic\services\Service;
-use concepture\yii2logic\enum\StatusEnum;
-use concepture\yii2logic\services\traits\StatusTrait;
 use Yii;
-use yii\helpers\ArrayHelper;
+use concepture\yii2handbook\converters\LocaleConverter;
+use concepture\yii2logic\services\Service;
+use concepture\yii2logic\services\traits\StatusTrait;
+use yii\db\ActiveQuery;
 
 /**
  * Class LocaleService
@@ -17,6 +16,14 @@ use yii\helpers\ArrayHelper;
 class LocaleService extends Service
 {
     use StatusTrait;
+
+    /**
+     * @return DomainService
+     */
+    protected function getDomainService()
+    {
+        return Yii::$app->domainService;
+    }
 
     /**
      * Возвращает ID текущей локали приложения
@@ -55,5 +62,25 @@ class LocaleService extends Service
         $result =  LocaleConverter::key($locale);
 
         return $result;
+    }
+
+    /**
+     * Ограничевает выборку локалей по языкам из домен мапы
+     *
+     * @return array
+     */
+    public function getByDomainMap()
+    {
+        $locales = $this->getDomainService()->getDomainMapAttributes('language');
+        if(! $locales) {
+            return [];
+        }
+
+        $condition = function (ActiveQuery $query) use($locales) {
+            $query->andWhere(['locale' => $locales]);
+            $query->orderBy(['id' => SORT_ASC]);
+        };
+
+        return parent::catalog(null, null, $condition, false, true);
     }
 }
