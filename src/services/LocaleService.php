@@ -72,15 +72,13 @@ class LocaleService extends Service
     public function getByDomainMap()
     {
         $locales = $this->getDomainService()->getDomainMapAttributes('language');
-        if(! $locales) {
-            return [];
+        if($locales) {
+            $condition = function (ActiveQuery $query) use($locales) {
+                $query->andWhere(['locale' => $locales]);
+                $query->orderBy(['id' => SORT_ASC]);
+            };
         }
-
-        $condition = function (ActiveQuery $query) use($locales) {
-            $query->andWhere(['locale' => $locales]);
-            $query->orderBy(['id' => SORT_ASC]);
-        };
-
+        
         return parent::catalog(null, null, $condition, false, true);
     }
 }
