@@ -57,51 +57,8 @@ trait SitemapGeneratorTrait
              * иначе на больших данных умрет
              */
             $models = $service->getAllbyCondition(function(ActiveQuery $query) use ($service){
-                $model = $service->getRelatedModel();
-                $statusAlias = "";
-                $deletedAlias = "";
-                $traits = ClassHelper::getTraits($model);
-                /**
-                 * Потому что статус и is_deleted могут быть в локализациях
-                 */
-                if (in_array(HasDomainPropertyTrait::class, $traits) ||
-                    in_array(HasLocalePropertyTrait::class, $traits)){
-                    $propModelClass = $model::getPropertyModelClass();
-                    $propModel = Yii::createObject($propModelClass);
-                    if ($propModel->hasAttribute('status')){
-                        $statusAlias = $model::propertyAlias() . ".";
-                    }
-
-                    if ($propModel->hasAttribute('is_deleted')){
-                        $deletedAlias = $model::propertyAlias() . ".";
-                    }
-                }
-
-                if (in_array(HasLocalizationTrait::class, $traits)){
-                    $propModelClass = $model::getLocalizationModelClass();
-                    $propModel = Yii::createObject($propModelClass);
-                    if ($propModel->hasAttribute('status')){
-                        $statusAlias = $model::localizationAlias() . ".";
-                    }
-
-                    if ($propModel->hasAttribute('is_deleted')){
-                        $deletedAlias = $model::propertyAlias() . ".";
-                    }
-                }
-
-
-                $where = [];
-                if ($model->hasAttribute('status')){
-                    $where[$statusAlias . 'status'] = StatusEnum::ACTIVE;
-                }
-
-                if ($model->hasAttribute('is_deleted')){
-                    $where[$deletedAlias . 'is_deleted'] = IsDeletedEnum::NOT_DELETED;
-                }
-
-                if (! empty($where)){
-                    $query->andWhere($where);
-                }
+                $query->active();
+                $query->notDeleted();
             });
             if (empty($models)){
                 continue;
