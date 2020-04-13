@@ -97,6 +97,18 @@ class DomainService extends Service
     }
 
     /**
+     * Возвращает данные по текущему домену
+     *
+     * @return array
+     */
+    public function getCurrentDomainData()
+    {
+        $items = $this->getDomainsData();
+
+        return $items[$this->getCurrentDomainId()] ?? null;
+    }
+
+    /**
      * Возвращает локали из списка доменов
      *
      * @return array
