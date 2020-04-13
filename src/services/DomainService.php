@@ -418,6 +418,22 @@ class DomainService extends Service
      */
     public function getRealCurrentHost()
     {
+        if (! Yii::$app instanceof \yii\web\Application) {
+            if (isset($GLOBALS['VIRTUAL_HOST'])){
+                return $GLOBALS['VIRTUAL_HOST'];
+            }
+
+            /**
+             * Для проектов где используется --alias при вызове консольных команд
+             * должно быть установлена переменная APP_HOST для получения хоста из консольки
+             */
+            if (defined('APP_HOST')){
+                return APP_HOST;
+            }
+
+            return null;
+        }
+
         $currentDomain = Url::base(true);
         $parsed = parse_url($currentDomain);
 
