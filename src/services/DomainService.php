@@ -109,6 +109,29 @@ class DomainService extends Service
     }
 
     /**
+     * Возвращает данные по текущему домену по хосту
+     *
+     * @param $host
+     * @return array
+     */
+    public function getDomainDataByHost($host = null)
+    {
+        if (! $host){
+            $host = $this->getCurrentHost();
+        }
+
+        $items = $this->getDomainsData();
+
+        foreach ($items as $item){
+            if ($item['host'] == $host){
+                return $item;
+            }
+        }
+
+        return  null;
+    }
+
+    /**
      * Возвращает локали из списка доменов
      *
      * @return array
