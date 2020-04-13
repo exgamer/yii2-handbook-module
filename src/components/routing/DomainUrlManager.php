@@ -228,7 +228,7 @@ class DomainUrlManager extends YiiUrlManager
             $this->suffix = '/';
         }
 
-        $result = ltrim(parent::createUrl($params), '/');
+        $result = ltrim($this->createCustomUrl($params), '/');
         if(! $admin) {
             $this->suffix = '';
         }
