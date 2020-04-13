@@ -385,6 +385,16 @@ class DomainService extends Service
             return null;
         }
 
+        return $this->getRealCurrentHost();
+    }
+
+    /**
+     * Возвращает текущий хост
+     *
+     * @return string
+     */
+    public function getRealCurrentHost()
+    {
         $currentDomain = Url::base(true);
         $parsed = parse_url($currentDomain);
 
