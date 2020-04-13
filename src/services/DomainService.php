@@ -66,6 +66,37 @@ class DomainService extends Service
     }
 
     /**
+     * Возвращает все данные по domainMap
+     *
+     * @return array
+     */
+    public function getDomainsData()
+    {
+        $items = $this->modelsCatalog();
+        $map = $this->getDomainMap();
+        foreach ($map as $url => $data){
+            $data['host'] = $url;
+            $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
+            $data['country_caption'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'caption');
+            $urlArray = explode('.', $url);
+            array_shift($urlArray);
+            $url = implode('.', $urlArray);
+            $data['domain'] = ".".$url;
+
+            $domainData[$data['alias']] = $data;
+        }
+
+        $result = [];
+        foreach ($items as $id => $data){
+            if ($domainData[$data->alias]){
+                $result[$id] = $domainData[$data->alias];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Возвращает локали из списка доменов
      *
      * @return array
