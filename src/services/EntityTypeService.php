@@ -3,7 +3,9 @@
 namespace concepture\yii2handbook\services;
 
 use Yii;
+use yii\db\ActiveRecord;
 use concepture\yii2logic\services\Service;
+use concepture\yii2logic\enum\StatusEnum;
 
 /**
  * Class EntityTypeService
@@ -21,9 +23,12 @@ class EntityTypeService extends Service
     }
 
     /**
-     * @inheritDoc
+     * Получение одной записи по условию
      *
-     * @param bool $cache
+     * @param array| \Closure $condition
+     * @param boolean $cache
+     *
+     * @return ActiveRecord|null
      */
     public function getOneByCondition($condition = null, $cache = false)
     {
@@ -34,5 +39,50 @@ class EntityTypeService extends Service
         return $this->getDb()->cache(function () use($condition) {
             return parent::getOneByCondition($condition);
         });
+    }
+
+    /**
+     * Получение записи по названию таблицы
+     *
+     * @param string $tableName
+     * @param boolean $createNotExist - создать  запись если не существует
+     * @param boolean $cache
+     *
+     * @return ActiveRecord|null
+     */
+    public function getByTableName($tableName, $createNotExist = false, $cache = false)
+    {
+        $item = $this->getOneByCondition(['table_name' => $tableName], $cache);
+        if(! $createNotExist) {
+            return $item;
+        }
+
+        if (! $item) {
+            $form = $this->getRelatedForm();
+            $form->table_name = $tableName;
+            $form->caption = $tableName;
+            $form->status = StatusEnum::ACTIVE;
+            $form->sort_module = 1;
+            $item = $this->create($form);
+        }
+
+        return $item;
+    }
+
+    /**
+     * Инициализация сущностей из массива названий таблиц
+     *
+     * @param array $tables
+     *
+     * @return array
+     */
+    public function createFromArray(array $tables)
+    {
+        $result = [];
+        foreach ($tables as $table) {
+            $result[$table] = $this->getByTableName($table, true);
+        }
+
+        return $result;
     }
 }
