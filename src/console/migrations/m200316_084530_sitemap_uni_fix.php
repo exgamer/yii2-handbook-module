@@ -18,7 +18,7 @@ class m200316_084530_sitemap_uni_fix extends Migration
         $sql = "ALTER TABLE sitemap
                 ADD UNIQUE KEY 
                 uni_entity_type_id_entity_id_sitemap 
-                (entity_type, entity_id, domain_id);";
+                (entity_type_id, entity_id, domain_id);";
         $this->execute($sql);
     }
 
