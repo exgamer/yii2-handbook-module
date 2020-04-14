@@ -87,7 +87,7 @@ class Sitemap extends ActiveRecord
                     'entity_id'
                 ],
                 'unique',
-                'targetAttribute' => ['entity_type_id', 'entity_id']
+                'targetAttribute' => ['entity_type_id', 'entity_id', 'domain_id']
             ],
             [
                 [

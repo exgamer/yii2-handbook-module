@@ -65,7 +65,7 @@ trait SitemapGeneratorTrait
             }
 
             foreach ($models as $model){
-                $service->updateById($model->id, [], '', false);
+                $service->updateById($model->id, []);
             }
         }
 
