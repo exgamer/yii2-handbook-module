@@ -38,7 +38,7 @@ class SeoBlockController extends Controller
                         UserRoleEnum::ADMIN
                     ],
                 ],
-            ],
+            ]
         );
     }
 

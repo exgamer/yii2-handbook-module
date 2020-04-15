@@ -32,7 +32,7 @@ class StaticFileController extends Controller
                         UserRoleEnum::ADMIN
                     ],
                 ]
-            ],
+            ]
         );
     }
 
