@@ -17,6 +17,7 @@ use concepture\yii2handbook\services\DynamicElementsService;
 # todo: разобраться
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditRollbackAction;
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
+use concepture\yii2user\enum\AccessEnum;
 
 /**
  * Динамические элементы
@@ -44,7 +45,7 @@ class DynamicElementsController extends Controller
                     ],
                     'allow' => true,
                     'roles' => [
-                        UserRoleEnum::ADMIN
+                        AccessEnum::SUPERADMIN,
                     ],
                 ],
                 [
@@ -54,7 +55,7 @@ class DynamicElementsController extends Controller
                     ],
                     'allow' => true,
                     'roles' => [
-                        UserRoleEnum::SUPER_ADMIN
+                        AccessEnum::SUPERADMIN,
                     ],
                 ]
             ]

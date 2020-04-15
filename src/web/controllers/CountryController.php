@@ -13,28 +13,28 @@ use concepture\yii2logic\actions\web\StatusChangeAction;
  */
 class CountryController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    protected function getAccessRules()
-    {
-        $rules = parent::getAccessRules();
-
-        return ArrayHelper::merge(
-            $rules,
-            [
-                [
-                    'actions' => [
-                        'status-change'
-                    ],
-                    'allow' => true,
-                    'roles' => [
-                        UserRoleEnum::ADMIN
-                    ],
-                ]
-            ]
-        );
-    }
+//    /**
+//     * @inheritDoc
+//     */
+//    protected function getAccessRules()
+//    {
+//        $rules = parent::getAccessRules();
+//
+//        return ArrayHelper::merge(
+//            $rules,
+//            [
+//                [
+//                    'actions' => [
+//                        'status-change'
+//                    ],
+//                    'allow' => true,
+//                    'roles' => [
+//                        UserRoleEnum::ADMIN
+//                    ],
+//                ]
+//            ]
+//        );
+//    }
 
     /**
      * @inheritDoc

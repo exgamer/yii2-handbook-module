@@ -14,27 +14,27 @@ use concepture\yii2logic\actions\web\UndeleteAction;
  */
 class StaticFileController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    protected function getAccessRules()
-    {
-        return ArrayHelper::merge(
-            parent::getAccessRules(),
-            [
-                [
-                    'actions' => [
-                        'undelete',
-                        'status-change'
-                    ],
-                    'allow' => true,
-                    'roles' => [
-                        UserRoleEnum::ADMIN
-                    ],
-                ]
-            ]
-        );
-    }
+//    /**
+//     * @inheritDoc
+//     */
+//    protected function getAccessRules()
+//    {
+//        return ArrayHelper::merge(
+//            parent::getAccessRules(),
+//            [
+//                [
+//                    'actions' => [
+//                        'undelete',
+//                        'status-change'
+//                    ],
+//                    'allow' => true,
+//                    'roles' => [
+//                        UserRoleEnum::ADMIN
+//                    ],
+//                ]
+//            ]
+//        );
+//    }
 
     /**
      * @inheritDoc

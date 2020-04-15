@@ -14,27 +14,27 @@ use concepture\yii2logic\actions\web\UndeleteAction;
  */
 class TagsController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    protected function getAccessRules()
-    {
-        $rules = parent::getAccessRules();
-
-        return ArrayHelper::merge(
-            $rules,
-            [
-                [
-                    'actions' => [
-                        'undelete',
-                        'list'
-                    ],
-                    'allow' => true,
-                    'roles' => [UserRoleEnum::ADMIN],
-                ]
-            ]
-        );
-    }
+//    /**
+//     * @inheritDoc
+//     */
+//    protected function getAccessRules()
+//    {
+//        $rules = parent::getAccessRules();
+//
+//        return ArrayHelper::merge(
+//            $rules,
+//            [
+//                [
+//                    'actions' => [
+//                        'undelete',
+//                        'list'
+//                    ],
+//                    'allow' => true,
+//                    'roles' => [UserRoleEnum::ADMIN],
+//                ]
+//            ]
+//        );
+//    }
 
     /**
      * @inheritDoc
