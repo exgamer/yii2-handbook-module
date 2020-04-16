@@ -1,15 +1,15 @@
 <?php
+
 namespace concepture\yii2handbook\forms;
 
-
 use Yii;
-use concepture\yii2logic\forms\Form;
+use kamaelkz\yii2admin\v1\forms\BaseForm;
 
 /**
  * Class CountryForm
  * @package concepture\yii2handbook\forms
  */
-class CountryForm extends Form
+class CountryForm extends BaseForm
 {
     public $sort;
     public $status;
