@@ -72,6 +72,11 @@ class DomainService extends Service
      */
     public function getDomainsData()
     {
+        static $_items = null;
+        if ($_items){
+            return $_items;
+        }
+
         $items = $this->modelsCatalog();
         $map = $this->getDomainMap();
         foreach ($map as $url => $data){
@@ -92,6 +97,8 @@ class DomainService extends Service
                 $result[$id] = $domainData[$data->alias];
             }
         }
+
+        $_items = $result;
 
         return $result;
     }
