@@ -155,9 +155,14 @@ class DomainUrlManager extends YiiUrlManager
 
                     /**
                      * От parent::createUrl отличается этим блоком для корректной генерации урл в админке
+                     *
                      */
                     if (isset($rule->patterns) && $rule->patterns && (Yii::$app->domainService->getRealCurrentHost() != Yii::$app->domainService->getCurrentHost())){
                         $data = Yii::$app->domainService->getCurrentDomainData();
+                        /**
+                         * @TODO если в domainMap есть версия но нет паттерна в роутах тут выбьет ошибка
+                         * и это так и должно быть не нужно тут ставить try/catch
+                         */
                         $rule->reinit($data['alias']);
                     }
                     /**
