@@ -248,6 +248,6 @@ class DynamicElementsController extends Controller
             return null;
         }
 
-        return $this->getDynamicElementsService()->setInter activeMode(Yii::$app->request->post('value'));
+        return $this->getDynamicElementsService()->setInteractiveMode(Yii::$app->request->post('value'));
     }
 }
