@@ -40,6 +40,14 @@ class DynamicElementsController extends Controller
                     'actions' => [
                         'interactive-mode',
                         'update-multiple',
+                    ],
+                    'allow' => true,
+                    'roles' => [
+                        AccessEnum::ADMIN,
+                    ],
+                ],
+                [
+                    'actions' => [
                         AuditDynamicElementsAction::actionName(),
                         AuditRollbackAction::actionName(),
                     ],
