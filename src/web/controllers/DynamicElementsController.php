@@ -40,6 +40,14 @@ class DynamicElementsController extends Controller
                     'actions' => [
                         'interactive-mode',
                         'update-multiple',
+                    ],
+                    'allow' => true,
+                    'roles' => [
+                        AccessEnum::ADMIN,
+                    ],
+                ],
+                [
+                    'actions' => [
                         AuditDynamicElementsAction::actionName(),
                         AuditRollbackAction::actionName(),
                     ],
@@ -240,6 +248,6 @@ class DynamicElementsController extends Controller
             return null;
         }
 
-        return $this->getDynamicElementsService()->setInteractiveMode(Yii::$app->request->post('value'));
+        return $this->getDynamicElementsService()->setInter activeMode(Yii::$app->request->post('value'));
     }
 }
