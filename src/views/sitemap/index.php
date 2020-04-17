@@ -25,7 +25,7 @@ $this->viewHelper()->pushPageHeader();
         'created_at',
         [
             'class'=>'yii\grid\ActionColumn',
-            'template'=>'{update}  {delete}',
+            'template'=>'{update} <div class="dropdown-divider"></div> {delete}',
             'buttons'=>[
                 'update'=> function ($url, $model) {
                     if ($model['is_deleted'] == IsDeletedEnum::DELETED){
