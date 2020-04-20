@@ -2,11 +2,11 @@
 
 namespace concepture\yii2handbook\models;
 
-use concepture\yii2logic\converters\Converter;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
 use concepture\yii2logic\models\LocalizedActiveRecord;
+use concepture\yii2handbook\converters\SqlLocaleConverter;
 
 /**
  * Post model
@@ -108,7 +108,7 @@ class Locale extends LocalizedActiveRecord
      */
     public static function getLocaleConverterClass()
     {
-        return LocaleConverter::class;
+        return SqlLocaleConverter::class;
     }
 
     /**
@@ -118,29 +118,5 @@ class Locale extends LocalizedActiveRecord
     public static function uniqueField()
     {
         return 'locale_id';
-    }
-}
-
-class LocaleConverter extends Converter
-{
-    public static function key($value)
-    {
-        $locales = Yii::$app->localeService->getCatalogBySql();
-        $locales = array_flip($locales);
-        if (isset($locales[$value])){
-            return $locales[$value];
-        }
-
-        return $value;
-    }
-
-    public static function value($key)
-    {
-        $locales = Yii::$app->localeService->getCatalogBySql();
-        if (isset($locales[$key])){
-            return $locales[$key];
-        }
-
-        return $key;
     }
 }

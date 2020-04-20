@@ -11,6 +11,9 @@ use concepture\yii2logic\console\migrations\Migration;
  */
 class m200420_062115_fill_locale_localization_table extends Migration
 {
+    /**
+     * @return string
+     */
     function getTableName()
     {
         return 'locale_localization';
