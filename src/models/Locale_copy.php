@@ -1,12 +1,9 @@
 <?php
-
 namespace concepture\yii2handbook\models;
 
-use concepture\yii2logic\converters\Converter;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
-use concepture\yii2logic\models\LocalizedActiveRecord;
 
 /**
  * Post model
@@ -21,7 +18,7 @@ use concepture\yii2logic\models\LocalizedActiveRecord;
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class Locale extends LocalizedActiveRecord
+class Locale extends ActiveRecord
 {
     use StatusTrait;
 
@@ -100,47 +97,5 @@ class Locale extends LocalizedActiveRecord
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
-    }
-
-    /**
-     * @inheritDoc
-     * @return mixed|string
-     */
-    public static function getLocaleConverterClass()
-    {
-        return LocaleConverter::class;
-    }
-
-    /**
-     * НЕ УБИРАТЬ
-     * @return string
-     */
-    public static function uniqueField()
-    {
-        return 'locale_id';
-    }
-}
-
-class LocaleConverter extends Converter
-{
-    public static function key($value)
-    {
-        $locales = Yii::$app->localeService->getCatalogBySql();
-        $locales = array_flip($locales);
-        if (isset($locales[$value])){
-            return $locales[$value];
-        }
-
-        return $value;
-    }
-
-    public static function value($key)
-    {
-        $locales = Yii::$app->localeService->getCatalogBySql();
-        if (isset($locales[$key])){
-            return $locales[$key];
-        }
-
-        return $key;
     }
 }

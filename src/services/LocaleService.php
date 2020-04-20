@@ -16,6 +16,10 @@ use yii\db\ActiveQuery;
 class LocaleService extends Service
 {
     use StatusTrait;
+    use \concepture\yii2logic\services\traits\LocalizedReadTrait;
+
+    /** @var array */
+    static $localesCatalog = [];
 
     /**
      * @return DomainService
@@ -80,5 +84,56 @@ class LocaleService extends Service
         }
 
         return parent::catalog(null, null, $condition, false, true);
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getCatalogBySql()
+    {
+        if (static::$localesCatalog) {
+            return static::$localesCatalog;
+        }
+        static::$localesCatalog = $this->queryAll('SELECT id, locale FROM locale', [], \PDO::FETCH_KEY_PAIR);
+        return static::$localesCatalog ? static::$localesCatalog : [];
+    }
+
+    public function blablabla($locales = [])
+    {
+        if (!$locales) {
+            return false;
+        }
+
+        $locales = $connection->createCommand('SELECT id, locale FROM locale ORDER BY id')->queryAll();
+        $localesForTranslate = $locales;
+
+        if (!$locales) {
+            throw new \yii\base\Exception('Locales is not found');
+        }
+
+        $rows = [];
+        foreach ($locales as $locale) {
+            foreach ($localesForTranslate as $translateLocale) {
+                if (!Languages::exists($translateLocale['locale'])) {
+                    continue;
+                }
+
+                $caption = null;
+                try {
+                    $caption = Languages::getName($locale['locale'], $translateLocale['locale']);
+                } catch (Exception $e) {
+                    dump($e->getMessage());
+                }
+
+                $rows[] = [
+                    'entity_id' => (int) $locale['id'],
+                    'locale_id' => (int) $translateLocale['id'],
+                    'caption' => $caption ? StringHelper::mb_ucfirst($caption) : 'UNKNOWN',
+                ];
+            }
+        }
+
+        $connection->createCommand('SET sql_mode=""')->execute();
+        $result = $this->batchInsert($this->getTableName(), ['entity_id', 'locale_id', 'caption'], $rows);
     }
 }

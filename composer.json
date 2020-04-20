@@ -9,7 +9,8 @@
         "yiisoft/yii2-jui": "~2.0.0",
         "udokmeci/yii2-beanstalk": "^1.0",
         "ramsey/uuid": "^3.9",
-        "symfony/process": "4.4.4"
+        "symfony/process": "4.4.4",
+        "symfony/intl": "^4.4"
     },
     "minimum-stability": "dev",
     "authors": [
