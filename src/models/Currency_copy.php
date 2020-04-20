@@ -4,15 +4,13 @@ namespace concepture\yii2handbook\models;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
-use concepture\yii2logic\models\LocalizedActiveRecord;
-use concepture\yii2handbook\converters\LocaleConverter;
 
 /**
  * Class Currency
  * @package concepture\yii2handbook\models
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class Currency extends LocalizedActiveRecord
+class Currency extends ActiveRecord
 {
     use StatusTrait;
 
@@ -87,14 +85,5 @@ class Currency extends LocalizedActiveRecord
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
-    }
-
-    /**
-     * @inheritDoc
-     * @return mixed|string
-     */
-    public static function getLocaleConverterClass()
-    {
-        return LocaleConverter::class;
     }
 }
