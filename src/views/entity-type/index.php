@@ -26,7 +26,7 @@ $this->viewHelper()->pushPageHeader();
 
             [
                 'class'=>'yii\grid\ActionColumn',
-                'template'=>'{view} {update}',
+                'template'=>'{update}',
             ],
         ],
     ]); ?>

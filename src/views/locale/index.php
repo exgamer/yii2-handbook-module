@@ -34,7 +34,7 @@ $this->viewHelper()->pushPageHeader();
 
         [
             'class'=>'yii\grid\ActionColumn',
-            'template'=>'{view} {update} {activate} {deactivate}',
+            'template'=>'{update} <div class="dropdown-divider"></div> {activate} {deactivate}',
             'buttons'=>[
                 'activate'=> function ($url, $model) {
                     if ($model['status'] == StatusEnum::ACTIVE){

@@ -61,7 +61,7 @@ $this->viewHelper()->pushPageHeader();
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {view} {delete} {undelete} {activate} {deactivate}',
+                'template' => '{update} <div class="dropdown-divider"></div> {delete} {undelete} {activate} {deactivate}',
                 'buttons' => [
                     'activate'=> function ($url, $model) {
                     if ($model['is_deleted'] == IsDeletedEnum::DELETED){

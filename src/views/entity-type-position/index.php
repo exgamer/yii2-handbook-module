@@ -32,7 +32,7 @@ $this->viewHelper()->pushPageHeader();
             'updated_at',
             [
                 'class'=>'yii\grid\ActionColumn',
-                'template'=>'{view} {update}',
+                'template'=>'{update}',
             ],
         ],
     ]); ?>
