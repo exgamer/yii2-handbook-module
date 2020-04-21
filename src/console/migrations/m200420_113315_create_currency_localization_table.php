@@ -34,6 +34,9 @@ class m200420_113315_create_currency_localization_table extends Migration
         $this->addIndex(['locale']);
         $this->addForeign('entity_id', 'currency','id');
         $this->addForeign('locale', 'locale','id');
+
+        $this->dropColumn('currency', 'name');
+        $this->dropColumn('currency', 'symbol');
     }
 
     /**

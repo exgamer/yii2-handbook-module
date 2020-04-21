@@ -33,6 +33,8 @@ class m200420_060845_create_locale_localization_table extends Migration
         $this->addIndex(['locale_id']);
         $this->addForeign('entity_id', 'locale','id');
         $this->addForeign('locale_id', 'locale','id');
+
+        $this->dropColumn('locale', 'caption');
     }
 
     /**
