@@ -14,6 +14,7 @@ use concepture\yii2handbook\converters\SqlLocaleConverter;
  * @property integer $id
  * @property integer $sort
  * @property string $locale
+ * @property string $locale_id
  * @property string $caption
  * @property integer $status
  * @property datetime $created_at
@@ -63,6 +64,7 @@ class Locale extends LocalizedActiveRecord
                 [
                     'status',
                     'sort',
+                    'locale_id',
                 ],
                 'integer'
             ],
@@ -95,8 +97,9 @@ class Locale extends LocalizedActiveRecord
             'id' => Yii::t('handbook','#'),
             'sort' => Yii::t('handbook','Позиция сортировки'),
             'status' => Yii::t('handbook','Статус'),
-            'locale' => Yii::t('handbook','Язык'),
-            'caption' => Yii::t('handbook','Метка'),
+            'locale' => Yii::t('handbook','Код'),
+            'locale_id' => Yii::t('handbook','Язык перевода'),
+            'caption' => Yii::t('handbook','Наименование'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
@@ -112,7 +115,6 @@ class Locale extends LocalizedActiveRecord
     }
 
     /**
-     * НЕ УБИРАТЬ
      * @return string
      */
     public static function uniqueField()

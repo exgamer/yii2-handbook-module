@@ -16,6 +16,8 @@ use yii\db\ActiveQuery;
 class LocaleService extends Service
 {
     use StatusTrait;
+    use \concepture\yii2handbook\services\traits\ModifySupportTrait;
+    use \concepture\yii2handbook\services\traits\ReadSupportTrait;
     use \concepture\yii2logic\services\traits\LocalizedReadTrait;
 
     /** @var array */

@@ -16,7 +16,6 @@ class LocaleForm extends Form
     public $status;
     public $locale;
     public $caption;
-    public $entity_id;
     public $locale_id;
 
     /**
@@ -29,7 +28,6 @@ class LocaleForm extends Form
                 [
                     'locale',
                     'caption',
-                    'entity_id',
                     'locale_id',
                 ],
                 'required'
