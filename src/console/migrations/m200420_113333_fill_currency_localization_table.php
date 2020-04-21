@@ -26,32 +26,33 @@ class m200420_113333_fill_currency_localization_table extends Migration
     {
         $connection = $this->getDb();
         $currencies = $connection->createCommand('SELECT id, code FROM currency ORDER BY code')->queryAll();
-        $currenciesForTranslate = $currencies;
+        $locales = $connection->createCommand('SELECT id, locale FROM locale ORDER BY id')->queryAll();
 
-        if (!$currencies) {
-            throw new \yii\base\Exception('Locales is not found');
+        if (!$currencies || !$locales) {
+            throw new \yii\base\Exception('Locales or currencies is not found');
         }
 
         $rows = [];
         foreach ($currencies as $currency) {
-            foreach ($currenciesForTranslate as $translateCurrency) {
-                if (!Currencies::exists($translateCurrency['code'])) {
+            foreach ($locales as $locale) {
+                if (!Currencies::exists($currency['code'])) {
                     continue;
                 }
 
                 $caption = null;
                 $symbol = null;
                 try {
-                    $caption = Currencies::getName($currency['code'], $translateCurrency['locale']);
+                    $caption = Currencies::getName($currency['code'], $locale['locale']);
+                    $symbol = Currencies::getSymbol($currency['code'], $locale['locale']);
                 } catch (Exception $e) {
                     dump($e->getMessage());
                 }
 
                 $rows[] = [
                     'entity_id' => (int) $currency['id'],
-                    'locale' => (int) $translateCurrency['id'],
+                    'locale' => (int) $locale['id'],
                     'name' => $caption ? StringHelper::mb_ucfirst($caption) : 'UNKNOWN',
-                    'symbol' => $caption ? StringHelper::mb_ucfirst($caption) : 'UNKNOWN',
+                    'symbol' => $symbol ? StringHelper::mb_ucfirst($symbol) : 'UNKNOWN',
                 ];
             }
         }
