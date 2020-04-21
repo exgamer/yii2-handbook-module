@@ -16,6 +16,12 @@ use yii\db\ActiveQuery;
 class LocaleService extends Service
 {
     use StatusTrait;
+    use \concepture\yii2handbook\services\traits\ModifySupportTrait;
+    use \concepture\yii2handbook\services\traits\ReadSupportTrait;
+    use \concepture\yii2logic\services\traits\LocalizedReadTrait;
+
+    /** @var array */
+    static $localesCatalog = [];
 
     /**
      * @return DomainService
@@ -80,5 +86,17 @@ class LocaleService extends Service
         }
 
         return parent::catalog(null, null, $condition, false, true);
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getCatalogBySql()
+    {
+        if (static::$localesCatalog) {
+            return static::$localesCatalog;
+        }
+        static::$localesCatalog = $this->queryAll('SELECT id, locale FROM locale', [], \PDO::FETCH_KEY_PAIR);
+        return static::$localesCatalog ? static::$localesCatalog : [];
     }
 }

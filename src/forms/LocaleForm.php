@@ -16,6 +16,7 @@ class LocaleForm extends Form
     public $status;
     public $locale;
     public $caption;
+    public $locale_id;
 
     /**
      * @see CForm::formRules()
@@ -27,6 +28,7 @@ class LocaleForm extends Form
                 [
                     'locale',
                     'caption',
+                    'locale_id',
                 ],
                 'required'
             ],

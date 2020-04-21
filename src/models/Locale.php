@@ -1,9 +1,12 @@
 <?php
+
 namespace concepture\yii2handbook\models;
 
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
+use concepture\yii2logic\models\LocalizedActiveRecord;
+use concepture\yii2handbook\converters\SqlLocaleConverter;
 
 /**
  * Post model
@@ -11,6 +14,7 @@ use concepture\yii2logic\models\traits\StatusTrait;
  * @property integer $id
  * @property integer $sort
  * @property string $locale
+ * @property string $locale_id
  * @property string $caption
  * @property integer $status
  * @property datetime $created_at
@@ -18,7 +22,7 @@ use concepture\yii2logic\models\traits\StatusTrait;
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class Locale extends ActiveRecord
+class Locale extends LocalizedActiveRecord
 {
     use StatusTrait;
 
@@ -60,6 +64,7 @@ class Locale extends ActiveRecord
                 [
                     'status',
                     'sort',
+                    'locale_id',
                 ],
                 'integer'
             ],
@@ -92,10 +97,28 @@ class Locale extends ActiveRecord
             'id' => Yii::t('handbook','#'),
             'sort' => Yii::t('handbook','Позиция сортировки'),
             'status' => Yii::t('handbook','Статус'),
-            'locale' => Yii::t('handbook','Язык'),
-            'caption' => Yii::t('handbook','Метка'),
+            'locale' => Yii::t('handbook','Код'),
+            'locale_id' => Yii::t('handbook','Язык перевода'),
+            'caption' => Yii::t('handbook','Наименование'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
+    }
+
+    /**
+     * @inheritDoc
+     * @return mixed|string
+     */
+    public static function getLocaleConverterClass()
+    {
+        return SqlLocaleConverter::class;
+    }
+
+    /**
+     * @return string
+     */
+    public static function uniqueField()
+    {
+        return 'locale_id';
     }
 }
