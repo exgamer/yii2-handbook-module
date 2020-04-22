@@ -34,6 +34,8 @@ class m200422_081446_create_country_localization_table extends Migration
         $this->addForeign('entity_id', 'country','id');
         $this->addForeign('locale', 'locale','id');
 
+        $this->dropForeignKey('fk_country_locale_locale_id', 'country');
+        $this->dropIndex('fk_country_locale_locale_id');
         $this->dropColumn('country', 'locale');
         $this->dropColumn('country', 'caption');
     }
