@@ -65,7 +65,7 @@ class LocaleService extends Service
             return $locale;
         }
 
-        $result =  LocaleConverter::key($locale);
+        $result = LocaleConverter::key($locale);
 
         return $result;
     }

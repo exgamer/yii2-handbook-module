@@ -45,38 +45,13 @@ $saveButton = Html::saveButton();
                 <?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
             </div>
         </div>
-        <legend class="font-weight-semibold text-uppercase font-size-sm">
-            <?= Yii::t('yii2admin', 'Дополнительно') ;?>
-        </legend>
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <?= $form
-                    ->field($model, 'status', [
-                        'template' => '
-                                                <div class="form-check form-check-inline mt-2">
-                                                    {input}
-                                                </div>
-                                                {error}
-                                            '
-                    ])
-                    ->checkbox(
-                        [
-                            'label' => Yii::t('yii2admin', 'Активировано'),
-                            'class' => 'form-check-input-styled-primary',
-                            'labelOptions' => ['class' => 'form-check-label control-label']
-                        ],
-                        true
-                    )
-                ?>
-            </div>
-        </div>
     </div>
 </div>
 <div class="card">
     <div class="card-body text-right">
-        <?= $saveRedirectButton?>
-        <?= $saveButton?>
+        <?=  $saveRedirectButton?>
+        <?=  $saveButton?>
     </div>
 </div>
-<?php ActiveForm::end(); ?>
+    <?php ActiveForm::end();?>
 <?php Pjax::end(); ?>
