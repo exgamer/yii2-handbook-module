@@ -13,6 +13,11 @@ $saveRedirectButton = Html::saveRedirectButton();
 
 <?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
     <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form', 'model' => new DynamicElements()]); ?>
+        <?php if(isset($originModel)) :?>
+            <legend class="font-weight-semibold text-uppercase font-size-sm">
+                <?= $originModel->caption;?>
+            </legend>
+        <?php endif ;?>
         <div class="card">
 <!--            <div class="card-body">-->
 <!--                <div class="row">-->
