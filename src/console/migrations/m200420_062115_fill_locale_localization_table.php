@@ -43,7 +43,7 @@ class m200420_062115_fill_locale_localization_table extends Migration
                 try {
                     $caption = Languages::getName($locale['locale'], $translateLocale['locale']);
                 } catch (Exception $e) {
-                    echo $e->getMessage();
+                    // echo $e->getMessage();
                 }
 
                 $rows[] = [
