@@ -13,6 +13,7 @@ use concepture\yii2logic\actions\web\StatusChangeAction;
  */
 class CountryController extends Controller
 {
+    public $localized = true;
 //    /**
 //     * @inheritDoc
 //     */
