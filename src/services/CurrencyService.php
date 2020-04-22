@@ -15,6 +15,7 @@ use Yii;
 class CurrencyService extends Service
 {
     use StatusTrait;
+    use \concepture\yii2logic\services\traits\LocalizedReadTrait;
 
     /**
      * Каталог 'code' => 'name (symbol)'

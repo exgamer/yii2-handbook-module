@@ -17,7 +17,7 @@ use concepture\yii2handbook\services\DynamicElementsService;
 # todo: разобраться
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditRollbackAction;
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
-use concepture\yii2user\enum\AccessEnum;
+use concepture\yii2logic\enum\AccessEnum;
 
 /**
  * Динамические элементы
