@@ -1,22 +1,22 @@
 <?php
 
-use Symfony\Component\Intl\Countries;
+use Symfony\Component\Intl\Languages;
 use concepture\yii2logic\helpers\StringHelper;
 use concepture\yii2logic\console\migrations\Migration;
 
 /**
- * Class m200422_083242_fill_country_localization_table
+ * Class m200420_062115_fill_locale_localization_table
  *
  * @author Poletaev Eugene <evgstn7@gmail.com>
  */
-class m200422_083242_fill_country_localization_table extends Migration
+class m200420_062115_fill_locale_localization_table extends Migration
 {
     /**
      * @return string
      */
     function getTableName()
     {
-        return 'country_localization';
+        return 'locale_localization';
     }
 
     /**
@@ -25,38 +25,37 @@ class m200422_083242_fill_country_localization_table extends Migration
     public function safeUp()
     {
         $connection = $this->getDb();
-        $countries = $connection->createCommand('SELECT id, iso FROM country ORDER BY iso')->queryAll();
         $locales = $connection->createCommand('SELECT id, locale FROM locale ORDER BY id')->queryAll();
-//        d($countries[0], $locales[0]);
+        $localesForTranslate = $locales;
 
-        if (!$countries || !$locales) {
-            throw new \yii\base\Exception('Locales or countries is not found');
+        if (!$locales) {
+            throw new \yii\base\Exception('Locales is not found');
         }
 
         $rows = [];
-        foreach ($countries as $country) {
-            foreach ($locales as $locale) {
-                if (!Countries::exists(mb_strtoupper($country['iso']))) {
+        foreach ($locales as $locale) {
+            foreach ($localesForTranslate as $translateLocale) {
+                if (!Languages::exists($translateLocale['locale'])) {
                     continue;
                 }
 
                 $caption = null;
                 try {
-                    $caption = Countries::getName(mb_strtoupper($country['iso']), $locale['locale']);
+                    $caption = Languages::getName($locale['locale'], $translateLocale['locale']);
                 } catch (Exception $e) {
-                     echo $e->getMessage();
+                    echo $e->getMessage();
                 }
 
                 $rows[] = [
-                    'entity_id' => (int) $country['id'],
-                    'locale' => (int) $locale['id'],
+                    'entity_id' => (int) $locale['id'],
+                    'locale_id' => (int) $translateLocale['id'],
                     'caption' => $caption ? StringHelper::mb_ucfirst($caption) : 'UNKNOWN',
                 ];
             }
         }
 
         $connection->createCommand('SET sql_mode=""')->execute();
-        $result = $this->batchInsert($this->getTableName(), ['entity_id', 'locale', 'caption'], $rows);
+        $result = $this->batchInsert($this->getTableName(), ['entity_id', 'locale_id', 'caption'], $rows);
     }
 
     /**

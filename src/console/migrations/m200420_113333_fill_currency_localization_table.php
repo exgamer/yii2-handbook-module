@@ -45,7 +45,7 @@ class m200420_113333_fill_currency_localization_table extends Migration
                     $caption = Currencies::getName($currency['code'], $locale['locale']);
                     $symbol = Currencies::getSymbol($currency['code'], $locale['locale']);
                 } catch (Exception $e) {
-                    // echo $e->getMessage();
+                    echo $e->getMessage();
                 }
 
                 $rows[] = [
