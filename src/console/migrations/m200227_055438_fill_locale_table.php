@@ -52,6 +52,10 @@ class m200227_055438_fill_locale_table extends Migration
             'ge' => 'ka',
         ];
 
+        if (empty($rows)){
+            $currentLocales =[];
+        }
+
         /**
          * запрос для конвертации id удаленных локалей в новую после обьединения
          *
@@ -99,7 +103,7 @@ class m200227_055438_fill_locale_table extends Migration
             $insertData[] = [
                 'locale' => $iso,
                 'caption' => $caption,
-                'status' => isset($usedLocales[$iso]) ? StatusEnum::ACTIVE : StatusEnum::INACTIVE,
+                'status' => StatusEnum::ACTIVE,
             ];
         }
 
