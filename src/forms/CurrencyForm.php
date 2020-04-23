@@ -17,6 +17,7 @@ class CurrencyForm extends Form
     public $name;
     public $symbol;
     public $symbol_native;
+    public $locale;
 
     /**
      * @see CForm::formRules()

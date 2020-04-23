@@ -53,6 +53,7 @@ class Currency extends LocalizedActiveRecord
             [
                 [
                     'status',
+                    'locale',
                 ],
                 'integer'
             ],
@@ -84,6 +85,7 @@ class Currency extends LocalizedActiveRecord
             'name' => Yii::t('handbook','Наименование'),
             'symbol' => Yii::t('handbook','Символ'),
             'symbol_native' => Yii::t('handbook','Родной символ'),
+            'locale' => Yii::t('handbook','Язык'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
         ];
