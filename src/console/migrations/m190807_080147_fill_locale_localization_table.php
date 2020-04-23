@@ -9,7 +9,7 @@ use concepture\yii2logic\console\migrations\Migration;
  *
  * @author Poletaev Eugene <evgstn7@gmail.com>
  */
-class m200420_062115_fill_locale_localization_table extends Migration
+class m190807_080147_fill_locale_localization_table extends Migration
 {
     /**
      * @return string
