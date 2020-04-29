@@ -22,7 +22,7 @@ class m200429_083911_change_payment_system_table extends Migration
     public function safeUp()
     {
         $this->dropColumn($this->getTableName(), 'caption');
-        $this->addColumn($this->getTableName(), 'logo', 'VARCHAR(1024) AFTER name');
+        $this->addColumn($this->getTableName(), 'logo', 'VARCHAR(1024)');
         $this->addColumn($this->getTableName(), 'updated_at', 'DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP');
         $this->addColumn($this->getTableName(), 'is_deleted', 'SMALLINT(6) DEFAULT 0');
         $this->addColumn($this->getTableName(), 'sort', 'SMALLINT(6) DEFAULT 0');
