@@ -1,9 +1,9 @@
 <?php
 
-namespace concepture\yii2handbook\console\controllers;
+namespace concepture\yii2handbook\web\controllers;
 
 use yii\helpers\ArrayHelper;
-use concepture\yii2user\enum\AccessEnum;
+use concepture\yii2logic\enum\AccessEnum;
 use kamaelkz\yii2admin\v1\actions\SortAction;
 use concepture\yii2logic\actions\web\v2\DeleteAction;
 use kamaelkz\yii2admin\v1\controllers\BaseController;

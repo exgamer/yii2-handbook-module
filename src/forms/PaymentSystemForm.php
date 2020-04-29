@@ -1,6 +1,9 @@
 <?php
 namespace concepture\yii2handbook\forms;
 
+use concepture\yii2logic\enum\StatusEnum;
+use concepture\yii2logic\validators\ModelValidator;
+use kamaelkz\yii2cdnuploader\pojo\CdnImagePojo;
 use Yii;
 use concepture\yii2logic\forms\Form;
 
@@ -11,19 +14,33 @@ use concepture\yii2logic\forms\Form;
  */
 class PaymentSystemForm extends Form
 {
-    public $caption;
+    public $name;
+    public $locale;
+    public $status = StatusEnum::INACTIVE;
+    public $logo;
 
     /**
-     * @see CForm::formRules()
+     * @inheritDoc
      */
     public function formRules()
     {
         return [
             [
                 [
-                    'caption',
+                    'locale',
+                    'name',
+                    'logo',
                 ],
                 'required'
+            ],
+            [
+                [
+                    'logo',
+                ],
+                ModelValidator::class,
+                'modelClass' => CdnImagePojo::class,
+                'modifySource' => false,
+                'message' => Yii::t('common', 'Некорректный формат данных.')
             ],
         ];
     }
