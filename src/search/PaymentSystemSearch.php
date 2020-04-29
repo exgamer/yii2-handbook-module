@@ -36,6 +36,6 @@ class PaymentSystemSearch extends PaymentSystem
 
     public static function getListSearchAttribute()
     {
-        return 'caption';
+        return 'name';
     }
 }
