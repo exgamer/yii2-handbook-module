@@ -14,6 +14,7 @@ class CountryForm extends BaseForm
     public $sort;
     public $status;
     public $locale;
+    public $domain_id;
     public $iso;
     public $caption;
     public $image;

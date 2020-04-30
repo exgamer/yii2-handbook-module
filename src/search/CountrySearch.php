@@ -17,7 +17,7 @@ class CountrySearch extends Country
     public function rules()
     {
         return [
-            [['id', 'locale'], 'integer'],
+            [['id', 'locale', 'domain_id'], 'integer'],
             [['caption', 'iso'], 'safe'],
         ];
     }
@@ -26,6 +26,9 @@ class CountrySearch extends Country
     {
         $query->andFilterWhere([
             'id' => $this->id
+        ]);
+        $query->andFilterWhere([
+            'domain_id' => $this->domain_id
         ]);
         $query->andFilterWhere([
             'locale' => $this->locale

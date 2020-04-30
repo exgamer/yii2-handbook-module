@@ -65,6 +65,7 @@ class Country extends LocalizedActiveRecord
                     'status',
                     'sort',
                     'locale',
+                    'domain_id',
                 ],
                 'integer'
             ],
@@ -115,6 +116,7 @@ class Country extends LocalizedActiveRecord
             'sort' => Yii::t('handbook','Позиция сортировки'),
             'status' => Yii::t('handbook','Статус'),
             'locale' => Yii::t('handbook','Язык'),
+            'domain_id' => Yii::t('handbook','Домен'),
             'iso' => Yii::t('handbook','ISO код страны'),
             'caption' => Yii::t('handbook','Название'),
             'image' => Yii::t('handbook','Флаг'),
