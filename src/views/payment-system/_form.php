@@ -60,8 +60,8 @@ echo Html::activeHiddenInput($model, 'locale');
                         'attribute' => 'logo',
                         'strategy' => StrategiesEnum::TRUSTED,
                         'resizeBigger' => false,
-                        'width' => 50,
-                        'height' => 23,
+                        'width' => 63,
+                        'height' => 39,
                         'options' => [
                             'plugin-options' => [
                                 'maxFileSize' => 2000000,
