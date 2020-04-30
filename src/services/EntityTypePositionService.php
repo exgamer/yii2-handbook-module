@@ -52,7 +52,7 @@ class EntityTypePositionService extends Service
      *
      * @param bool $cache
      */
-    public function getOneByCondition($condition = null, $cache = false)
+    public function getOneByCondition($condition = null, $cache = false, $asSql = false, $fetchMode = null)
     {
         if( ! Yii::$app->has('cache') || ! $cache) {
             return parent::getOneByCondition($condition);
