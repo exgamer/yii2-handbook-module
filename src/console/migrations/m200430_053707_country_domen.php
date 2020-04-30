@@ -8,6 +8,14 @@ use concepture\yii2logic\console\migrations\Migration;;
 class m200430_053707_country_domen extends Migration
 {
     /**
+     * @return string
+     */
+    function getTableName()
+    {
+        return 'country';
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function safeUp()
