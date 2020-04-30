@@ -29,7 +29,7 @@ class PaymentSystemForm extends Form
                 [
                     'locale',
                     'name',
-                    'logo',
+//                    'logo',
                 ],
                 'required'
             ],
