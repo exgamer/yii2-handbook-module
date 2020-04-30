@@ -58,7 +58,7 @@ echo Html::activeHiddenInput($model, 'locale');
                     ->widget(CdnUploader::class, [
                         'model' => $model,
                         'attribute' => 'logo',
-                        'strategy' => StrategiesEnum::RETINA,
+                        'strategy' => StrategiesEnum::TRUSTED,
                         'resizeBigger' => false,
                         'width' => 50,
                         'height' => 23,
