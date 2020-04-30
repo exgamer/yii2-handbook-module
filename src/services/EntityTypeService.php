@@ -33,11 +33,11 @@ class EntityTypeService extends Service
     public function getOneByCondition($condition = null, $cache = false, $asSql = false, $fetchMode = null)
     {
         if( ! Yii::$app->has('cache') || ! $cache) {
-            return parent::getOneByCondition($condition);
+            return parent::getOneByCondition($condition, $asSql, $fetchMode);
         }
 
-        return $this->getDb()->cache(function () use($condition) {
-            return parent::getOneByCondition($condition);
+        return $this->getDb()->cache(function () use($condition, $asSql, $fetchMode) {
+            return parent::getOneByCondition($condition, $asSql, $fetchMode);
         });
     }
 
