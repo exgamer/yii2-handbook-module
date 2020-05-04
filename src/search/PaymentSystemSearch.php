@@ -18,7 +18,13 @@ class PaymentSystemSearch extends PaymentSystem
     public function rules()
     {
         return [
-            [['id'], 'integer']
+            [['id'], 'integer'],
+            [
+                [
+                    'name'
+                ],
+                'safe'
+            ],
         ];
     }
 
@@ -26,6 +32,11 @@ class PaymentSystemSearch extends PaymentSystem
     {
         $query->andFilterWhere([
             'id' => $this->id
+        ]);
+        $query->andFilterWhere([
+            'like',
+            'name',
+            $this->name
         ]);
     }
 
