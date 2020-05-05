@@ -90,3 +90,35 @@
   ...
 ```
 - Пример вызова `php yii queue/put test a::a,c::c,e::e` - закидываем тестовую задачу в трубу test;
+
+
+
+# Подключение воркера для выполнения консольных команд
+1. в console\config\main.php добавить
+```php
+<?php
+use concepture\yii2handbook\components\queue\beanstalkd\worker\CommandWorker;
+
+    return [
+        'controllerMap' => [
+            CommandWorker::getCommandName() => [
+                'class' => CommandWorker::class,
+                'stream' => true // признак обработки в отдельном потоке или в общем, true по умолчанию
+            ]
+        ]
+    ]           
+
+```
+2. Вызов
+```php
+<?php
+    $payload = [
+        'command' => [
+            'bookmaker-rating/recount-by-bookmaker',
+            '1',
+        ]
+    ];
+    
+    
+    Yii::$app->queue->putIn(\common\enum\TubeEnum::COMMAND, $payload);
+```
