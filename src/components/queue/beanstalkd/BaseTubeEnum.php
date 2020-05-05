@@ -9,6 +9,7 @@ use concepture\yii2logic\enum\Enum;
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
-abstract class BaseTubeEnum extends Enum
+class BaseTubeEnum extends Enum
 {
+    const COMMAND = 'command';
 }
