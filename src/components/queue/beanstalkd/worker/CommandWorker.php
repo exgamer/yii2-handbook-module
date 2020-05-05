@@ -26,6 +26,10 @@ class CommandWorker extends BaseWorker
      */
     public function execute($data)
     {
+        if (! isset($data['command'])){
+            throw new \Exception("'command' not found in payload");
+        }
+
         $command = $data['command'];
         if (! is_array($command)){
             $command = [$command];
