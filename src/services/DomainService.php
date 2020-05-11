@@ -83,6 +83,7 @@ class DomainService extends Service
             $data['host'] = $url;
             $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
             $data['country_caption'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'caption');
+            $data['country_image'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'image');
             $urlArray = explode('.', $url);
             array_shift($urlArray);
             $url = implode('.', $urlArray);
