@@ -344,7 +344,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                     ':url_md5_hash' => $this->getCurrentUlrHash()
                 ]
             );
-            $query->orderBy('url');
+            $query->orderBy('is_general', 'url');
         });
 
         return $items;
