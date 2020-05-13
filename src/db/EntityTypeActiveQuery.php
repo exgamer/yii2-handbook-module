@@ -17,7 +17,7 @@ use yii\db\ActiveRecordInterface;
  *       }
  * В запросе
  *        $query->with(['relatedEntity']);
- * 
+ *
  * Class EntityTypeActiveQuery
  * @package concepture\yii2handbook\db
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
