@@ -47,8 +47,9 @@ class EntityTypeActiveQuery extends Base
                 $relation = null;
                 if ($name !== 'relatedEntity') {
                     $relation = $model->getRelation($name);
+                    $relation->primaryModel = null;
                 }
-                $relation->primaryModel = null;
+
                 $relations[$name] = $relation;
             } else {
                 $relation = $relations[$name];
