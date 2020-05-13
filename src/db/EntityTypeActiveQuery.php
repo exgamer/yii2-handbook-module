@@ -108,9 +108,9 @@ class EntityTypeActiveQuery extends Base
                 $name = $names[$etid];
                 $value = $result[$etid][$eid] ?? null;
                 if ($model instanceof ActiveRecordInterface) {
-                    $model->populateRelation($relatedKey . ucfirst($name), $value);
+                    $model->populateRelation($name, $value);
                 } else {
-                    $model[$relatedKey . ucfirst($name)] = $value;
+                    $model[$name] = $value;
                 }
             }
         }
