@@ -68,6 +68,7 @@ class EntityTypeActiveQuery extends Base
 
     public function findWith($with, &$models)
     {
+        $relatedKey = 'relatedEntity';
         $primaryModel = reset($models);
         if (!$primaryModel instanceof ActiveRecordInterface) {
             /* @var $modelClass ActiveRecordInterface */
@@ -80,8 +81,8 @@ class EntityTypeActiveQuery extends Base
          * BEGIN
          * Для возможности получать связанные сущности по entity_id и entity_type_id
          */
-        if (isset($relations['relatedEntity'])) {
-            unset($relations['relatedEntity']);
+        if (isset($relations[$relatedKey])) {
+            unset($relations[$relatedKey]);
             $types = [];
             foreach ($models as $model) {
                 $eid = is_object($model) ? $model->entity_id : $model['entity_id'];
@@ -89,8 +90,10 @@ class EntityTypeActiveQuery extends Base
                 $types[$etid] [$eid] = $eid;
             }
             $result = [];
+            $names = [];
             foreach ($types as $id => $ids) {
                 $name = \Yii::$app->entityTypeService->catalogValue($id);
+                $names[$id] = $name;
                 /**
                  * @TODO Настройку если модель лежит не тут (пока устраивает)
                  */
@@ -102,13 +105,13 @@ class EntityTypeActiveQuery extends Base
             foreach ($models as $model) {
                 $eid = is_object($model) ? $model->entity_id : $model['entity_id'];
                 $etid = is_object($model) ? $model->entity_type_id : $model['entity_type_id'];
+                $name = $names[$etid];
                 $value = $result[$etid][$eid] ?? null;
                 if ($model instanceof ActiveRecordInterface) {
-                    $model->populateRelation('relatedEntity', $value);
+                    $model->populateRelation($relatedKey . ucfirst($name), $value);
                 } else {
-                    $model[$name] = $value;
+                    $model[$relatedKey . ucfirst($name)] = $value;
                 }
-
             }
         }
         /**
