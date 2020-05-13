@@ -9,7 +9,15 @@ use yii\db\ActiveRecordInterface;
 /**
  * AQ для поддержки связей через entity_id и entity_type_id
  * запишет в ключ relatedEntity связанную сущность
+ *
+ * В модели
+ *     public static function find()
+ *       {
+ *           return Yii::createObject(EntityTypeActiveQuery::class, [get_called_class()]);
+ *       }
+ * В запросе
  *        $query->with(['relatedEntity']);
+ * 
  * Class EntityTypeActiveQuery
  * @package concepture\yii2handbook\db
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
