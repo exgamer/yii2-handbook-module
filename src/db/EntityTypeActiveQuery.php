@@ -18,6 +18,10 @@ use yii\db\ActiveRecordInterface;
  * В запросе
  *        $query->with(['relatedEntity']);
  *
+ *       $query->with(['relatedEntity' => function(\concepture\yii2logic\db\ActiveQuery $query){
+ *          $query->with('bookmaker');
+ *       }]);
+ *
  * Class EntityTypeActiveQuery
  * @package concepture\yii2handbook\db
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
@@ -48,7 +52,7 @@ class EntityTypeActiveQuery extends Base
                     $relation = $model->getRelation($name);
                     $relation->primaryModel = null;
                 }else{
-                    $relation = 1;
+                    $relation = new static($this->modelClass);
                 }
 
                 $relations[$name] = $relation;
@@ -76,12 +80,13 @@ class EntityTypeActiveQuery extends Base
             $primaryModel = $modelClass::instance();
         }
         $relations = $this->normalizeRelations($primaryModel, $with);
-
         /**
          * BEGIN
          * Для возможности получать связанные сущности по entity_id и entity_type_id
          */
         if (isset($relations[$relatedKey])) {
+            $rel = $relations[$relatedKey];
+            $relWith = $rel->with;
             unset($relations[$relatedKey]);
             $types = [];
             foreach ($models as $model) {
@@ -99,7 +104,20 @@ class EntityTypeActiveQuery extends Base
                  */
                 $nameSpace = '\common\models\\';
                 $modelClass = $nameSpace . ucfirst($name);
-                $result[$id] = $modelClass::find()->andWhere(['id' => $ids])->asArray($this->asArray)->indexBy('id')->all();
+                $q = $modelClass::find()->andWhere(['id' => $ids])->asArray($this->asArray)->indexBy('id');
+                /**
+                 * Поддержка связей для связанных сущностей
+                 */
+                if ($relWith) {
+                    $model = $modelClass::instance();
+                    foreach ($relWith as $w) {
+                        if ($model->getRelation($w, false)) {
+                            $q->with($w);
+                        }
+                    }
+                }
+
+                $result[$id] = $q->all();
             }
 
             foreach ($models as $model) {
