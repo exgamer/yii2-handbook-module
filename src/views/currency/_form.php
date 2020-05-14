@@ -19,7 +19,7 @@ $saveButton = Html::saveButton();
         <?php foreach (Yii::$app->localeService->getByDomainMap() as $key => $locale):?>
             <li class="nav-item">
                 <?= Html::a(
-                    $locale,
+                    Yii::$app->localeService->catalogValue($locale, 'locale', 'caption'),
                     \yii\helpers\Url::current(['locale' => $key]),
                     ['class' => 'nav-link ' . ($key ==  $model->locale   ? "active" : "")]
                 ) ?>
