@@ -120,15 +120,15 @@ class EntityTypeActiveQuery extends Base
                 $result[$id] = $q->all();
             }
 
-            foreach ($models as $model) {
+            foreach ($models as $key => $model) {
                 $eid = is_object($model) ? $model->entity_id : $model['entity_id'];
                 $etid = is_object($model) ? $model->entity_type_id : $model['entity_type_id'];
                 $name = $names[$etid];
                 $value = $result[$etid][$eid] ?? null;
                 if ($model instanceof ActiveRecordInterface) {
-                    $model->populateRelation($name, $value);
+                    $model->populateRelation($relatedKey, $value);
                 } else {
-                    $model[$name] = $value;
+                    $models[$key][$name] = $value;
                 }
             }
         }
