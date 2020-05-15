@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\models;
 
+use kamaelkz\yii2cdnuploader\traits\ModelTrait;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
@@ -25,6 +26,7 @@ use concepture\yii2handbook\converters\LocaleConverter;
 class Country extends LocalizedActiveRecord
 {
     use StatusTrait;
+    use ModelTrait;
 
     /**
      * @see \concepture\yii2logic\models\ActiveRecord:label()
