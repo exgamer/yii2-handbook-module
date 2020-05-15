@@ -81,6 +81,7 @@ class DomainService extends Service
         $map = $this->getDomainMap();
         foreach ($map as $url => $data){
             $data['host'] = $url;
+            $data['locale_id'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'id');
             $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
             $data['country_caption'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'caption');
             $data['country_image'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'image');
