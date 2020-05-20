@@ -94,7 +94,7 @@ class CacheService extends Component
 		$this->prefix = $this->env . ':';
 		$this->prefix_tag .= $this->prefix;
 		$this->prefix_callback .= $this->prefix;
-		$this->nocache = (bool)getenv('NOCACHE') || isset($_GET['nocache']);
+		$this->nocache = (bool)getenv('NOCACHE') || isset($_GET['nc']);
 	}
 
     /**
