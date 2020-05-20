@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -81,6 +82,7 @@ class DomainService extends Service
         $map = $this->getDomainMap();
         foreach ($map as $url => $data){
             $data['host'] = $url;
+            $data['host_with_scheme'] = UrlHelper::getCurrentSchema() . "://" . $url;
             $data['language_id'] = Yii::$app->localeService->catalogValue($data['language'], 'locale', 'id');
             $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
             $data['country_caption'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'caption');
