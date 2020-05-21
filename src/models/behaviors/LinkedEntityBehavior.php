@@ -45,7 +45,7 @@ class LinkedEntityBehavior extends Behavior
             $entity_type_id =  Yii::$app->entityTypeService->catalogKey($tableName, 'id', 'table_name');
             $linkClass = $this->getAttributeConfigData($config, 'link_class');
             $linkService = $linkClass::getService();
-            $linkAttribute = $this->getAttributeConfigData($config, 'link_attribute');
+            $linkAttribute = $tableName . "_id";
             $linkClass::deleteAll(['entity_type_id' => $entity_type_id, 'entity_id' => $entity_id]);
             $fields = [
                 'entity_type_id',
@@ -89,7 +89,7 @@ class LinkedEntityBehavior extends Behavior
         if (! isset($linkAttrs[$attribute])){
             throw new Exception($attribute . " is no linked data");
         }
-        
+
         if ($this->owner->{$attribute}){
             return $this->owner->{$attribute};
         }
@@ -108,7 +108,7 @@ class LinkedEntityBehavior extends Behavior
         $entity_id = $this->owner->id;
         $tableName = trim($class::tableName(), '{}%');
         $entity_type_id =  Yii::$app->entityTypeService->catalogKey($tableName, 'id', 'table_name');
-        $linkAttribute = $this->getAttributeConfigData($config, 'link_attribute');
+        $linkAttribute = $tableName . "_id";
         $linkModels = $linkService->getAllByCondition(function(ActiveQuery $query) use($entity_type_id, $entity_id, $linkAttribute) {
             $query->andWhere([
                 'entity_type_id' => $entity_type_id,
