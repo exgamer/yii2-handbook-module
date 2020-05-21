@@ -112,7 +112,7 @@ class LinkedEntityBehavior extends Behavior
         $tableName = trim($class::tableName(), '{}%');
         $entity_type_id =  Yii::$app->entityTypeService->catalogKey($tableName, 'id', 'table_name');
         $linkAttribute = $tableName . "_id";
-        $linkModels = $linkService->getAllByCondition(function(ActiveQuery $query) use($entity_type_id, $entity_id, $linkAttribute) {
+        $linkModels = $linkService->getAllByCondition(function (ActiveQuery $query) use ($entity_type_id, $entity_id, $linkAttribute) {
             $query->andWhere([
                 'entity_type_id' => $entity_type_id,
                 'entity_id' => $entity_id,
@@ -121,11 +121,27 @@ class LinkedEntityBehavior extends Behavior
             $query->indexBy([$linkAttribute]);
         });
 
+        $currentLinkModels = [];
+        if ($this->owner->{$attribute}) {
+            foreach ($this->owner->{$attribute} as $key => $d) {
+                $linkModel = Yii::createObject($linkClass);
+                $linkModel->{$linkAttribute} = $d['link_id'];
+                $linkModel->status = isset($d['status']) ? $d['status'] : 0;
+                $linkModel->sort = $key+1;
+                $currentLinkModels[$d['link_id']] = $linkModel;
+            }
+        }
+
         $data = [];
         foreach ($allLinked as $model) {
-            $link = isset($linkModels[$model->id]) ? $linkModels[$model->id] : null;
+            if (isset($currentLinkModels[$model->id])){
+                $link = $currentLinkModels[$model->id];
+            }else {
+                $link = isset($linkModels[$model->id]) ? $linkModels[$model->id] : null;
+            }
+
             $sort = $link ? $link->sort : 1;
-            $pogo = new $this->pojoClass();
+            $pogo = Yii::createObject($this->pojoClass);
             $pogo->link_id = $model->id;
             $pogo->name = $model->toString();
             $pogo->status = $link ? $link->status : 0;
