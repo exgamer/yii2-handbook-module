@@ -1,9 +1,9 @@
 <?php
 namespace concepture\yii2handbook\models\behaviors;
 
-use common\pojo\LinkedEntity;
 use concepture\yii2logic\db\ActiveQuery;
 use concepture\yii2logic\helpers\ClassHelper;
+use concepture\yii2logic\pojo\LinkedEntity;
 use Yii;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
@@ -94,7 +94,7 @@ class LinkedEntityBehavior extends Behavior
             return $this->owner->{$attribute};
         }
 
-        $class = $this->getAttributeConfigData($config, 'class');
+        $class = $this->getAttributeConfigData($linkAttrs[$attribute], 'class');
         $service = $class::getService();
         $linkClass = $this->getAttributeConfigData($linkAttrs[$attribute], 'link_class');
         $linkService = $linkClass::getService();
@@ -122,13 +122,13 @@ class LinkedEntityBehavior extends Behavior
         foreach ($allLinked as $model) {
             $link = isset($linkModels[$model->id]) ? $linkModels[$model->id] : null;
             $sort = $link ? $link->sort : 1;
-            $model = new $this->pojoClass();
-            $model->{$linkAttribute} = $model->id;
-            $model->name = $model->toString();
-            $model->status = $link ? $link->status : 0;
-            $model->sort = $sort;
+            $pogo = new $this->pojoClass();
+            $pogo->link_id = $model->id;
+            $pogo->name = $model->toString();
+            $pogo->status = $link ? $link->status : 0;
+            $pogo->sort = $sort;
 
-            $data[] = $model;
+            $data[] = $pogo;
         }
 
         usort($data, function ($a, $b) {
