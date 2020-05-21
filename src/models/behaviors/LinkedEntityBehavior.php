@@ -66,6 +66,9 @@ class LinkedEntityBehavior extends Behavior
             }
 
             $linkService->batchInsert($fields, $insertData);
+            foreach ($this->owner->{$attr} as $key => $data) {
+                $this->owner->{$attr} = $this->getLinkModels($attr);
+            }
         }
     }
 
@@ -90,7 +93,7 @@ class LinkedEntityBehavior extends Behavior
             throw new Exception($attribute . " is no linked data");
         }
 
-        if ($this->owner->{$attribute}){
+        if ($this->owner->{$attribute} && !is_array($this->owner->{$attribute}[0])){
             return $this->owner->{$attribute};
         }
 
