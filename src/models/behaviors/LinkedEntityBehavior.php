@@ -1,6 +1,10 @@
 <?php
 namespace concepture\yii2handbook\models\behaviors;
 
+use common\models\Advantage;
+use common\models\EntityAdvantage;
+use common\models\EntityPostCategory;
+use concepture\yii2article\models\PostCategory;
 use concepture\yii2logic\db\ActiveQuery;
 use concepture\yii2logic\helpers\ClassHelper;
 use concepture\yii2logic\pojo\LinkedEntity;
@@ -11,6 +15,23 @@ use Exception;
 
 /**
  * Class LinkedEntityBehavior
+ *
+ *   public function behaviors()
+ *   {
+ *       return [
+ *           'JsonFieldsBehavior' => [
+ *               'class' => 'concepture\yii2handbook\models\behaviors\LinkedEntityBehavior',
+ *               'linkAttr' => [
+ *                   'post_categories' => [
+ *                       'class' => PostCategory::class,
+ *                       'link_class' => EntityPostCategory::class,
+ *               ]
+ *           ],
+ *       ];
+ *   }
+ *
+ *
+ *
  * @package concepture\yii2handbook\models\behaviors
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
