@@ -9,7 +9,11 @@ use yii\base\Behavior;
 use yii\db\ActiveRecord;
 use Exception;
 
-
+/**
+ * Class LinkedEntityBehavior
+ * @package concepture\yii2handbook\models\behaviors
+ * @author Olzhas Kulzhambekov <exgamer@live.ru>
+ */
 class LinkedEntityBehavior extends Behavior
 {
     /**
