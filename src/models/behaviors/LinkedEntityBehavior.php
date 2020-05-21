@@ -13,7 +13,7 @@ use Exception;
 class LinkedEntityBehavior extends Behavior
 {
     /**
-     * Массив атрибутов которые сохраняются json
+     * Массив атрибутов которые являются записями в другой таблице
      *
      * @var array
      */
