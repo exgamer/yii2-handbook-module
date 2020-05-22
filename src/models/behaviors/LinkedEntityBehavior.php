@@ -53,6 +53,13 @@ class LinkedEntityBehavior extends Behavior
         ];
     }
 
+    protected function getCurrentEntityTypeId()
+    {
+        $owner = $this->owner->id;
+
+        return Yii::$app->entityTypeService->catalogKey(trim($owner::tableName(), '{}%'), 'id', 'table_name');
+    }
+
     public function saveLinks()
     {
         if(empty($this->linkAttr) ) {
@@ -63,11 +70,10 @@ class LinkedEntityBehavior extends Behavior
             if (! $this->owner->{$attr}) {
                 continue;
             }
-
             $entity_id = $this->owner->id;
             $class = $this->getAttributeConfigData($config, 'class');
             $tableName = trim($class::tableName(), '{}%');
-            $entity_type_id =  Yii::$app->entityTypeService->catalogKey($tableName, 'id', 'table_name');
+            $entity_type_id =  Yii::$app->entityTypeService->catalogKey($this->getCurrentEntityTypeId(), 'id', 'table_name');
             $linkClass = $this->getAttributeConfigData($config, 'link_class');
             $linkService = $linkClass::getService();
             $linkAttribute = $tableName . "_id";
@@ -135,7 +141,7 @@ class LinkedEntityBehavior extends Behavior
 
         $entity_id = $this->owner->id;
         $tableName = trim($class::tableName(), '{}%');
-        $entity_type_id =  Yii::$app->entityTypeService->catalogKey($tableName, 'id', 'table_name');
+        $entity_type_id =  Yii::$app->entityTypeService->catalogKey($this->getCurrentEntityTypeId(), 'id', 'table_name');
         $linkAttribute = $tableName . "_id";
         $linkModels = $linkService->getAllByCondition(function (ActiveQuery $query) use ($entity_type_id, $entity_id, $linkAttribute) {
             $query->andWhere([
