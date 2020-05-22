@@ -55,7 +55,7 @@ class LinkedEntityBehavior extends Behavior
 
     protected function getCurrentEntityTypeId()
     {
-        $owner = $this->owner->id;
+        $owner = $this->owner;
 
         return Yii::$app->entityTypeService->catalogKey(trim($owner::tableName(), '{}%'), 'id', 'table_name');
     }
