@@ -22,7 +22,7 @@ trait ModifySupportTrait
             return;
         }
 
-        if ($model->domain_id){
+        if ($model->domain_id !== null){
             return;
         }
 
