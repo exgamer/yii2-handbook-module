@@ -3,8 +3,12 @@
 namespace concepture\yii2handbook\models;
 
 use Yii;
+use concepture\yii2handbook\pojo\MenuItems;
 use concepture\yii2logic\models\ActiveRecord;
+use concepture\yii2logic\models\traits\StatusTrait;
+use concepture\yii2logic\models\traits\IsDeletedTrait;
 use concepture\yii2handbook\models\traits\DomainTrait;
+use concepture\yii2logic\models\behaviors\JsonFieldsBehavior;
 
 /**
  * Class Menu
@@ -13,6 +17,7 @@ use concepture\yii2handbook\models\traits\DomainTrait;
  * @property string $type
  * @property string $caption
  * @property string $url
+ * @property string $items
  * @property string $domain_id
  * @property string $status
  * @property string $created_at
@@ -25,7 +30,9 @@ use concepture\yii2handbook\models\traits\DomainTrait;
  */
 class Menu extends ActiveRecord
 {
+    use StatusTrait;
     use DomainTrait;
+    use IsDeletedTrait;
 
     /** @var bool */
     public $allow_physical_delete = false;
@@ -52,6 +59,23 @@ class Menu extends ActiveRecord
     public function toString()
     {
         return $this->caption;
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'JsonFieldsBehavior' => [
+                'class' => JsonFieldsBehavior::class,
+                'jsonAttr' => [
+                    'items' => [
+                        'class' => MenuItems::class,
+                    ],
+                ],
+            ],
+        ];
     }
 
 
@@ -86,11 +110,9 @@ class Menu extends ActiveRecord
             ],
             [
                 [
-                    'type',
-                    'domain_id',
+                    'items',
                 ],
-                'unique',
-                'targetAttribute' => ['type', 'domain_id'],
+                'safe',
             ],
         ];
     }
@@ -105,6 +127,7 @@ class Menu extends ActiveRecord
             'type' => Yii::t('handbook','Тип'),
             'caption' => Yii::t('handbook','Наименование'),
             'url' => Yii::t('handbook','Ссылка'),
+            'items' => Yii::t('handbook','Пункты меню'),
             'domain_id' => Yii::t('handbook','Домен'),
             'status' => Yii::t('handbook','Статус'),
             'created_at' => Yii::t('handbook','Дата создания'),

@@ -27,6 +27,7 @@ class m200528_045146_create_menu_table extends Migration
             'type' => $this->integer()->notNull(),
             'caption' => $this->string(255)->notNull(),
             'url' => $this->string(1024),
+            'items' => $this->json(),
             'domain_id' => $this->bigInteger()->notNull(),
             'status' => $this->smallInteger()->defaultValue(0),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression("CURRENT_TIMESTAMP")),
@@ -35,7 +36,6 @@ class m200528_045146_create_menu_table extends Migration
             'sort' => $this->smallInteger()->defaultValue(0),
         ]);
 
-        $this->addUniqueIndex(['type', 'domain_id']);
         $this->addIndex(['type', 'domain_id', 'status', 'is_deleted']);
         $this->addForeign('domain_id', 'domain','id');
     }

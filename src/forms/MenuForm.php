@@ -19,8 +19,12 @@ class MenuForm extends BaseForm
     public $caption;
     /** @var string */
     public $url;
+    /** @var array */
+    public $items = [];
     /** @var int */
     public $domain_id;
+    /** @var int */
+    public $status = 0;
 
     /**
      * @return array
@@ -32,7 +36,6 @@ class MenuForm extends BaseForm
                 [
                     'type',
                     'caption',
-                    'domain_id',
                 ],
                 'required',
             ],
@@ -50,12 +53,18 @@ class MenuForm extends BaseForm
                 'string',
                 'max' => 1024,
             ],
+//            [
+//                [
+//                    'url',
+//                ],
+//                UrlValidator::class,
+//                'pattern' => '/^\/(([A-Z0-9][A-Z0-9_-]*)/i',
+//            ],
             [
                 [
-                    'url',
+                    'items',
                 ],
-                UrlValidator::class,
-                'pattern' => '/^\/(([A-Z0-9][A-Z0-9_-]*)/i',
+                'safe',
             ],
         ];
     }

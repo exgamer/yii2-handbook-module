@@ -3,9 +3,13 @@
 namespace concepture\yii2handbook\services;
 
 use yii\db\ActiveQuery;
+use concepture\yii2logic\forms\Model;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\services\Service;
 use concepture\yii2logic\enum\IsDeletedEnum;
+use concepture\yii2logic\services\traits\StatusTrait;
+use concepture\yii2handbook\services\traits\ReadSupportTrait;
+use concepture\yii2handbook\services\traits\ModifySupportTrait;
 use concepture\yii2handbook\services\traits\EntityTypeSupportTrait;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServiceTrait;
 
@@ -17,8 +21,20 @@ use concepture\yii2handbook\traits\ServicesTrait as HandbookServiceTrait;
  */
 class MenuService extends Service
 {
+    use StatusTrait;
+    use ReadSupportTrait;
+    use ModifySupportTrait;
     use HandbookServiceTrait;
     use EntityTypeSupportTrait;
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeCreate(Model $form)
+    {
+        $this->setCurrentDomain($form);
+        parent::beforeCreate($form);
+    }
 
     /**
      * @param string $entity_type_position
