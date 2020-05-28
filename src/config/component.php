@@ -49,4 +49,7 @@ return [
     'seoBlockService' => [
         'class' => 'concepture\yii2handbook\services\SeoBlockService'
     ],
+    'menuService' => [
+        'class' => 'concepture\yii2handbook\services\MenuService'
+    ],
 ];
