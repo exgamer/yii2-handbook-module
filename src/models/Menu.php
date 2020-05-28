@@ -27,6 +27,9 @@ class Menu extends ActiveRecord
 {
     use DomainTrait;
 
+    /** @var bool */
+    public $allow_physical_delete = false;
+
     /**
      * @return string
      */
