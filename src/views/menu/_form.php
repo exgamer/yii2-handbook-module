@@ -25,7 +25,7 @@ $saveButton = Html::saveButton();
                 <?= Yii::t('yii2admin', 'Основные данные') ;?>
             </legend>
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-lg-3 col-md-3 col-sm-12">
                     <?= $form
                         ->field($model, 'type')
                         ->dropDownList(MenuEnum::arrayList(), [
@@ -34,11 +34,25 @@ $saveButton = Html::saveButton();
                         ]);
                     ?>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-lg-4 col-md-4 col-sm-12">
                     <?= $form->field($model, 'caption')->textInput(['maxlength' => true]) ?>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-lg-4 col-md-4 col-sm-12">
                     <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
+            <legend class="font-weight-semibold text-uppercase font-size-sm">
+                <?= Yii::t('yii2admin', 'Дополнительные данные') ;?>
+            </legend>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <?= $form->field($model, 'desktop_max_count')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <?= $form->field($model, 'link_all_caption')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <?= $form->field($model, 'link_all_url')->textInput(['maxlength' => true]) ?>
                 </div>
             </div>
             <legend class="font-weight-semibold text-uppercase font-size-sm">

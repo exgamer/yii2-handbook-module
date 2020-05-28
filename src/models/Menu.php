@@ -17,6 +17,9 @@ use concepture\yii2logic\models\behaviors\JsonFieldsBehavior;
  * @property string $type
  * @property string $caption
  * @property string $url
+ * @property string $desktop_max_count
+ * @property string $link_all_caption
+ * @property string $link_all_url
  * @property string $items
  * @property string $domain_id
  * @property string $status
@@ -88,6 +91,7 @@ class Menu extends ActiveRecord
             [
                 [
                     'type',
+                    'desktop_max_count',
                     'domain_id',
                     'status',
                     'is_deleted',
@@ -96,17 +100,19 @@ class Menu extends ActiveRecord
             ],
             [
                 [
-                    'caption'
+                    'caption',
+                    'link_all_caption',
                 ],
                 'string',
-                'max' => 255
+                'max' => 255,
             ],
             [
                 [
                     'url',
+                    'link_all_url',
                 ],
                 'string',
-                'max' => 1024
+                'max' => 1024,
             ],
             [
                 [
@@ -127,6 +133,9 @@ class Menu extends ActiveRecord
             'type' => Yii::t('handbook','Тип'),
             'caption' => Yii::t('handbook','Наименование'),
             'url' => Yii::t('handbook','Ссылка'),
+            'desktop_max_count' => Yii::t('handbook','Количество пунктов на десктопе'),
+            'link_all_caption' => Yii::t('handbook','Наименование ссылки на все пункты'),
+            'link_all_url' => Yii::t('handbook','Ссылка на все пункты'),
             'items' => Yii::t('handbook','Пункты меню'),
             'domain_id' => Yii::t('handbook','Домен'),
             'status' => Yii::t('handbook','Статус'),

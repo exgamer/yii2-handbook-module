@@ -19,6 +19,12 @@ class MenuForm extends BaseForm
     public $caption;
     /** @var string */
     public $url;
+    /** @var int */
+    public $desktop_max_count;
+    /** @var string */
+    public $link_all_caption;
+    /** @var string */
+    public $link_all_url;
     /** @var array */
     public $items = [];
     /** @var int */
@@ -41,7 +47,14 @@ class MenuForm extends BaseForm
             ],
             [
                 [
+                    'desktop_max_count',
+                ],
+                'integer',
+            ],
+            [
+                [
                     'caption',
+                    'link_all_caption',
                 ],
                 'string',
                 'max' => 255,
@@ -49,6 +62,7 @@ class MenuForm extends BaseForm
             [
                 [
                     'url',
+                    'link_all_url',
                 ],
                 'string',
                 'max' => 1024,
