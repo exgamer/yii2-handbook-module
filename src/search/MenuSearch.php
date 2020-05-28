@@ -32,7 +32,7 @@ class MenuSearch extends Menu
                 [
                     'caption',
                 ],
-                'safe',
+                'string',
             ],
         ];
     }

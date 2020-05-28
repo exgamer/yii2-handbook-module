@@ -26,7 +26,6 @@ use concepture\yii2logic\models\behaviors\JsonFieldsBehavior;
  * @property string $created_at
  * @property string $updated_at
  * @property string $is_deleted
- * @property string $sort
  *
  * @package concepture\yii2handbook\models
  * @author Poletaev Eugene <evgstn7@gmail.com>
@@ -142,7 +141,6 @@ class Menu extends ActiveRecord
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
             'is_deleted' => Yii::t('handbook','Удален'),
-            'sort' => Yii::t('handbook', 'Сортировка'),
         ];
     }
 }

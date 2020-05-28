@@ -43,6 +43,7 @@ class MenuService extends Service
     public function getPositionSortCondition($entity_type_position)
     {
         return function(ActiveQuery $query) use($entity_type_position) {
+            $query->addSelect('*');
             $entityTableName = trim($this->getTableName(), '{}');
             if(! $entity_type_position) {
                 $query->orderBy(["{$entityTableName}.id" => SORT_DESC]);
