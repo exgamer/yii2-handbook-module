@@ -52,4 +52,10 @@ return [
     'menuService' => [
         'class' => 'concepture\yii2handbook\services\MenuService'
     ],
+    'sourceMessageService' => [
+        'class' => 'concepture\yii2handbook\services\SourceMessageService'
+    ],
+    'messageService' => [
+        'class' => 'concepture\yii2handbook\services\MessageService'
+    ],
 ];
