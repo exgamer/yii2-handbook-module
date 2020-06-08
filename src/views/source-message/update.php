@@ -10,8 +10,27 @@ $this->setTitle(Yii::t('yii2admin', 'Редактирование'));
 $this->pushBreadcrumbs(['label' => Message::label(), 'url' => ['index']]);
 $this->pushBreadcrumbs($this->title);
 
+$this->registerJs(
+    '$(document).on("click", ".source-message-copy", function () {
+        let $form = $(this).closest(".tab-pane");
+        if ($form.length === 0) {
+            return;
+        }
+        let $firstInput = $form.find("input[type=\"text\"]").first();
+        if ($firstInput.length === 0) {
+            return;
+        }
+
+        let value = $firstInput.val();
+        $(this).parents(".input-group").find("input[type=\"text\"]").val(value);
+    });',
+    \yii\web\View::POS_END,
+    'source-message-copy-handler'
+);
+
 $saveButton = Html::saveButton();
 $saveRedirectButton = Html::saveRedirectButton();
+
 
 ?>
 
