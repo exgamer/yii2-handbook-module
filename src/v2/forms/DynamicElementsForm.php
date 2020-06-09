@@ -1,26 +1,29 @@
 <?php
 
-namespace concepture\yii2handbook\forms;
+namespace concepture\yii2handbook\v2\forms;
 
 use yii\validators\UrlValidator;
 use concepture\yii2handbook\enum\SettingsTypeEnum;
 use kamaelkz\yii2admin\v1\forms\BaseForm;
 
 /**
- * Форма динамических элементов
+ * Форма динамических элементов версия 2
  *
- * @author Olzhas Kulzhambekov <exgamer@live.ru>
+ * @author kamaelkz <kamaelkz@yandex.kz>
  */
 class DynamicElementsForm extends BaseForm
 {
     public $domain_id;
-    public $locale;
-    public $url;
-    public $url_md5_hash;
+    public $route;
+    public $route_hash;
+    public $route_params;
+    public $route_params_hash;
     public $name;
-    public $value;
     public $caption;
     public $type = SettingsTypeEnum::TEXT;
+    public $general = false;
+    public $multi_domain = true;
+    public $value;
 
     /**
      * @inheritDoc
@@ -35,13 +38,6 @@ class DynamicElementsForm extends BaseForm
                     'type'
                 ],
                 'required'
-            ],
-            [
-                [
-                    'url',
-                ],
-                UrlValidator::class,
-                'pattern' => '/^\/(([A-Z0-9][A-Z0-9_-]*)/i'
             ],
         ];
     }

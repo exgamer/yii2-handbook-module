@@ -1,14 +1,14 @@
 <?php
 
-namespace concepture\yii2handbook\search;
+namespace concepture\yii2handbook\v2\search;
 
 use yii\db\ActiveQuery;
-use concepture\yii2handbook\models\DynamicElements;
+use concepture\yii2handbook\v2\models\DynamicElements;
 
 /**
- * Поиск по динамическим элементам
+ * Поиск по динамическим элементам версия 2
  *
- * @author Olzhas Kulzhambekov <exgamer@live.ru>
+ * @author kamaelkz <kamaelkz@yandex.kz>
  */
 class DynamicElementsSearch extends DynamicElements
 {
@@ -21,21 +21,19 @@ class DynamicElementsSearch extends DynamicElements
                     [
                         [
                             'id',
-                            'domain_id',
-                            'locale',
                         ],
                         'integer'
                     ],
                     [
                         [
-                            'url',
+                            'route',
                             'name',
                         ],
                         'safe'
                     ],
                     [
                         [
-                            'url_md5_hash'
+                            'route_hash'
                         ],
                         'string',
                         'max' => 32
@@ -52,16 +50,9 @@ class DynamicElementsSearch extends DynamicElements
             'id' => $this->id
         ]);
         $query->andFilterWhere([
-            'domain_id' => $this->domain_id
-        ]);
-        $query->andFilterWhere([
-            'locale' => $this->locale
-        ]);
-        # todd: реализовать нормальный поиск
-        $query->andFilterWhere([
             'like',
-            'url',
-            $this->url
+            'route',
+            $this->route
         ]);
         $query->andFilterWhere([
             'like',
@@ -69,7 +60,7 @@ class DynamicElementsSearch extends DynamicElements
             $this->name
         ]);
         $query->andFilterWhere([
-            'url_md5_hash' => $this->url_md5_hash
+            'route_hash' => $this->route_hash
         ]);
     }
 }

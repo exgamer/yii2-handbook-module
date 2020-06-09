@@ -1,16 +1,19 @@
 <?php
 
-namespace concepture\yii2handbook\services;
+namespace concepture\yii2handbook\v2\services;
 
 use Yii;
 use yii\base\Event;
+use yii\base\Exception;
 use yii\db\ActiveQuery;
+use yii\helpers\Json;
 use yii\web\View;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\base\Model as YiiModel;
 use yii\base\InvalidConfigException;
-use concepture\yii2handbook\search\DynamicElementsSearch;
+use yii\db\Connection;
+use concepture\yii2handbook\v2\forms\DynamicElementsForm;
 use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
 use concepture\yii2logic\services\Service;
@@ -26,10 +29,10 @@ use concepture\yii2handbook\enum\DynamicElementsEnum;
 use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
 use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
-
+use concepture\yii2logic\enum\StatusEnum;
 
 /**
- * Сервис динамическх элементов
+ * Сервис динамическх элементов версия 2
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -98,6 +101,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private $currentUrlHash = null;
 
     /**
+     * @var array
+     */
+    private $routeData = [];
+
+    /**
      * @inheritDoc
      */
     public function init()
@@ -107,19 +115,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
-     * @return \concepture\yii2handbook\services\DomainService
+     * @return DynamicElementsPropertyService
      */
-    private function getDomainService()
+    private function getPropertyService()
     {
-        return Yii::$app->domainService;
-    }
-
-    /**
-     * @return \concepture\yii2handbook\services\LocaleService
-     */
-    private function getLocaleService()
-    {
-        return Yii::$app->localeService;
+        return Yii::$app->dynamicElementsPropertyService;
     }
 
     /**
@@ -194,22 +194,13 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);
-        $this->setCurrentLocale($form);
         parent::beforeCreate($form);
     }
 
     /**
-     * Метод для расширения find()
-     * !! ВНимание эти данные будут поставлены в find по умолчанию все всех случаях
-     *
-     * @param ActiveQuery $query
-     * @see \concepture\yii2logic\services\Service::extendFindCondition()
+     * @inheritDoc
      */
-    protected function extendQuery(ActiveQuery $query)
-    {
-        $this->applyDomain($query);
-//        $this->applyLocale($query);
-    }
+    protected function extendQuery(ActiveQuery $query) {}
 
     /**
      * Получение элементов
@@ -229,20 +220,18 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $dataSet = $this->getDataSet(null, $reset);
         $attribute = strtolower($name);
         # если такого элемента нет, заполняем массив для записи в бд
-        if(! isset($dataSet->{$attribute})) {
-            try {
-                $this->writeItems[$name] = [
-                    'url' => $this->getCurrentUrl($is_general),
-                    'url_md5_hash' => $this->getCurrentUlrHash($is_general),
-                    'domain_id' => $this->getDomainService()->getCurrentDomainId(),
-                    'locale' => $this->getLocaleService()->getCurrentLocaleId(),
-                    'type' => $type,
-                    'name' => $name,
-                    'value' => $value,
-                    'caption' => $caption,
-                    'is_general' => $is_general,
-                ];
-            } catch (\Exception $e) {}
+        if(! property_exists($dataSet, $attribute)) {
+            # todo: убрал отлов ошибок
+            $this->writeItems[$name] = [
+                'route' => $this->getCurrentRoute(),
+                'route_params' => $this->getCurrentRouteParams(),
+                'domain_id' => $this->domainService()->getCurrentDomainId(),
+                'type' => $type,
+                'name' => $name,
+                'value' => $value,
+                'caption' => $caption,
+                'general' => $is_general,
+            ];
 
             $event->value = $value;
             $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
@@ -299,7 +288,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @return SeoData|mixed
      * @throws InvalidConfigException
      */
-    public function getDataSet($model = null, $reset = false)
+    private function getDataSet($model = null, $reset = false)
     {
         static $dataSet;
 
@@ -308,8 +297,9 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         if($reset || ! $dataSet) {
+            $this->setRouteData();
             $dataSet = new SeoData();
-            $items = $this->getElementsForCurrentUrl($reset);
+            $items = $this->getCurrentElements($reset);
             foreach ($items as $item) {
                 $dataSet->setVirtualAttribute($item->name, $item->value);
                 $this->existsItems[$item->name] = $item->getAttributes();
@@ -320,7 +310,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         if ($model){
             $dataSet = DataLoadHelper::loadData($model, $dataSet, true);
         }
-
+        
         return $dataSet;
     }
 
@@ -330,7 +320,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @return array
      * @throws InvalidConfigException
      */
-    public function getElementsForCurrentUrl($reset = false)
+    public function getCurrentElements($reset = false)
     {
         static $items;
 
@@ -339,12 +329,12 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         $items = $this->getAllByCondition(function(ActiveQuery $query) {
-            $query->andWhere("url = '' OR url_md5_hash = :url_md5_hash",
-                [
-                    ':url_md5_hash' => $this->getCurrentUlrHash()
-                ]
-            );
-            $query->orderBy('is_general', 'url');
+            $query->andWhere([
+                'OR',
+                ['route_hash' => $this->getCurrentRouteHash()],
+                ['general' => 1]
+            ]);
+            $query->orderBy('general', 'route_hash');
         });
 
         return $items;
@@ -369,89 +359,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $query->andWhere(['is_general' => $is_general]);
             $query->orderBy('is_general', 'url_md5_hash, id');
         });
-    }
-
-    /**
-     * @deprecated
-     * @param DynamicElementsSearch $searchModel
-     * @return \yii\data\ActiveDataProvider
-     */
-    public function getDataProviderGroupByHash(DynamicElementsSearch $searchModel)
-    {
-        $condition = function(ActiveQuery $query) {
-            $query->select(['url_md5_hash', 'url', 'count(id) as hash_count']);
-            $query->groupBy('url_md5_hash, url');
-        };
-
-        return $this->getDataProvider([], [], $searchModel, null, $condition);
-    }
-
-    /**
-     * Возвращает текущий адрес страницы
-     *
-     * @param bool $is_general
-     *
-     * @return string
-     * @throws InvalidConfigException
-     */
-    private function getCurrentUrl($is_general = false)
-    {
-        static $result;
-
-        if($is_general) {
-            return '';
-        }
-
-        if($result) {
-            return $result;
-        }
-
-        $result = Yii::$app->getRequest()->getPathInfo();
-
-        // TODO обсудить с Илюхой, нужно на списках с пагинацией брать одни и те же элементы
-        if (array_key_exists('page', Yii::$app->getRequest()->getQueryParams())) {
-            $result = Url::toRoute(Yii::$app->requestedRoute);
-        }
-
-        $result = trim($result, '/');
-        # главная страница
-        if (! $result){
-            $result = "/";
-        }
-
-        return $result;
-    }
-
-    /**
-     * Возвращает хэш текущего адреса страницы
-     *
-     * @param bool $is_general
-     *
-     * @return string
-     */
-    public function getCurrentUlrHash($is_general = false)
-    {
-        if($this->currentUrlHash) {
-
-            return $this->currentUrlHash;
-        }
-
-        if($is_general) {
-
-            return md5('');
-        }
-
-        return md5($this->getCurrentUrl());
-    }
-
-    /**
-     * Установка хэша текущего урла страницы
-     *
-     * @param string $hash
-     */
-    public function setCurrentUlrHash($hash)
-    {
-        $this->currentUrlHash = $hash;
     }
 
     /**
@@ -521,14 +428,53 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function writeElements()
     {
-        $data = $this->writeItems;
-        if(! $data) {
-            return null;
-        }
+        $this->getDb()->transaction(function(Connection $db) {
+            $items = $this->writeItems;
+            if (!$items) {
+                return null;
+            }
 
-        $item = reset($data);
-        $fields = array_keys($item);
-        $this->batchInsert($fields, $data);
+            $records = [];
+            foreach ($items as $item) {
+                $form = new DynamicElementsForm();
+                $form->load($item, '');
+                if (!$form->validate()) {
+                    throw new Exception('Validation failed');
+                }
+
+                $result = $this->create($form);
+                if (!$result) {
+                    d($form->getErrors());
+                    throw new Exception('Dynamic element save failed');
+                }
+
+                $records[] = [
+                    'id' => $result->id,
+                    'value' => $result->value,
+                ];
+            }
+
+            $domains = $this->domainService()->getAllByCondition(function (ActiveQuery $query) {
+                $query->andWhere([
+                    'status' => StatusEnum::ACTIVE
+                ]);
+                $query->andWhere(['!=', 'id', $this->domainService()->getCurrentDomainId()]);
+            });
+
+            if ($records && $domains) {
+                $fileds = ['entity_id', 'domain_id', 'value'];
+                $rows = [];
+                foreach ($domains as $domain) {
+                    foreach ($records as $record) {
+                        $rows[] = [$record['id'], $domain->id, $record['value']];
+                    }
+                }
+
+                if ($rows) {
+                    $this->getPropertyService()->batchInsert($fileds, $rows);
+                }
+            }
+        });
     }
 
     /**
@@ -644,6 +590,8 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     /**
      * Замена урла элемента
      *
+     * @deprecated
+     *
      * @param string $fromUrl
      * @param string $toUrl
      * @return array
@@ -686,6 +634,69 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * Возвращает хэш текущего адреса страницы
+     *
+     * @return string
+     */
+    public function getCurrentRouteHash()
+    {
+        if($this->currentUrlHash) {
+
+            return $this->currentUrlHash;
+        }
+
+        return md5($this->getCurrentRoute());
+    }
+
+    /**
+     * Установка хэша текущего урла страницы
+     *
+     * @param string $hash
+     */
+    public function setCurrentRouteHash($hash)
+    {
+        $this->currentUrlHash = $hash;
+    }
+
+    /**
+     * Возвращает текущий роут
+     *
+     * @return string
+     */
+    private function getCurrentRoute($reset = false)
+    {
+        static $result;
+
+        if($result && ! $reset) {
+            return $result;
+        }
+
+        return $this->routeData['value'];
+    }
+
+    /**
+     * Возвращает параметры текущего роута
+     *
+     * @return string
+     */
+    private function getCurrentRouteParams()
+    {
+        return Json::encode($this->routeData['params']);
+    }
+
+    /**
+     * Установка данных роута
+     */
+    private function setRouteData()
+    {
+        $controller = Yii::$app->controller;
+        $this->routeData = [
+            'value' => "{$controller->id}/{$controller->action->id}",
+            'params' => $controller->actionParams
+        ];
+    }
+
+    /**
      * Ссылка на редактирование настроек
      *
      * @param integer|array $id
@@ -694,7 +705,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     private function getUpdateUrl($id)
     {
-        $domain = $this->getDomainService()->getCurrentDomain();
+        $domain = $this->domainService()->getCurrentDomain();
         $alias = null;
         if( isset($domain)) {
             $alias = $domain->alias;

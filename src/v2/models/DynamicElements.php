@@ -9,20 +9,22 @@ use concepture\yii2handbook\models\traits\DomainTrait;
 use concepture\yii2logic\models\traits\v2\property\HasDomainPropertyTrait;
 
 /**
- * Динамические элементы
+ * Динамические элементы версия 2
  *
  * @property integer $id
- * @property integer $domain_id
- * @property integer $locale
- * @property string $url
- * @property string $url_md5_hash
+ * @property string $route
+ * @property string $route_hash
+ * @property string $route_params
+ * @property string $route_params_hash
  * @property string $name
- * @property string $value
  * @property string $caption
  * @property integer $type
+ * @property boolean $general
+ * @property boolean $multi_domain
  * @property string $created_at
  * @property string $updated_at
- * @property boolean $is_general
+ * @property boolean $is_deleted
+ * @property integer $sort
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -32,14 +34,7 @@ class DynamicElements extends ActiveRecord
         HasDomainPropertyTrait;
 
     /**
-     * @var integer
-     */
-    public $hash_count;
-
-    /**
-     * @see \concepture\yii2logic\models\ActiveRecord:label()
-     *
-     * @return string
+     * @inheritDoc
      */
     public static function label()
     {
@@ -47,9 +42,7 @@ class DynamicElements extends ActiveRecord
     }
 
     /**
-     * @see \concepture\yii2logic\models\ActiveRecord:toString()
-     *
-     * @return string
+     * @inheritDoc
      */
     public function toString()
     {
@@ -57,7 +50,7 @@ class DynamicElements extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public static function tableName()
     {
@@ -65,22 +58,21 @@ class DynamicElements extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function rules()
     {
         return [
             [
                 [
-                    'domain_id',
-                    'locale',
                     'type',
                 ],
                 'integer'
             ],
             [
                 [
-                    'is_general'
+                    'general',
+                    'multi_domain',
                 ],
                 'boolean'
             ],
@@ -97,27 +89,45 @@ class DynamicElements extends ActiveRecord
                     'value',
                 ],
                 'string',
+                'max' => 512
             ],
             [
                 [
-                    'url',
+                    'route',
+                    'route_params'
                 ],
                 'string',
-                'max'=>256
+                'max'=>1024
             ],
             [
                 [
-                    'url_md5_hash',
+                    'route_hash',
                 ],
                 MD5Validator::class,
-                'source' => 'url'
+                'source' => 'route'
             ],
             [
                 [
-                    'url_md5_hash'
+                    'route_params_hash',
+                ],
+                MD5Validator::class,
+                'source' => 'route_params',
+                'skipOnEmpty' => false
+            ],
+            [
+                [
+                    'route_hash',
+                    'route_params_hash',
+                ],
+                'string',
+                'max' => 32
+            ],
+            [
+                [
+                    'route_hash'
                 ],
                 'unique',
-                'targetAttribute' => ['url_md5_hash', 'name', 'domain_id']
+                'targetAttribute' => ['route_hash', 'route_params_hash', 'name']
             ]
         ];
     }
@@ -126,17 +136,18 @@ class DynamicElements extends ActiveRecord
     {
         return [
             'id' => Yii::t('handbook','#'),
-            'domain_id' => Yii::t('handbook','Домен'),
-            'locale' => Yii::t('handbook','Язык'),
-            'url' => Yii::t('handbook','Адрес страницы'),
-            'url_md5_hash' => Yii::t('handbook','md5 url страницы'),
+            'route' => Yii::t('handbook','Роут'),
+            'route_params' => Yii::t('handbook','Параметры роута'),
+            'route_hash' => Yii::t('handbook','Хэш роута'),
             'name' => Yii::t('handbook','Ключ'),
-            'value' => Yii::t('handbook','Значение'),
             'caption' => Yii::t('handbook','Наименование'),
+            'value' => Yii::t('handbook','Значение'),
             'type' => Yii::t('handbook','Тип'),
+            'general' => Yii::t('handbook','Общий'),
+            'multi_domain' => Yii::t('handbook','Мульти доменный'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
-            'hash_count' => Yii::t('handbook','Количество'),
+            'sort' => Yii::t('handbook','Позиция сортировки'),
         ];
     }
 }

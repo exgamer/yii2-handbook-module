@@ -31,6 +31,9 @@ return [
     'dynamicElementsService' => [
         'class' => 'concepture\yii2handbook\services\DynamicElementsService'
     ],
+    'dynamicElementsPropertyService' => [
+        'class' => 'concepture\yii2handbook\v2\services\DynamicElementsPropertyService'
+    ],
     'tagsService' => [
         'class' => 'concepture\yii2handbook\services\TagsService'
     ],

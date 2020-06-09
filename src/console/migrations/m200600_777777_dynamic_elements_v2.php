@@ -26,8 +26,10 @@ class m200600_777777_dynamic_elements_v2 extends Migration
             $this->getTableName(),
             [
                 'id' => $this->bigPrimaryKey(),
-                'route' => $this->string(2048)->notNull(),
+                'route' => $this->string(1024)->notNull(),
                 'route_hash' => $this->string(32)->notNull(),
+                'route_params' => $this->string(1024),
+                'route_params_hash' => $this->string(32),
                 'name' => $this->string(512)->notNull(),
                 'caption' => $this->string(512)->notNull(),
                 'type' => $this->smallInteger()->defaultValue(0),
@@ -43,7 +45,9 @@ class m200600_777777_dynamic_elements_v2 extends Migration
 
         $sql = "CREATE INDEX index_route_hash_{$this->getTableName()} ON {$this->getTableName()} (`route_hash`) USING HASH";
         $this->execute($sql);
-        $this->addIndex(['name', 'route_hash']);
+        $sql = "CREATE INDEX index_route_params_hash_{$this->getTableName()} ON {$this->getTableName()} (`route_params_hash`) USING HASH";
+        $this->execute($sql);
+        $this->addIndex(['name', 'route_hash', 'route_params_hash'], true);
         $this->addIndex(['is_deleted']);
         $this->addIndex(['sort']);
         $this->addIndex(['type']);
