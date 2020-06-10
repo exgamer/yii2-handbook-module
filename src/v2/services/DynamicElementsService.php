@@ -558,7 +558,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $class = "{$class} general";
         }
 
-        if($this->dto->multi_domain == false) {
+        if($this->dto->multi_domain === false) {
             $class = "{$class} multi_domain";
         }
 
