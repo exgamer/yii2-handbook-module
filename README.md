@@ -102,10 +102,15 @@ return [
     - и после всего будут учтены элементы для текущего URL
         
 - Расширение для твига - в конфигурацию твига добавить расширение:
-    
     ```php
         ...
           'extensions' => 'concepture\yii2handbook\twig\DynamicElementsExtension'
+        ...
+    ```
+    v2
+    ```php
+        ...
+          'extensions' => 'concepture\yii2handbook\v2\twig\DynamicElementsExtension'
         ...
     ```
 - Пример
@@ -113,6 +118,14 @@ return [
         {{ de(de_constant('SettingsTypeEnum::TEXT'), de_constant('SeoSettingEnum::TITLE'), 'Главная страница', 'Заголовок главной страницы') }}
         {{ de(de_constant('SettingsTypeEnum::TEXT_AREA'), 'MY_TEXT_AREA', 'Произвольный текст', 'Некий текст') }}
         {{ de(de_constant('SettingsTypeEnum::TEXT_EDITOR'), 'MY_EDITOR', 'Произвольный текст', 'Некий текст 2') }}
+    ```
+    v2
+    ```twig
+        {{ de(de_const('Type::TEXT'), de_const('Name::TITLE'), 'Title', {'value' : 'Index title', 'no_control' : true}) }}
+        {{ de(de_const('Type::TEXT_AREA'), de_const('Name::DESCRIPTION') , 'Description', {'value' : 'Index descriptions', 'no_control' : true}) }}
+        {{ de(de_const('Type::TEXT_AREA'), de_const('Name::KEYWORDS'), 'Keywords', {'value' : 'Index keywords', 'no_control' : true}) }}
+        {{ de(de_const('Type::TEXT'), 'TEST_MULTIPLE_DOMAIN', 'Test multiple domain', {'value' : 'Test multiple domain', 'multi_domain' : false}) }}
+        {{ de(de_const('Type::TEXT'), 'TEST_MULTIPLE_DOMAIN_2', 'Test multiple domain', {'value' : 'Test multiple domain', 'general' : true, 'multi_domain' : false}) }}
     ```
 - Консольные команды
     - Подключение (например console\config\main.php)
