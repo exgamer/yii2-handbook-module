@@ -13,23 +13,24 @@ use yii\helpers\Html;
 use yii\base\Model as YiiModel;
 use yii\base\InvalidConfigException;
 use yii\db\Connection;
-use concepture\yii2handbook\v2\forms\DynamicElementsForm;
-use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2logic\helpers\DataLoadHelper;
 use concepture\yii2logic\services\Service;
 use concepture\yii2logic\services\events\modify\AfterModifyEvent;
 use concepture\yii2logic\services\events\modify\AfterBatchInsertEvent;
+use concepture\yii2logic\forms\Model;
+use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
+use concepture\yii2logic\enum\StatusEnum;
+use concepture\yii2handbook\v2\forms\DynamicElementsForm;
+use concepture\yii2handbook\datasets\SeoData;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServices;
 use concepture\yii2handbook\services\traits\ReadSupportTrait;
 use concepture\yii2handbook\services\traits\ModifySupportTrait;
-use concepture\yii2logic\forms\Model;
-use concepture\yii2logic\services\traits\ReadSupportTrait as CoreReadSupportTrait;
-use concepture\yii2handbook\forms\DynamicElementsMultipleForm;
-use concepture\yii2handbook\enum\DynamicElementsEnum;
+use concepture\yii2handbook\v2\forms\DynamicElementsMultipleForm;
+use concepture\yii2handbook\v2\enum\DynamicElementsNameEnum;
 use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
 use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
-use concepture\yii2logic\enum\StatusEnum;
+use concepture\yii2handbook\v2\dto\DynamicElementDto;
 
 /**
  * Сервис динамическх элементов версия 2
@@ -106,12 +107,18 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private $routeData = [];
 
     /**
+     * @var DynamicElementDto
+     */
+    private $dto;
+
+    /**
      * @inheritDoc
      */
     public function init()
     {
         parent::init();
         $this->view = \Yii::$app->getView();
+        $this->dto = DynamicElementDto::instance();
     }
 
     /**
@@ -209,43 +216,86 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @param string $name
      * @param string $value
      * @param string $caption
+     * @param array $options
      *
      * @return string
      */
-    public function getElements(int $type, string $name, string $caption, $value = '', $is_general = false)
+    public function getElement(int $type, string $name, string $caption, $options)
     {
-        $event = $this->elementsGetEvent($type, $name, $caption, $value, $is_general);
+        $this->dto->name = $name;
+        $this->dto->caption = $caption;
+        $this->applyOptions($options);
+        $this->dto->key = "{$this->getCurrentRoutePrefix()}_{$this->dto->name}";
+        $event = $this->elementsGetEvent($type, $this->dto->key, $this->dto->caption, $this->dto->value, $this->dto->general);
         $this->trigger(static::EVENT_BEFORE_GET_ELEMENT, $event);
         $reset = (! Yii::$app instanceof \yii\web\Application);
         $dataSet = $this->getDataSet(null, $reset);
-        $attribute = strtolower($name);
         # если такого элемента нет, заполняем массив для записи в бд
-        if(! property_exists($dataSet, $attribute)) {
+        if(! property_exists($dataSet, strtolower($this->dto->key))) {
             # todo: убрал отлов ошибок
-            $this->writeItems[$name] = [
+            $this->writeItems[$this->dto->key] = [
                 'route' => $this->getCurrentRoute(),
                 'route_params' => $this->getCurrentRouteParams(),
                 'domain_id' => $this->domainService()->getCurrentDomainId(),
                 'type' => $type,
-                'name' => $name,
-                'value' => $value,
-                'caption' => $caption,
-                'general' => $is_general,
+                'name' => $this->dto->key,
+                'value' => $this->dto->value,
+                'caption' => $this->dto->caption,
+                'general' => $this->dto->general,
+                'multi_domain' => $this->dto->multi_domain
             ];
 
-            $event->value = $value;
+            $event->value = $this->dto->value;
             $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
 
-            return $event->value;
+            return $this->elementValue();
         }
 
-        $event->value = ( $dataSet->{$attribute} ?? null);
+        $event->value = ( $dataSet->{strtolower($this->dto->key)} ?? null);
         $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
-        if(isset($this->modelStack[$name])) {
-            $this->callStack[$name] = $this->modelStack[$name]['id'];
+        if(isset($this->modelStack[$this->dto->key])) {
+            $this->callStack[$this->dto->key] = $this->modelStack[$this->dto->key]['id'];
         }
 
-        return $event->value;
+        return $this->elementValue();
+    }
+
+    /**
+     * Установка настроек элемента
+     *
+     * @param array $options
+     */
+    private function applyOptions($options)
+    {
+        $this->dto->value = $options['value'] ?? '';
+        $this->dto->general = $options['general'] ?? false;
+        $this->dto->no_control = $options['no_control'] ?? false;
+        $this->dto->multi_domain = $options['multi_domain'] ?? true;
+    }
+
+    /**
+     * Возвращает значение элемента
+     *
+     * @param string $key
+     * @param string $name
+     * @param string $caption
+     * @param string $value
+     * @param boolean $general
+     * @param boolean $no_control
+     * @return string|null
+     */
+    private function elementValue()
+    {
+        # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
+        if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
+            return null;
+        }
+
+        if($this->dto->no_control) {
+            return $this->dto->value;
+        }
+
+        return $this->dynamicElementsService()->getManageControl();
     }
 
     /**
@@ -260,15 +310,18 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $event->data = $data;
         $this->trigger(static::EVENT_BEFORE_APPLY, $event);
         if(! $model && ! $this->title ) {
-            $this->title = ( $data->seo_title ?? $data->title ?? $this->view->title);
+            $title = $data->{strtolower($this->getCurrentRoutePrefix()) . "_title"} ?? null;
+            $this->title = ( $data->seo_title ?? $title ?? $this->view->title);
         }
 
         if($model) {
             $this->title = $data->seo_title ?? $model->{$titleAttribute};
         }
 
-        $this->description = $data->seo_description ?? $data->description ?? null;
-        $this->keywords = $data->seo_keywords ?? $data->keywords ?? null;
+        $description = $data->{strtolower($this->getCurrentRoutePrefix()) . "_description"} ?? null;
+        $this->description = $data->seo_description ?? $description ?? null;
+        $keywords = $data->{strtolower($this->getCurrentRoutePrefix()) . "_keywords"} ?? null;
+        $this->keywords = $data->seo_keywords ?? $keywords ?? null;
 
         if(null !== $data->seo_h1) {
             $this->heading = $data->seo_h1;
@@ -310,7 +363,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         if ($model){
             $dataSet = DataLoadHelper::loadData($model, $dataSet, true);
         }
-        
+
         return $dataSet;
     }
 
@@ -372,6 +425,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $ids = [];
         $formData = [];
         $index = 0;
+        $domain_id = $form->domain_id;
         $attributes = $form->getAttributes();
         foreach ($attributes as $key => $value) {
             if($key === 'ids') {
@@ -380,13 +434,18 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 continue;
             }
 
-            $formData[] = [$form->ids[$index] ,$value];
+            if($key === 'domain_id') {
+                continue;
+            }
+
+            $formData[] = [$form->ids[$index] ,$domain_id, $value];
             $index ++;
         }
         # находим исходные элементы и проверяем изменялись они или нет
-        $items = $this->getAllByCondition(function( ActiveQuery $query ) use ($ids) {
-            $query->addSelect(['id', 'value']);
+        $items = $this->getAllByCondition(function( ActiveQuery $query ) use ($ids, $domain_id) {
+            $query->addSelect(['id', 'p.value']);
             $query->andWhere(['id' => $ids]);
+            $query->applyPropertyUniqueValue($domain_id);
             $query->asArray();
             $query->indexBy('id');
         });
@@ -407,7 +466,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return true;
         }
 
-        return $this->batchInsert(['id', 'value'], $insertData);
+        return $this->getPropertyService()->batchInsert(['entity_id', 'domain_id', 'value'], $insertData);
     }
 
     /**
@@ -439,18 +498,20 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 $form = new DynamicElementsForm();
                 $form->load($item, '');
                 if (!$form->validate()) {
+                    Yii::warning($form->getErrors());
                     throw new Exception('Validation failed');
                 }
 
                 $result = $this->create($form);
                 if (!$result) {
-                    d($form->getErrors());
+                    Yii::warning($form->getErrors());
                     throw new Exception('Dynamic element save failed');
                 }
 
                 $records[] = [
                     'id' => $result->id,
                     'value' => $result->value,
+                    'multi_domain' => $result->multi_domain
                 ];
             }
 
@@ -466,6 +527,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 $rows = [];
                 foreach ($domains as $domain) {
                     foreach ($records as $record) {
+                        if(! $record['multi_domain']) {
+                            continue;
+                        }
+
                         $rows[] = [$record['id'], $domain->id, $record['value']];
                     }
                 }
@@ -478,44 +543,34 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
-     * Возвращает элемент управления элементами
-     *
-     * @param string $name
-     * @param string $caption
-     * @param string $value
-     * @param boolean $is_general
+     * Возвращает элемент управления элементом
      */
-    public function getManageControl($name, $caption, $value = '', $is_general = false)
+    public function getManageControl()
     {
-        # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
-        if(in_array($name, DynamicElementsEnum::values())) {
-            return null;
-        }
-
         $id = null;
-        if(isset($this->modelStack[$name])) {
-            $id = $this->modelStack[$name]['id'];
+        if(isset($this->modelStack[$this->dto->key])) {
+            $id = $this->modelStack[$this->dto->key]['id'];
         }
 
         if(! $id || ! $this->canManage()) {
-            return $value;
+            return $this->dto->value;
         }
 
         $interactiveMode = $this->getInteractiveMode();
 
         $class = 'yii2-handbook-dynamic-elements-manage-control ' . ($interactiveMode ? 'yii2-handbook-dynamic-elements-interactive-mode' : null);
-        if($is_general) {
+        if($this->dto->general) {
             $class = "{$class} general";
         }
 
         return Html::tag(
             'span',
-            $value,
+            $this->dto->value,
             [
                 'class' => $class,
                 'data-url' => $this->getUpdateUrl($id),
-                'data-title' => $caption,
-                'is_general' => $is_general,
+                'data-title' => $this->dto->caption,
+                'is_general' => $this->dto->general,
             ]
         );
     }
@@ -536,7 +591,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $ids[] = $model->id;
         }
 
-        echo $this->view->render('@concepture/yii2handbook/views/dynamic-elements/include/manage_panel', [
+        echo $this->view->render('@concepture/yii2handbook/v2/views/dynamic-elements/_manage_panel', [
             'url' => $this->getUpdateUrl($ids),
             'count' => count($this->existsItems),
             'interactiveMode' => $this->getInteractiveMode()
@@ -665,12 +720,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     private function getCurrentRoute($reset = false)
     {
-        static $result;
-
-        if($result && ! $reset) {
-            return $result;
-        }
-
         return $this->routeData['value'];
     }
 
@@ -685,12 +734,29 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * Возвращает префикс ключа
+     *
+     * @param boolean $general
+     *
+     * @return string
+     */
+    private function getCurrentRoutePrefix()
+    {
+        if($this->dto->general) {
+            return 'GENERAL';
+        }
+
+        return strtoupper($this->routeData['prefix']);
+    }
+
+    /**
      * Установка данных роута
      */
     private function setRouteData()
     {
         $controller = Yii::$app->controller;
         $this->routeData = [
+            'prefix' => "{$controller->id}_{$controller->action->id}",
             'value' => "{$controller->id}/{$controller->action->id}",
             'params' => $controller->actionParams
         ];
@@ -705,23 +771,19 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     private function getUpdateUrl($id)
     {
-        $domain = $this->domainService()->getCurrentDomain();
-        $alias = null;
-        if( isset($domain)) {
-            $alias = $domain->alias;
-        }
+        $domain_id = $this->domainService()->getCurrentDomainId();
 
         if(is_array($id)) {
             $url = [
                 'admin/handbook/dynamic-elements/update-multiple',
                 'ids' => implode(',', $id),
-                'domainAlias' => $alias
+                'domain_id' => $domain_id
             ];
         } else {
             $url = [
                 'admin/handbook/dynamic-elements/update',
                 'id' => $id,
-                'domainAlias' => $alias
+                'domain_id' => $domain_id
             ];
         }
 

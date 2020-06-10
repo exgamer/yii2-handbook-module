@@ -49,13 +49,9 @@ class DynamicElementsExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'de',
-                function($type, $name, $caption, $value = '', $is_general = false, $no_controls = false) {
-                    $value = $this->dynamicElementsService()->getElements($type, $name, $caption, $value, $is_general);
-                    if ($no_controls){
-                        return $value;
-                    }
+                function($type, $name, $caption, $options = []) {
+                    return $this->dynamicElementsService()->getElement($type, $name, $caption, $options);
 
-                    return $this->dynamicElementsService()->getManageControl($name, $caption, $value, $is_general);
                 },
                 [
                     'is_safe' => [
@@ -64,10 +60,10 @@ class DynamicElementsExtension extends AbstractExtension
                 ]
             ),
             new TwigFunction(
-                'de_constant',
+                'de_const',
                 function($value) {
                     list($class, $constant) = explode('::', $value);
-                    $namespace = "concepture\\yii2handbook\\v2\\enum\\{$class}";
+                    $namespace = "concepture\\yii2handbook\\v2\\enum\\DynamicElements{$class}Enum";
                     $hash = md5($namespace);
                     if(! isset($this->constants[$hash])) {
                         $reflection = new \ReflectionClass($namespace);

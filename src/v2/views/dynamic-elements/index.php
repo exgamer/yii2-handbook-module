@@ -54,15 +54,11 @@ $this->pushBreadcrumbs($this->title);
                     'update'=> function ($url, $model) {
                         return Html::a(
                             '<i class="icon-pencil6"></i>',
-                            null,
+                            Url::to(['update', 'id' => $model['id'], 'domain_id' => $model['domain_id']]),
                             [
-                                'data-url' => Url::to(['update', 'id' => $model['id']]),
-                                'class' => 'list-icons-item magic-modal-control',
-                                'aria-label' => Yii::t('yii2admin', 'Редактирование'),
+                                'class' => 'list-icons-item',
                                 'title' => Yii::t('yii2admin', 'Редактирование'),
                                 'data-pjax' => '0',
-                                'data-modal-size' => 'modal-lg',
-                                'data-callback' => 'function(){callbackHelper.reloadPjax("#list-pjax")}'
                             ]
                         );
                     },

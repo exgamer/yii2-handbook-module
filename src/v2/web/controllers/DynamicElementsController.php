@@ -146,43 +146,38 @@ class DynamicElementsController extends Controller
      * @return string|\yii\web\Response
      * @throws \Exception
      */
-    public function actionUpdate($id, $domainAlias = null)
+    public function actionUpdate($id, $domain_id)
     {
-        if($domainAlias && $domainAlias !== $this->getDomainService()->getCookie()) {
-            $this->getDomainService()->setCookie($domainAlias);
-
-            return $this->redirect(['update', 'id' => $id], 301);
-        }
-
         $service = $this->getService();
-        $originModel = $service->findById($id);
-        if (! $originModel){
+        $model = $service->getOneByCondition(function(ActiveQuery $query) use($id, $domain_id) {
+            $query->andWhere(['id' => $id]);
+            $query->applyPropertyUniqueValue($domain_id);
+        });
+        if (! $model){
             throw new NotFoundHttpException();
         }
 
-        $model = $service->getRelatedForm();
-        $model->setAttributes($originModel->attributes, false);
-        if (method_exists($model, 'customizeForm')) {
-            $model->customizeForm($originModel);
+        $form = $service->getRelatedForm();
+        $form->setAttributes($model->attributes, false);
+        if (method_exists($form, 'customizeForm')) {
+            $form->customizeForm($model);
         }
 
-        if ($model->load(Yii::$app->request->post())) {
-            $originModel->setAttributes($model->attributes);
-            if ($model->validate(null, true, $originModel)) {
-                if (($result = $service->update($model, $originModel)) != false) {
-
-                    if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
-                        return $this->redirect(['index']);
-                    }
+        if ($form->load(Yii::$app->request->post()) && $model->validate()) {
+            if (($result = $service->update($form, $model)) != false) {
+                if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
+                    return $this->redirect(['index']);
                 }
             }
-
-            $model->addErrors($originModel->getErrors());
         }
 
+        $domainsData = $this->domainService()->getModelDomains($model);
+
         return $this->render('update', [
-            'model' => $model,
-            'originModel' => $originModel,
+            'model' => $form,
+            'originModel' => $model,
+            'domain_id' => $domain_id,
+            'domainsData' => $domainsData
         ]);
     }
 
@@ -192,29 +187,26 @@ class DynamicElementsController extends Controller
      * @param string $ids
      * @param string $domainAlias
      */
-    public function actionUpdateMultiple($ids, $domainAlias = null)
+    public function actionUpdateMultiple($ids, $domain_id)
     {
-        if($domainAlias && $domainAlias !== $this->getDomainService()->getCookie()) {
-            $this->getDomainService()->setCookie($domainAlias);
-
-            return $this->redirect(['update', 'hash' => $hash], 301);
-        }
-
         $form = new DynamicElementsMultipleForm();
+        $stringIds = $ids;
         $ids = explode(',', $ids);
         if(! $ids || ! is_array($ids)) {
             throw new BadRequestHttpException('Bad Request');
         }
 
-        $items = $this->dynamicElementsService()->getAllByCondition(function(ActiveQuery $query) use($ids) {
+        $items = $this->dynamicElementsService()->getAllByCondition(function(ActiveQuery $query) use($ids, $domain_id) {
             $query->andWhere(['id' => $ids]);
-            $query->orderBy('is_general', 'id');
+            $query->applyPropertyUniqueValue($domain_id);
+            $query->orderBy('general', 'id');
         });
         foreach ($items as $item) {
             $form->setVirtualAttribute($item->name, $item->value);
             $form->setStringValidator($item->name, $item->caption);
         }
 
+        $form->domain_id = $domain_id;
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             $this->dynamicElementsService()->updateMultiple($form);
 
@@ -223,9 +215,14 @@ class DynamicElementsController extends Controller
             }
         }
 
+        $domainsData = $this->domainService()->getDomainsData();
+
         return $this->render('update-multiple', [
             'items' => $items,
             'model' => $form,
+            'domain_id' => $domain_id,
+            'ids' => $stringIds,
+            'domainsData' => $domainsData
         ]);
     }
 

@@ -15,7 +15,7 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
 <?php endif;?>
 
 <?php if ($originModel->type == SettingsTypeEnum::TEXT_EDITOR) : ?>
-    <?= $this->render('/include/_editor.php', [
+    <?= $this->render('@concepture/yii2handbook/views/include/_editor.php', [
         'form' => $form,
         'model' => $model,
         'attribute' => $attribute,

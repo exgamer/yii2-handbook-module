@@ -107,6 +107,47 @@ class DomainService extends Service
         return $result;
     }
 
+
+    /**
+     * Возвращает домены для которых есть свойства у модели
+     *
+     * @param $model
+     * @param string $propsRelationName
+     * @return array
+     */
+    public function getModelDomains($model = null, $propsRelationName = 'properties')
+    {
+
+        static $items = null;
+
+        $result = $this->getDomainsData();
+        if (! $items){
+            $items = $this->modelsCatalog();
+        }
+
+        if (! $model){
+            return $result;
+        }
+
+        $res = [];
+        $method = "get" . ucfirst($propsRelationName);
+        $query = $model->{$method}();
+        unset($query->where['domain_id']);
+        $models = $query->all();
+        if ($models) {
+            foreach ($models as $property) {
+                $domain = $items[$property->domain_id] ?? null;
+                if (! $domain){
+                    continue;
+                }
+
+                $res[$property->domain_id] = $result[$property->domain_id];
+            }
+        }
+
+        return $res;
+    }
+
     /**
      * Возвращает данные по текущему домену
      *
