@@ -248,10 +248,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $event->value = $this->dto->value;
             $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
 
-            return $this->elementValue();
+            return $this->elementValue($event->value);
         }
 
-        $event->value = ( $dataSet->{strtolower($this->dto->key)} ?? null);
+        $value = ($dataSet->{strtolower($this->dto->key)} ?? null);
+        $event->value = $this->dto->value = $value;
         $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
         if(isset($this->modelStack[$this->dto->key])) {
             $this->callStack[$this->dto->key] = $this->modelStack[$this->dto->key]['id'];
@@ -276,12 +277,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     /**
      * Возвращает значение элемента
      *
-     * @param string $key
-     * @param string $name
-     * @param string $caption
-     * @param string $value
-     * @param boolean $general
-     * @param boolean $no_control
      * @return string|null
      */
     private function elementValue()
@@ -489,7 +484,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     {
         $this->getDb()->transaction(function(Connection $db) {
             $items = $this->writeItems;
-            if (!$items) {
+            if (! $items) {
                 return null;
             }
 
@@ -563,6 +558,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $class = "{$class} general";
         }
 
+        if($this->dto->multi_domain == false) {
+            $class = "{$class} multi_domain";
+        }
+
         return Html::tag(
             'span',
             $this->dto->value,
@@ -570,7 +569,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 'class' => $class,
                 'data-url' => $this->getUpdateUrl($id),
                 'data-title' => $this->dto->caption,
-                'is_general' => $this->dto->general,
             ]
         );
     }
