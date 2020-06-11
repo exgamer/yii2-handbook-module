@@ -124,7 +124,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     /**
      * @return DynamicElementsPropertyService
      */
-    private function getPropertyService()
+    public function getPropertyService()
     {
         return Yii::$app->dynamicElementsPropertyService;
     }
@@ -754,7 +754,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     {
         $controller = Yii::$app->controller;
         $prefix = str_replace('-', '_', "{$controller->id}_{$controller->action->id}");
-        $value = str_replace('-', '_', "{$controller->id}/{$controller->action->id}");
+        $value = "{$controller->id}/{$controller->action->id}";
         $this->routeData = [
             'prefix' => $prefix,
             'value' => $value,
