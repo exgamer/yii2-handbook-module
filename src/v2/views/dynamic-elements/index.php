@@ -54,7 +54,7 @@ $this->pushBreadcrumbs($this->title);
                     'update'=> function ($url, $model) {
                         return Html::a(
                             '<i class="icon-pencil6"></i>',
-                            Url::to(['update', 'id' => $model['id'], 'domain_id' => $model['domain_id']]),
+                            ['update', 'id' => $model['id'], 'domain_id' => $model['domain_id']],
                             [
                                 'class' => 'list-icons-item',
                                 'title' => Yii::t('yii2admin', 'Редактирование'),

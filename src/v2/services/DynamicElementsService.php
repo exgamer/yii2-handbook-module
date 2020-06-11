@@ -753,9 +753,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private function setRouteData()
     {
         $controller = Yii::$app->controller;
+        $prefix = str_replace('-', '_', "{$controller->id}_{$controller->action->id}");
+        $value = str_replace('-', '_', "{$controller->id}/{$controller->action->id}");
         $this->routeData = [
-            'prefix' => "{$controller->id}_{$controller->action->id}",
-            'value' => "{$controller->id}/{$controller->action->id}",
+            'prefix' => $prefix,
+            'value' => $value,
             'params' => $controller->actionParams
         ];
     }
