@@ -119,6 +119,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         parent::init();
         $this->view = \Yii::$app->getView();
         $this->dto = DynamicElementDto::instance();
+        $this->setRouteData();
     }
 
     /**
@@ -345,7 +346,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         if($reset || ! $dataSet) {
-            $this->setRouteData();
             $dataSet = new SeoData();
             $items = $this->getCurrentElements($reset);
             foreach ($items as $item) {
@@ -753,6 +753,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private function setRouteData()
     {
         $controller = Yii::$app->controller;
+        if(! $controller) {
+            return;
+        }
+        
         $prefix = str_replace('-', '_', "{$controller->id}_{$controller->action->id}");
         $value = "{$controller->id}/{$controller->action->id}";
         $this->routeData = [
