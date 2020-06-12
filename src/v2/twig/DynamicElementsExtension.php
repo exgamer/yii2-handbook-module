@@ -28,7 +28,7 @@ class DynamicElementsExtension extends AbstractExtension
         $view->on(View::EVENT_BEGIN_PAGE, function() {
             return $this->dynamicElementsService()->apply();
         });
-        $view->on(View::EVENT_END_BODY, function() {
+        $view->on(View::EVENT_END_PAGE, function() {
             return $this->dynamicElementsService()->writeElements();
         });
         $view->on(View::EVENT_END_BODY, [$this->dynamicElementsService(), 'renderManagePanel']);
