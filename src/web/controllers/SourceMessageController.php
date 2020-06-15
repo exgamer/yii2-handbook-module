@@ -87,12 +87,20 @@ class SourceMessageController extends BaseController
     public function actionUpdate($id)
     {
         $form = new MessageMultipleForm();
-        $items = $this->getMessageService()->getAllByCondition(function(ActiveQuery $query) use($id) {
+
+        $domainMapCountries = \Yii::$app->domainService->getDomainMapAttributes('country');
+        $countries = $this->countryService()->getAllByCondition(function(ActiveQuery $query) use ($domainMapCountries) {
+            $query->andWhere(['in', 'iso', $domainMapCountries]);
+            $query->indexBy('iso');
+        });
+
+        $items = $this->getMessageService()->getAllByCondition(function(ActiveQuery $query) use($id, $countries) {
             $query->select([
                 "*",
                 new Expression("CASE WHEN language ='ru' THEN 1 ELSE -1 END as priority")
             ]);
             $query->andWhere(['id' => (int) $id]);
+            $query->andWhere(['in', 'language', ArrayHelper::getColumn($countries, 'iso')]);
             $query->orderBy(['priority' => SORT_DESC,'id' => SORT_DESC]);
             $query->indexBy('language');
         });
@@ -112,10 +120,6 @@ class SourceMessageController extends BaseController
 
             return $this->responseNotify();
         }
-
-        $countries = $this->countryService()->getAllByCondition(function(ActiveQuery $query) {
-            $query->indexBy('iso');
-        });
 
         $itemsByLanguage = [];
         $domainMap = \Yii::$app->domainService->getDomainMap();

@@ -57,7 +57,8 @@ class SourceMessage extends ActiveRecord
      */
     public function getMessages()
     {
-        return $this->hasMany(Message::class, ['id' => 'id']);
+        $countries = \Yii::$app->domainService->getDomainMapAttributes('country');
+        return $this->hasMany(Message::class, ['id' => 'id'])->andWhere(['in', 'language', $countries]);
     }
 
     /**
