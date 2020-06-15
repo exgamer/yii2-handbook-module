@@ -127,6 +127,9 @@ class SourceMessageController extends BaseController
 
         foreach ($countryLanguage as $lang => $item) {
             foreach ($item as $iso) {
+                if (!isset($items[$iso])) {
+                    continue;
+                }
                 $itemsByLanguage[$lang][] = $items[$iso];
             }
         }
