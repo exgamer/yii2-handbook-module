@@ -177,6 +177,9 @@ class MessageController extends Base
         }
 
         foreach ($langMessages as $language => $messages) {
+            if (!in_array($language, $this->config['languages'])) {
+                continue;
+            }
             $dir = $this->config['messagePath'] . DIRECTORY_SEPARATOR . $language;
             if (!is_dir($dir) && !@mkdir($dir)) {
                 throw new Exception("Directory '{$dir}' can not be created.");
@@ -340,6 +343,9 @@ class MessageController extends Base
         $currentLanguages = [];
         $rows = (new Query())->select(['language'])->from($messageTable)->groupBy('language')->all($db);
         foreach ($rows as $row) {
+            if (!in_array($row['language'], $languages)) {
+                continue;
+            }
             $currentLanguages[] = $row['language'];
         }
         $missingLanguages = [];
