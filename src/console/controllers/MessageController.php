@@ -189,6 +189,10 @@ class MessageController extends Base
         }
 
         foreach ($langMessages as $language => $messages) {
+            if (!in_array($language, $this->config['languages'])) {
+                continue;
+            }
+            
             $dir = $this->config['messagePath'] . DIRECTORY_SEPARATOR . $language;
             $file = str_replace('\\', '/', "$dir/$catalog.po");
             $this->convertPoToMoFile($file, $dir, $catalog);
