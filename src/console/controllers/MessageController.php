@@ -443,6 +443,35 @@ class MessageController extends Base
             }
         }
 
+        // Проверяем сохраненные ранее сообщения на наличие всех языков
+        $missingMessageLangs = (new Query())->select(['id', 'count(id) as count', 'GROUP_CONCAT(language SEPARATOR ",") as languages'])
+            ->from($messageTable)->groupBy('id')
+            ->all($db);
+
+        if (!empty($missingMessageLangs)) {
+            $toInsert = [];
+            foreach ($missingMessageLangs as $data) {
+                $messageLanguages = explode(',', $data['languages']);
+                $missing = array_diff($languages, $messageLanguages);
+                if (!$missing) {
+                    continue;
+                }
+
+                foreach ($missing as $lang) {
+                    $toInsert[] = [
+                        'id' => $data['id'],
+                        'language' => $lang,
+                    ];
+                }
+            }
+            
+            if ($toInsert) {
+                $db->createCommand()
+                    ->batchInsert($messageTable, ['id', 'language'], $toInsert)
+                    ->execute();
+            }
+        }
+
         $this->stdout($savedFlag ? "saved.\n" : "Nothing to save.\n");
         $this->stdout($removeUnused ? 'Deleting obsoleted messages...' : 'Updating obsoleted messages...');
 
