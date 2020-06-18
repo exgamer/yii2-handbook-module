@@ -45,7 +45,9 @@ $is_superadmin = Yii::$app->getUser()->can(AccessEnum::SUPERADMIN);
 <!--                                    --><?//= $form->field($model, 'name')->textInput() ?>
 <!--                                </div>-->
                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                    <?= $form->field($model, 'caption')->textInput() ?>
+                                    <?=
+                                        $form->field($model, 'caption')->textInput()
+                                    ?>
                                 </div>
                             <?php else:?>
                                 <?php if(isset($originModel)) :?>
@@ -58,6 +60,7 @@ $is_superadmin = Yii::$app->getUser()->can(AccessEnum::SUPERADMIN);
                                 <?= $this->render('@concepture/yii2handbook/views/include/_value_field', [
                                     'form' => $form,
                                     'model' => $model,
+                                    'originModel' => $originModel,
                                 ]) ?>
                             </div>
                         </div>

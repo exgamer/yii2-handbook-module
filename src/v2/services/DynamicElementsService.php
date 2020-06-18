@@ -31,6 +31,7 @@ use concepture\yii2handbook\services\events\DynamicElementsGetEvent;
 use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
 use concepture\yii2handbook\v2\dto\DynamicElementDto;
+use concepture\yii2handbook\v2\models\DynamicElements;
 
 /**
  * Сервис динамическх элементов версия 2
@@ -248,7 +249,8 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 'value' => $this->dto->value,
                 'caption' => $this->dto->caption,
                 'general' => $this->dto->general,
-                'multi_domain' => $this->dto->multi_domain
+                'multi_domain' => $this->dto->multi_domain,
+                'value_params' => Json::encode($this->dto->value_params_keys)
             ];
 
             $event->value = $this->dto->value;
@@ -280,6 +282,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $this->dto->general = $options['general'] ?? false;
         $this->dto->no_control = $options['no_control'] ?? false;
         $this->dto->multi_domain = $options['multi_domain'] ?? true;
+        if(isset($options['value_params']) && is_array($options['value_params'])) {
+            $this->dto->value_params_keys = array_keys($options['value_params']);
+            $this->dto->value_params_values = array_values($options['value_params']);
+        }
     }
 
     /**
@@ -292,6 +298,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
         if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
             return null;
+        }
+
+        if($this->dto->value_params_keys) {
+            $params = array_combine($this->dto->value_params_keys, $this->dto->value_params_values);
+            $this->dto->value = Yii::$app->getI18n()->format($this->dto->value, $params , Yii::$app->language);
         }
 
         if($this->dto->no_control) {
@@ -718,6 +729,27 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     public function setCurrentRouteHash($hash)
     {
         $this->currentUrlHash = $hash;
+    }
+
+    /**
+     * Формирует подсказку для элемента
+     *
+     * @param DynamicElements $model
+     */
+    public function getValueParamsHint(DynamicElements $model)
+    {
+        $result = null;
+        if(! $model->value_params) {
+            return $result;
+        }
+
+        $params = Json::decode($model->value_params);
+        foreach ($params as &$param) {
+            $param = "{{$param}}";
+        }
+
+        return Html::tag('span', Yii::t('yii2admin', 'Допустимые параметры') . ': ' . implode(' ', $params) , ['class' => 'text-muted']);
+
     }
 
     /**

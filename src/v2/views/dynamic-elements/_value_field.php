@@ -1,16 +1,27 @@
 <?php
+
 use concepture\yii2handbook\enum\SettingsTypeEnum;
-use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
+use concepture\yii2handbook\v2\models\DynamicElements;
+
+$hint = null;
+if(isset($originModel) && $originModel instanceof DynamicElements && $originModel->value_params) {
+    $hint = Yii::$app->dynamicElementsService->getValueParamsHint($originModel);
+}
+
 ?>
 <?php if ($originModel->type == SettingsTypeEnum::TEXT) : ?>
-    <?= $form->field($model, $attribute)->textInput(['maxlength' => true])
-        ->label($label ?? $model->getAttributeLabel('values'));
+    <?= $form
+        ->field($model, $attribute)->textInput(['maxlength' => true])
+        ->label($label ?? $model->getAttributeLabel('values'))
+        ->hint($hint);
     ?>
 <?php endif;?>
 
 <?php if ($originModel->type == SettingsTypeEnum::TEXT_AREA) : ?>
-    <?= $form->field($model, $attribute)->textarea()
-        ->label($label ?? $model->getAttributeLabel('values'));
+    <?= $form
+        ->field($model, $attribute)->textarea()
+        ->label($label ?? $model->getAttributeLabel('values'))
+        ->hint($hint);
     ?>
 <?php endif;?>
 
@@ -20,7 +31,8 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
         'model' => $model,
         'attribute' => $attribute,
         'originModel' => isset($originModel) ? $originModel : null,
-        'label' => $label ?? $model->getAttributeLabel('values')
+        'label' => $label ?? $model->getAttributeLabel('values'),
+        'hint' => $hint
     ]) ?>
 <?php endif;?>
 <?php if ($originModel->type == SettingsTypeEnum::CHECKBOX) : ?>
@@ -42,6 +54,7 @@ use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
                 'label' => $label ?? $model->getAttributeLabel('values')
             ],
             true
-        );
+        )
+        ->hint($hint);
     ?>
 <?php endif;?>

@@ -1,12 +1,20 @@
 <?php
-    use concepture\yii2handbook\enum\SettingsTypeEnum;
+
+use concepture\yii2handbook\enum\SettingsTypeEnum;
+use concepture\yii2handbook\v2\models\DynamicElements;
+
+$hint = null;
+if(isset($originModel) && $originModel instanceof DynamicElements && $originModel->value_params) {
+    $hint = Yii::$app->dynamicElementsService->getValueParamsHint($originModel);
+}
+
 ?>
 <?php if ($model->type == SettingsTypeEnum::TEXT) : ?>
-    <?= $form->field($model, 'value')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'value')->textInput(['maxlength' => true])->hint($hint) ?>
 <?php endif;?>
 
 <?php if ($model->type == SettingsTypeEnum::TEXT_AREA) : ?>
-    <?= $form->field($model, 'value')->textarea(); ?>
+    <?= $form->field($model, 'value')->textarea()->hint($hint); ?>
 <?php endif;?>
 
 <?php if ($model->type == SettingsTypeEnum::TEXT_EDITOR) : ?>
@@ -14,7 +22,8 @@
         'form' => $form,
         'model' => $model,
         'attribute' => 'value',
-        'originModel' => isset($originModel) ? $originModel : null
+        'originModel' => isset($originModel) ? $originModel : null,
+        'hint' => $hint
     ]) ?>
 <?php endif;?>
 <?php if ($model->type == SettingsTypeEnum::CHECKBOX) : ?>
@@ -36,6 +45,6 @@
                 'label' => $model->getAttributeLabel('value')
             ],
             true
-        );
+        )->hint($hint);
     ?>
 <?php endif;?>
