@@ -5,6 +5,7 @@ use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 use concepture\yii2handbook\v2\models\DynamicElements;
 use concepture\yii2logic\enum\AccessEnum;
+use \concepture\yii2handbook\v2\enum\DynamicElementsTypeEnum;
 
 $saveButton = Html::saveButton();
 $saveRedirectButton = Html::saveRedirectButton();
@@ -32,6 +33,14 @@ $is_superadmin = Yii::$app->getUser()->can(AccessEnum::SUPERADMIN);
                     <div class="card-body">
                         <div class="row">
                             <?php if($is_superadmin) :?>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <?= $form
+                                        ->field($model, 'type')
+                                        ->dropDownList(DynamicElementsTypeEnum::arrayList(), [
+                                            'class' => 'form-control custom-select',
+                                        ]);
+                                    ?>
+                                </div>
 <!--                                <div class="col-lg-12 col-md-12 col-sm-12">-->
 <!--                                    --><?//= $form->field($model, 'name')->textInput() ?>
 <!--                                </div>-->
