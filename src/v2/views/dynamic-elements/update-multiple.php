@@ -76,7 +76,7 @@ $saveRedirectButton = Html::submitButton(
                                         'form' => $form,
                                         'model' => $model,
                                         'attribute' => $model->normalizeAttribute($item->name),
-                                        'label' => $item->caption,
+                                        'label' => Yii::t('de', $item->caption),
                                         'originModel' => $item,
                                     ]) ?>
                                     <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>

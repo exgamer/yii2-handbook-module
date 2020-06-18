@@ -45,7 +45,12 @@ $this->pushBreadcrumbs($this->title);
                     return UrlHelper::getFrontendUrlManager()->createUrl(["/{$model->route}", Json::decode($model->route_params)]);
                 },
             ],
-            'caption',
+            [
+                'attribute' => 'caption',
+                'value' => function($model) {
+                    return Yii::t('de', $model->caption);
+                }
+            ],
             [
                 'class'=>'yii\grid\ActionColumn',
                 'dropdown' => false,

@@ -52,7 +52,7 @@ $is_superadmin = Yii::$app->getUser()->can(AccessEnum::SUPERADMIN);
                             <?php else:?>
                                 <?php if(isset($originModel)) :?>
                                     <legend class="font-weight-semibold text-uppercase font-size-sm">
-                                        <?= $originModel->caption;?>
+                                        <?= Yii::t('de', $originModel->caption);?>
                                     </legend>
                                 <?php endif ;?>
                             <?php endif;?>
