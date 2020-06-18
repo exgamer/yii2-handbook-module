@@ -115,9 +115,9 @@ return [
     ```
 - Пример
     ```twig
-        {{ de(de_constant('SettingsTypeEnum::TEXT'), de_constant('SeoSettingEnum::TITLE'), 'Главная страница', 'Заголовок главной страницы') }}
-        {{ de(de_constant('SettingsTypeEnum::TEXT_AREA'), 'MY_TEXT_AREA', 'Произвольный текст', 'Некий текст') }}
-        {{ de(de_constant('SettingsTypeEnum::TEXT_EDITOR'), 'MY_EDITOR', 'Произвольный текст', 'Некий текст 2') }}
+        {{ de(de_constant('SettingsTypeEnum::TEXT'), de_constant('SeoSettingEnum::TITLE'), _('de','Главная страница'), 'Заголовок главной страницы') }}
+        {{ de(de_constant('SettingsTypeEnum::TEXT_AREA'), 'MY_TEXT_AREA', _('de','Произвольный текст'), 'Некий текст') }}
+        {{ de(de_constant('SettingsTypeEnum::TEXT_EDITOR'), 'MY_EDITOR', _('de','Произвольный текст'), 'Некий текст 2') }}
     ```
     v2
     ```twig
