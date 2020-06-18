@@ -13,6 +13,8 @@ class DynamicElementDto extends Pojo
     public $key;
     public $caption;
     public $value;
+    public $value_params_keys;
+    public $value_params_values;
     public $general;
     public $no_control;
     public $multi_domain;

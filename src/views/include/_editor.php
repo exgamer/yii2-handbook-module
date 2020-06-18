@@ -1,4 +1,5 @@
 <?php
+
 use kamaelkz\yii2admin\v1\widgets\formelements\editors\froala\FroalaEditor;
 use mihaildev\ckeditor\CKEditor;
 use concepture\yii2logic\enum\EditorTypeEnum;
@@ -14,7 +15,8 @@ use concepture\yii2logic\enum\EditorTypeEnum;
                 'allowedContent' => true,
             ],
         ])
-        ->label($label ?? $model->getAttributeLabel($attribute));
+        ->label($label ?? $model->getAttributeLabel($attribute))
+        ->hint($hint ?? null);
     ?>
 
 <?php else: ?>
@@ -35,6 +37,7 @@ use concepture\yii2logic\enum\EditorTypeEnum;
             ]
         ])
         ->label($label ?? $model->getAttributeLabel($attribute))
+        ->hint($hint ?? null);
     ?>
 
 <?php endif;?>

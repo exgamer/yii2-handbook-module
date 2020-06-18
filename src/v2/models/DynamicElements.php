@@ -26,6 +26,7 @@ use concepture\yii2logic\validators\v2\UniquePropertyValidator;
  * @property string $updated_at
  * @property boolean $is_deleted
  * @property integer $sort
+ * @property string $value_params
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -99,6 +100,19 @@ class DynamicElements extends ActiveRecord
                 ],
                 'string',
                 'max'=>1024
+            ],
+            [
+                [
+                    'value_params'
+                ],
+                'string'
+            ],
+            [
+                [
+                    'value_params'
+                ],
+                'default',
+                'value' => null
             ],
             [
                 [
