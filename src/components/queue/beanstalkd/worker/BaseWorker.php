@@ -159,8 +159,10 @@ abstract class BaseWorker extends BeanstalkController implements WorkerInterface
 
             return self::DELETE;
         } catch (\Exception $e) {
+            $this->stderr('<ERROR>');
             $this->stderr($e->getMessage() . "\n", Console::FG_RED);
-
+            $this->stderr($e->getTraceAsString() . "\n", Console::FG_RED);
+            $this->stderr('</ERROR>');
             return self::BURY;
         }
     }
