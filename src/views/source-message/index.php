@@ -10,7 +10,9 @@ $this->pushBreadcrumbs($this->title);
 
 ?>
 
-<?php Pjax::begin(); ?>
+<?php Pjax::begin([
+    'enablePushState' => true
+]); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'searchVisible' => true,
