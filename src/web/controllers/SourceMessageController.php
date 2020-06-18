@@ -130,7 +130,6 @@ class SourceMessageController extends BaseController
         }
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-//            d($form);
             if (isset($form->plurals) && !empty($form->plurals)) {
                 foreach ($form->plurals as $iso => $plural) {
                     $form->{$iso} = str_replace('{plural}', "{n, plural, one{{$plural['one']}} few{{$plural['few']}} many{{$plural['many']}} other{{$plural['other']}}}", $form->{$iso});
@@ -152,7 +151,6 @@ class SourceMessageController extends BaseController
             ->getDataProvider([], $config, $search, '', $condition)
             ->getModels();
 
-        d($items);
         return $this->render('update', [
             'items' => $items,
             'model' => $form,

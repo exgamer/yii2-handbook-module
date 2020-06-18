@@ -136,13 +136,25 @@ $saveRedirectButton = Html::saveRedirectButton();
                                     <div style="margin-left: 92px">
                                         <?php
                                             $matches = [];
-                                            preg_match('/one{.*}/', $item->translation, $matches, PREG_OFFSET_CAPTURE);
-                                            d($matches);
+                                            preg_match_all('/[ ]\S\w*{(.*?)}/', $item->translation, $matches);
                                         ?>
-                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][one]", ['template' => '{input}'])->textInput(['placeholder' => 'one']);?>
-                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][few]", ['template' => '{input}'])->textInput(['placeholder' => 'few']);?>
-                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][many]", ['template' => '{input}'])->textInput(['placeholder' => 'many']);?>
-                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][other]", ['template' => '{input}'])->textInput(['placeholder' => 'other']);?>
+                                        <?php if (isset($matches[0]) && !empty($matches[0])): ?>
+                                            <?php foreach ($matches[0] as $key => $match): ?>
+                                                <?php
+                                                    $type = trim(preg_replace('/{.*}/', '', $match));
+                                                    $value = $matches[1][$key];
+                                                ?>
+                                                <?=
+                                                    $form->field($model, "plurals[{$countries[$item->language]->iso}][{$type}]", ['template' => '{input}'])
+                                                        ->textInput(['value' => $value, 'placeholder' => $type]);
+                                                ?>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][one]", ['template' => '{input}'])->textInput(['placeholder' => 'one']);?>
+                                            <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][few]", ['template' => '{input}'])->textInput(['placeholder' => 'few']);?>
+                                            <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][many]", ['template' => '{input}'])->textInput(['placeholder' => 'many']);?>
+                                            <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][other]", ['template' => '{input}'])->textInput(['placeholder' => 'other']);?>
+                                        <?php endif; ?>
                                     </div>
                                     <?php endif; ?>
                                 </div>

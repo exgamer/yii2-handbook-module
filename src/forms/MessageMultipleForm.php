@@ -24,6 +24,9 @@ class MessageMultipleForm extends BaseModel
      */
     public $languages = [];
 
+    /**
+     * @var array
+     */
     public $plurals = [];
 
     /**
