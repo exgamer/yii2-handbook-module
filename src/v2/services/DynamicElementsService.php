@@ -112,6 +112,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private $dto;
 
     /**
+     * @var array
+     */
+    private $callIds = [];
+
+    /**
      * @inheritDoc
      */
     public function init()
@@ -256,7 +261,9 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $event->value = $this->dto->value = $value;
         $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
         if(isset($this->modelStack[$this->dto->key])) {
-            $this->callStack[$this->dto->key] = $this->modelStack[$this->dto->key]['id'];
+            $id = $this->modelStack[$this->dto->key]['id'];
+            $this->callStack[$this->dto->key] = $id;
+            $this->callIds[] = $id;
         }
 
         return $this->elementValue();
@@ -585,13 +592,15 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         Bundle::register(Yii::$app->getView());
 
         $ids = [];
-        foreach ($this->modelStack as $model) {
-            $ids[] = $model->id;
+        $totalCount = count($this->callIds);
+        foreach ($this->callIds as $id) {
+            $ids[] = $id;
         }
 
+        $this->callIds = [];
         echo $this->view->render('@concepture/yii2handbook/v2/views/dynamic-elements/_manage_panel', [
             'url' => $this->getUpdateUrl($ids),
-            'count' => count($this->existsItems),
+            'count' => $totalCount,
             'interactiveMode' => $this->getInteractiveMode()
         ]);
     }
