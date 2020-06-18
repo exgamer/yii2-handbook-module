@@ -29,7 +29,7 @@ class DynamicElementsSearch extends DynamicElements
                             'route',
                             'name',
                         ],
-                        'safe'
+                        'string'
                     ],
                     [
                         [
@@ -51,12 +51,12 @@ class DynamicElementsSearch extends DynamicElements
         ]);
         $query->andFilterWhere([
             'like',
-            'route',
+            'lower(route)',
             $this->route
         ]);
         $query->andFilterWhere([
             'like',
-            'name',
+            'lower(name)',
             $this->name
         ]);
         $query->andFilterWhere([

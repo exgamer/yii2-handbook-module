@@ -18,7 +18,7 @@ class CountrySearch extends Country
     {
         return [
             [['id', 'locale', 'domain_id'], 'integer'],
-            [['caption', 'iso'], 'safe'],
+            [['caption', 'iso'], 'string'],
         ];
     }
 

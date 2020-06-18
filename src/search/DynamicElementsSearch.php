@@ -31,7 +31,7 @@ class DynamicElementsSearch extends DynamicElements
                             'url',
                             'name',
                         ],
-                        'safe'
+                        'string'
                     ],
                     [
                         [

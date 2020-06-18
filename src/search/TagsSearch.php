@@ -28,7 +28,7 @@ class TagsSearch extends Tags
                 ],
                 'integer'
             ],
-            [['caption'], 'safe'],
+            [['caption'], 'string'],
         ];
     }
 

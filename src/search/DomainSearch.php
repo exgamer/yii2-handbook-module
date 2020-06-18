@@ -19,7 +19,7 @@ class DomainSearch extends Domain
     {
         return [
             [['id'], 'integer'],
-            [['alias'], 'safe'],
+            [['alias'], 'string'],
         ];
     }
 

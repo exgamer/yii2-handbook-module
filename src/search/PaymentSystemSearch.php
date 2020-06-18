@@ -23,7 +23,7 @@ class PaymentSystemSearch extends PaymentSystem
                 [
                     'name'
                 ],
-                'safe'
+                'string'
             ],
         ];
     }

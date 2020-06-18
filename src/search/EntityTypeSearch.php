@@ -18,7 +18,7 @@ class EntityTypeSearch extends EntityType
     {
         return [
             [['id'], 'integer'],
-            [['table_name'], 'safe'],
+            [['table_name'], 'string'],
         ];
     }
 

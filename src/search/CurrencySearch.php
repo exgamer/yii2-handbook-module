@@ -19,7 +19,7 @@ class CurrencySearch extends Currency
     {
         return [
             [['id'], 'integer'],
-            [['code'], 'safe'],
+            [['code'], 'string'],
         ];
     }
 
