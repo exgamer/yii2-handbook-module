@@ -104,9 +104,23 @@ class SourceMessageController extends BaseController
             $query->orderBy(['priority' => SORT_DESC,'id' => SORT_DESC]);
             $query->indexBy('language');
         });
-        foreach ($items as $item) {
-            $form->setVirtualAttribute($item->language, $item->translation);
-            $form->setStringValidator($item->language, $item->translation);
+//        foreach ($items as $item) {
+//            $form->setVirtualAttribute($item->language, $item->translation);
+//            $form->setStringValidator($item->language, $item->translation);
+//        }
+        $itemsByLanguage = [];
+        $domainMap = \Yii::$app->domainService->getDomainMap();
+        $countryLanguage = ArrayHelper::map($domainMap, 'country', 'country', 'language');
+
+        foreach ($countryLanguage as $lang => $item) {
+            foreach ($item as $iso) {
+                if (!isset($items[$iso])) {
+                    continue;
+                }
+                $itemsByLanguage[$lang][] = $items[$iso];
+                $form->setVirtualAttribute($items[$iso]->language, $items[$iso]->translation);
+                $form->setStringValidator($items[$iso]->language, $items[$iso]->translation);
+            }
         }
 
         $sourceMessage = null;
@@ -119,19 +133,6 @@ class SourceMessageController extends BaseController
             $this->getMessageService()->updateMultiple($form);
 
             return $this->responseNotify();
-        }
-
-        $itemsByLanguage = [];
-        $domainMap = \Yii::$app->domainService->getDomainMap();
-        $countryLanguage = ArrayHelper::map($domainMap, 'country', 'country', 'language');
-
-        foreach ($countryLanguage as $lang => $item) {
-            foreach ($item as $iso) {
-                if (!isset($items[$iso])) {
-                    continue;
-                }
-                $itemsByLanguage[$lang][] = $items[$iso];
-            }
         }
 
         $config = ['pagination' => false];

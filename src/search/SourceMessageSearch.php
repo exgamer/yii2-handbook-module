@@ -31,6 +31,7 @@ class SourceMessageSearch extends SourceMessage
                 [
                     'message',
                     'translation',
+                    'category',
                 ],
                 'string'
             ]
