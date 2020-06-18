@@ -7,6 +7,7 @@ use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\validators\MD5Validator;
 use concepture\yii2handbook\models\traits\DomainTrait;
 use concepture\yii2logic\models\traits\v2\property\HasDomainPropertyTrait;
+use concepture\yii2logic\validators\v2\UniquePropertyValidator;
 
 /**
  * Динамические элементы версия 2
@@ -126,8 +127,9 @@ class DynamicElements extends ActiveRecord
                 [
                     'route_hash'
                 ],
-                'unique',
-                'targetAttribute' => ['route_hash', 'route_params_hash', 'name']
+                UniquePropertyValidator::class,
+                'fields' => ['route_hash', 'route_params_hash', 'name'],
+                'propertyFields' => ['domain_id']
             ]
         ];
     }
