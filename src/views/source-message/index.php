@@ -27,7 +27,7 @@ $this->pushBreadcrumbs($this->title);
                     $url = Url::to(['update', 'id' => $model->id]);
 
                     return <<<HTML
-                        <span class="editable-column magic-modal-control" data-url="$url" data-modal-size="modal-full" data-callback="function(){callbackHelper.reloadPjax('#list-pjax')}">
+                        <span class="editable-column magic-modal-control" data-url="$url" data-modal-size="modal-lg" data-callback="function(){callbackHelper.reloadPjax('#list-pjax')}">
                         $model->message
 </span>
 HTML;
