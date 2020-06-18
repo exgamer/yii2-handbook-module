@@ -32,6 +32,9 @@ $is_superadmin = Yii::$app->getUser()->can(AccessEnum::SUPERADMIN);
                     <div class="card-body">
                         <div class="row">
                             <?php if($is_superadmin) :?>
+<!--                                <div class="col-lg-12 col-md-12 col-sm-12">-->
+<!--                                    --><?//= $form->field($model, 'name')->textInput() ?>
+<!--                                </div>-->
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <?= $form->field($model, 'caption')->textInput() ?>
                                 </div>
