@@ -1,14 +1,14 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
-use concepture\yii2handbook\enum\SettingsTypeEnum;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 use concepture\yii2handbook\v2\models\DynamicElements;
+use concepture\yii2logic\enum\AccessEnum;
 
 $saveButton = Html::saveButton();
 $saveRedirectButton = Html::saveRedirectButton();
+$is_superadmin = Yii::$app->getUser()->can(AccessEnum::SUPERADMIN);
 
 ?>
 
@@ -30,12 +30,18 @@ $saveRedirectButton = Html::saveRedirectButton();
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <?php if(isset($originModel)) :?>
-                            <legend class="font-weight-semibold text-uppercase font-size-sm">
-                                <?= $originModel->caption;?>
-                            </legend>
-                        <?php endif ;?>
                         <div class="row">
+                            <?php if($is_superadmin) :?>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <?= $form->field($model, 'caption')->textInput() ?>
+                                </div>
+                            <?php else:?>
+                                <?php if(isset($originModel)) :?>
+                                    <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                        <?= $originModel->caption;?>
+                                    </legend>
+                                <?php endif ;?>
+                            <?php endif;?>
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <?= $this->render('@concepture/yii2handbook/views/include/_value_field', [
                                     'form' => $form,
