@@ -36,12 +36,6 @@ $saveRedirectButton = Html::saveRedirectButton();
 
 <?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
 <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form']); ?>
-<div class="card">
-    <div class="card-body text-right">
-        <?= $saveRedirectButton; ?>
-        <?= $saveButton; ?>
-    </div>
-</div>
 <div class="row">
     <div class="col-md-3">
         <div class="card">
@@ -70,12 +64,25 @@ $saveRedirectButton = Html::saveRedirectButton();
     </div>
 
     <div class="tab-content col-md-9">
+        <div class="card">
+            <div class="card-body text-right">
+                <?= $saveRedirectButton; ?>
+                <?= $saveButton; ?>
+            </div>
+        </div>
         <?php foreach ($itemsByLanguage as $lang => $items): ?>
             <div class="tab-pane fade <?= 'ru' === $lang ? 'active' : null;?> show" id="tab-<?= $lang; ?>" role="tabpanel">
                 <div class="card">
                     <div class="card-header">
                         <legend class="font-weight-semibold text-uppercase font-size-sm">
-                            <?= Yii::t('yii2admin','Оригинал');?> : <?= $sourceMessage->message ;?>
+                            <?= Yii::t('yii2admin','Оригинал');?> :
+                            <?php $isPlural = false; ?>
+                            <?php if (preg_match('/(plural)/', $sourceMessage->message)): ?>
+                                <?php $isPlural = true; ?>
+                                <?= preg_replace('/{.*}/', '{plural}', $sourceMessage->message); ?>
+                            <?php else: ?>
+                                <?= $sourceMessage->message ;?>
+                            <?php endif; ?>
                         </legend>
                     </div>
                     <div class="card-body">
@@ -119,26 +126,39 @@ $saveRedirectButton = Html::saveRedirectButton();
                                     </div>
                                     {error}'
                                         ])
-                                        ->textInput(['value' => $item->translation])
+                                        ->textInput(['value' => !$isPlural ? $item->translation : preg_replace('/{.*}/', '{plural}', $item->translation)])
                                         ->label($label);
                                     ?>
                                     <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
                                     <?= $form->field($model, 'languages[]', ['template' => '{input}'])->hiddenInput(['value' => $item->language]);?>
+
+                                    <?php if ($isPlural): ?>
+                                    <div style="margin-left: 92px">
+                                        <?php
+                                            $matches = [];
+                                            preg_match('/one{.*}/', $item->translation, $matches, PREG_OFFSET_CAPTURE);
+                                            d($matches);
+                                        ?>
+                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][one]", ['template' => '{input}'])->textInput(['placeholder' => 'one']);?>
+                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][few]", ['template' => '{input}'])->textInput(['placeholder' => 'few']);?>
+                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][many]", ['template' => '{input}'])->textInput(['placeholder' => 'many']);?>
+                                        <?= $form->field($model, "plurals[{$countries[$item->language]->iso}][other]", ['template' => '{input}'])->textInput(['placeholder' => 'other']);?>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
-
             </div>
         <?php endforeach; ?>
-    </div>
-</div>
-<div class="card">
-    <div class="card-body text-right">
-        <?= $saveRedirectButton; ?>
-        <?= $saveButton; ?>
+        <div class="card">
+            <div class="card-body text-right">
+                <?= $saveRedirectButton; ?>
+                <?= $saveButton; ?>
+            </div>
+        </div>
     </div>
 </div>
 <?php ActiveForm::end(); ?>

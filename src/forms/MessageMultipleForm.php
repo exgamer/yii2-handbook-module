@@ -24,6 +24,8 @@ class MessageMultipleForm extends BaseModel
      */
     public $languages = [];
 
+    public $plurals = [];
+
     /**
      * @inheritDoc
      */
@@ -32,21 +34,27 @@ class MessageMultipleForm extends BaseModel
         return [
             [
                 [
-                    'ids'
+                    'ids',
                 ],
                 'each',
                 'rule' => [
-                    'integer'
+                    'integer',
                 ]
             ],
             [
                 [
-                    'languages'
+                    'languages',
                 ],
                 'each',
                 'rule' => [
-                    'string'
+                    'string',
                 ]
+            ],
+            [
+                [
+                    'plurals',
+                ],
+                'safe',
             ],
         ];
     }
