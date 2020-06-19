@@ -1,5 +1,6 @@
 <?php
 
+use concepture\yii2logic\helpers\AccessHelper;
 use yii\helpers\Html;
 use \concepture\yii2handbook\models\DynamicElements;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
@@ -36,63 +37,70 @@ $saveRedirectButton = Html::submitButton(
         'value' => 'index'
     ]
 );
-
+$hasAccess = true;
+if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id])) {
+    $hasAccess = false;
+}
 ?>
 
 <?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
-    <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form', 'model' => new DynamicElements()]); ?>
-        <div class="d-md-flex align-items-md-start">
-            <?= $this->render('_domains_sidebar', [
-                'domainsData' => $domainsData,
-                'domain_id' => $domain_id,
-                'url' => ['update-multiple', 'ids' => $ids]
-            ]);
-            ?>
-            <div class="w-100">
-                <div class="card">
-                    <div class="card-body text-right">
-                        <?= $saveRedirectButton; ?>
-                        <?= $saveButton; ?>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <?php $generalHeader = false;?>
-                            <?php foreach ($items as $key => $item) :?>
-                                <div id="<?= $item->name;?>" class="col-lg-12 col-md-12 col-sm-12">
-                                    <?php if($key === 0 && $item->general == false):?>
-                                        <legend class="font-weight-semibold text-uppercase font-size-sm">
-                                            <?= Yii::t('yii2handbook', 'По адресу') ;?>
-                                        </legend>
-                                    <?php endif;?>
-                                    <?php if($generalHeader == false && $item->general == true) :?>
-                                        <?php $generalHeader = true;?>
-                                        <legend class="font-weight-semibold text-uppercase font-size-sm">
-                                            <?= Yii::t('yii2handbook', 'Общие') ;?>
-                                        </legend>
-                                    <?php endif;?>
-                                    <?= $this->render('_value_field', [
-                                        'form' => $form,
-                                        'model' => $model,
-                                        'attribute' => $model->normalizeAttribute($item->name),
-                                        'label' => Yii::t('de', $item->caption),
-                                        'originModel' => $item,
-                                    ]) ?>
-                                    <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body text-right">
-                        <?= $saveRedirectButton; ?>
-                        <?= $saveButton; ?>
-                    </div>
+<?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form', 'model' => new DynamicElements()]); ?>
+<div class="d-md-flex align-items-md-start">
+    <?= $this->render('_domains_sidebar', [
+        'domainsData' => $domainsData,
+        'domain_id' => $domain_id,
+        'url' => ['update-multiple', 'ids' => $ids]
+    ]);
+    ?>
+    <div class="w-100">
+        <?php if ($hasAccess) :?>
+            <div class="card">
+                <div class="card-body text-right">
+                    <?= $saveRedirectButton; ?>
+                    <?= $saveButton; ?>
                 </div>
             </div>
+        <?php endif;?>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <?php $generalHeader = false;?>
+                    <?php foreach ($items as $key => $item) :?>
+                        <div id="<?= $item->name;?>" class="col-lg-12 col-md-12 col-sm-12">
+                            <?php if($key === 0 && $item->general == false):?>
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    <?= Yii::t('yii2handbook', 'По адресу') ;?>
+                                </legend>
+                            <?php endif;?>
+                            <?php if($generalHeader == false && $item->general == true) :?>
+                                <?php $generalHeader = true;?>
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    <?= Yii::t('yii2handbook', 'Общие') ;?>
+                                </legend>
+                            <?php endif;?>
+                            <?= $this->render('_value_field', [
+                                'form' => $form,
+                                'model' => $model,
+                                'attribute' => $model->normalizeAttribute($item->name),
+                                'label' => Yii::t('de', $item->caption),
+                                'originModel' => $item,
+                            ]) ?>
+                            <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+        <?php if ($hasAccess) :?>
+            <div class="card">
+                <div class="card-body text-right">
+                    <?= $saveRedirectButton; ?>
+                    <?= $saveButton; ?>
+                </div>
+            </div>
+        <?php endif;?>
+    </div>
     <?php ActiveForm::end(); ?>
-<?php Pjax::end(); ?>
+    <?php Pjax::end(); ?>
 
 

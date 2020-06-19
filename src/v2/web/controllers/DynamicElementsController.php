@@ -3,6 +3,8 @@
 namespace concepture\yii2handbook\v2\web\controllers;
 
 use concepture\yii2handbook\traits\ServicesTrait;
+use concepture\yii2logic\enum\PermissionEnum;
+use concepture\yii2logic\helpers\AccessHelper;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -48,6 +50,7 @@ class DynamicElementsController extends Controller
                     'allow' => true,
                     'roles' => [
                         AccessEnum::ADMIN,
+                        AccessHelper::getAccessPermission($this, PermissionEnum::DOMAIN)
                     ],
                 ],
                 [
