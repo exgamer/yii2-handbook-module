@@ -59,8 +59,10 @@ class SourceMessageSearch extends SourceMessage
     /**
      * @inheritDoc
      */
-    public function extendDataProvider(ActiveDataProvider $dataProvider)
+    public function
+    (ActiveDataProvider $dataProvider)
     {
+        parent::extendDataProvider($dataProvider);
         $dataProvider->pagination->pageSize = 50;
     }
 

@@ -47,9 +47,8 @@ class EntityTypePositionSortSearch extends EntityTypePositionSort
      */
     public function extendDataProvider(ActiveDataProvider $dataProvider)
     {
+        parent::extendDataProvider($dataProvider);
         $dataProvider->pagination = false;
         $dataProvider->getSort()->defaultOrder = ['sort' => SORT_ASC];
-
-        parent::extendDataProvider($dataProvider);
     }
 }
