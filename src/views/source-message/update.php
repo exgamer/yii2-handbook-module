@@ -34,7 +34,7 @@ $saveRedirectButton = Html::saveRedirectButton();
 
 ?>
 
-<?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
+<?php Pjax::begin(['formSelector' => '#dynamic-elements-form', 'enablePushState' => false]); ?>
 <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form']); ?>
 <div class="card">
     <div class="card-body text-right">
