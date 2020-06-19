@@ -129,14 +129,10 @@ class SourceMessageController extends BaseController
             $sourceMessage = $item->sourceMessage;
         }
 
+        // TODO
+        $form->originPluralText = $sourceMessage->message;
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            if (isset($form->plurals) && !empty($form->plurals)) {
-                foreach ($form->plurals as $iso => $plural) {
-                    $form->{$iso} = str_replace('{plural}', "{n, plural, one{{$plural['one']}} few{{$plural['few']}} many{{$plural['many']}} other{{$plural['other']}}}", $form->{$iso});
-                }
-            }
             $this->getMessageService()->updateMultiple($form);
-
             return $this->responseNotify();
         }
 
