@@ -13,6 +13,11 @@
             <div class="card-body p-0">
                 <ul class="nav nav-tabs nav-tabs-vertical flex-column border-bottom-0">
                     <?php foreach ($domainsData as $id => $data) :?>
+                        <?php
+                            if (! \Yii::$app->user->hasDomainAccess($id)) {
+                                continue;
+                            }
+                        ?>
                         <?php $active = ($domain_id == $id ? 'active' : "");?>
                         <?php $url['domain_id'] = $id;?>
                         <li class="nav-item">
