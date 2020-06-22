@@ -50,7 +50,6 @@ class DynamicElementsController extends Controller
                     'allow' => true,
                     'roles' => [
                         AccessEnum::ADMIN,
-                        AccessHelper::getAccessPermission($this, PermissionEnum::DOMAIN)
                     ],
                 ],
                 [
