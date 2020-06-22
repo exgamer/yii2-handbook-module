@@ -48,7 +48,7 @@ class SourceMessageSearch extends SourceMessage
         $query->andFilterWhere(['like',  "message.translation", $this->translation]);
         if (!\Yii::$app->user->can(AccessEnum::SUPERADMIN)) {
             $query->andFilterWhere(['category' => 'frontend']);
-            $query->andFilterWhere(['not like', static::tableName() . ".message", '@@']);
+            //$query->andFilterWhere(['not like', static::tableName() . ".message", '@@']);
         } else {
             $query->andFilterWhere(['like', static::tableName() . ".category", $this->category]);
         }

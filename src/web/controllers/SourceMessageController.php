@@ -129,9 +129,10 @@ class SourceMessageController extends BaseController
             $sourceMessage = $item->sourceMessage;
         }
 
+        // TODO
+        $form->originText = $sourceMessage->message;
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             $this->getMessageService()->updateMultiple($form);
-
             return $this->responseNotify();
         }
 
