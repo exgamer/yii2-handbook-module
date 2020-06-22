@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\forms;
 
 use kamaelkz\yii2admin\v1\forms\BaseModel;
 use concepture\yii2handbook\traits\VirtualAttributesTrait;
+use concepture\yii2handbook\models\behaviors\PluralMessageBehavior;
 
 /**
  * Форма редактирования переводов, пачкой
@@ -24,6 +25,23 @@ class MessageMultipleForm extends BaseModel
      */
     public $languages = [];
 
+    public $originText = null;
+    /**
+     * @var array
+     */
+    public $plurals = [];
+
+    public function behaviors()
+    {
+        return [
+            'PluralMessageBehavior' => [
+                'class' => PluralMessageBehavior::class,
+                'originText' => 'originText',
+                'pluralAttr' => 'plurals',
+            ],
+        ];
+    }
+
     /**
      * @inheritDoc
      */
@@ -32,21 +50,28 @@ class MessageMultipleForm extends BaseModel
         return [
             [
                 [
-                    'ids'
+                    'ids',
                 ],
                 'each',
                 'rule' => [
-                    'integer'
+                    'integer',
                 ]
             ],
             [
                 [
-                    'languages'
+                    'languages',
                 ],
                 'each',
                 'rule' => [
-                    'string'
+                    'string',
                 ]
+            ],
+            [
+                [
+                    'originText',
+                    'plurals',
+                ],
+                'safe',
             ],
         ];
     }
