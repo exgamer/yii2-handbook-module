@@ -133,6 +133,7 @@ class DynamicElementsController extends Controller
         $searchModel = Yii::createObject(DynamicElementsSearch::class);
         $searchModel->load(Yii::$app->request->queryParams);
         $dataProvider =  $this->dynamicElementsService()->getDataProvider([], [], $searchModel);
+        $this->storeUrl();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -168,6 +169,11 @@ class DynamicElementsController extends Controller
         if ($form->load(Yii::$app->request->post()) && $model->validate()) {
             if (($result = $service->update($form, $model)) != false) {
                 if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
+                    $redirectStore = $this->redirectStoreUrl();
+                    if($redirectStore) {
+                        return $redirectStore;
+                    }
+
                     return $this->redirect(['index']);
                 }
             }
@@ -213,6 +219,11 @@ class DynamicElementsController extends Controller
             $this->dynamicElementsService()->updateMultiple($form);
 
             if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
+                $redirectStore = $this->redirectStoreUrl();
+                if($redirectStore) {
+                    return $redirectStore;
+                }
+
                 return $this->redirect(['index']);
             }
         }

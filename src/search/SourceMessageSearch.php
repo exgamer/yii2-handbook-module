@@ -61,6 +61,7 @@ class SourceMessageSearch extends SourceMessage
      */
     public function extendDataProvider(ActiveDataProvider $dataProvider)
     {
+        parent::extendDataProvider($dataProvider);
         $dataProvider->pagination->pageSize = 50;
     }
 

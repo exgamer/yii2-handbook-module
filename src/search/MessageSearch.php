@@ -25,5 +25,6 @@ class MessageSearch extends Message
      */
     public function extendDataProvider(ActiveDataProvider $dataProvider)
     {
+        parent::extendDataProvider($dataProvider);
     }
 }
