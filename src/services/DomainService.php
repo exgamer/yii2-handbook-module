@@ -162,6 +162,17 @@ class DomainService extends Service
     }
 
     /**
+     * @param $id
+     * @return mixed|null
+     */
+    public function getDomainDatabyId($id)
+    {
+        $items = $this->getDomainsData();
+
+        return $items[$id] ?? null;
+    }
+
+    /**
      * Возвращает данные по текущему домену по хосту
      *
      * @param $host
