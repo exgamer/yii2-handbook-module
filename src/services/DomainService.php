@@ -165,7 +165,7 @@ class DomainService extends Service
      * @param $id
      * @return mixed|null
      */
-    public function getDomainDatabyId($id)
+    public function getDomainDataById($id)
     {
         $items = $this->getDomainsData();
 
