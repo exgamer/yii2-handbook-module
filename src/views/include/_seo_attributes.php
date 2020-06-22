@@ -4,7 +4,16 @@
 <div class="row">
     <?php if(! isset($except['seo_name'])) :?>
         <div class="col-lg-6 col-md-6 col-sm-6">
-            <?= $form->field($model, 'seo_name')->textInput(['maxlength' => true, 'disabled' => isset($originModel) ? true : false]) ?>
+            <?php
+                if(isset($disabledSeoName)) {
+                    $disabled = $disabledSeoName;
+                } else if(isset($originModel)) {
+                    $disabled = true;
+                } else {
+                    $disabled = false;
+                }
+            ?>
+            <?= $form->field($model, 'seo_name')->textInput(['maxlength' => true, 'disabled' => $disabled]) ?>
         </div>
     <?php endif;?>
     <?php if(! isset($except['seo_title'])) :?>
