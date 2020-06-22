@@ -2,6 +2,8 @@
 
 namespace concepture\yii2handbook\services;
 
+use concepture\yii2handbook\models\Country;
+use concepture\yii2logic\db\ActiveQuery;
 use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
 use yii\helpers\Url;
@@ -83,9 +85,25 @@ class DomainService extends Service
         foreach ($map as $url => $data){
             $data['host'] = $url;
             $data['host_with_scheme'] = UrlHelper::getCurrentSchema() . "://" . $url;
-            $data['language_id'] = Yii::$app->localeService->catalogValue($data['language'], 'locale', 'id');
+            $data['language_id'] = $languageId = Yii::$app->localeService->catalogValue($data['language'], 'locale', 'id');
             $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
+            $data['country_id'] = $countryId = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'id');
             $data['country_caption'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'caption');
+
+            // TODO нужно как то лакончиней сделать
+            $country_caption_by_language = Yii::$app->countryService->getOneByCondition(function (ActiveQuery $query) use ($languageId, $countryId) {
+                $query->resetCondition();
+                $query->select(Country::localizationAlias().'.caption');
+                $query->andWhere([
+                    'id' => $countryId,
+                    Country::localizationAlias().'.entity_id' => $countryId,
+                    Country::localizationAlias().'.locale' => $languageId,
+                ]);
+            });
+            if ($country_caption_by_language) {
+                $data['country_caption_by_language'] = $country_caption_by_language->caption;
+            }
+
             $data['country_image'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'image');
             $urlArray = explode('.', $url);
             array_shift($urlArray);
