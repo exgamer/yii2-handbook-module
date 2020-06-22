@@ -25,7 +25,7 @@ class MessageMultipleForm extends BaseModel
      */
     public $languages = [];
 
-    public $originPluralText = null;
+    public $originText = null;
     /**
      * @var array
      */
@@ -36,7 +36,7 @@ class MessageMultipleForm extends BaseModel
         return [
             'PluralMessageBehavior' => [
                 'class' => PluralMessageBehavior::class,
-                'originText' => 'originPluralText',
+                'originText' => 'originText',
                 'pluralAttr' => 'plurals',
             ],
         ];
@@ -68,7 +68,7 @@ class MessageMultipleForm extends BaseModel
             ],
             [
                 [
-                    'originPluralText',
+                    'originText',
                     'plurals',
                 ],
                 'safe',

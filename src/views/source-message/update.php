@@ -155,7 +155,10 @@ $saveRedirectButton = Html::saveRedirectButton();
                                             <?= Plural::widget([
                                                 'form' => $form,
                                                 'model' => $model,
+                                                'originText' => $model->originText,
+                                                'pluralAttr' => 'plurals',
                                                 'targetAttr' => $countries[$item->language]->iso,
+                                                'token' => '{plural}',
                                             ]); ?>
                                         </div>
                                     <?php endif; ?>
