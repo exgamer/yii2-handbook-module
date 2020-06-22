@@ -250,8 +250,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 'caption' => $this->dto->caption,
                 'general' => $this->dto->general,
                 'multi_domain' => $this->dto->multi_domain,
-                'value_params' => Json::encode($this->dto->value_params_keys)
             ];
+            if($this->dto->value_params_keys) {
+                $this->writeItems[$this->dto->key]['value_params'] = Json::encode($this->dto->value_params_keys);
+            }
 
             $event->value = $this->dto->value;
             $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);

@@ -2,7 +2,6 @@
 
 namespace concepture\yii2handbook\v2\web\controllers;
 
-use concepture\yii2handbook\traits\ServicesTrait;
 use concepture\yii2logic\enum\PermissionEnum;
 use concepture\yii2logic\helpers\AccessHelper;
 use Yii;
@@ -14,8 +13,6 @@ use yii\web\NotFoundHttpException;
 use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 use concepture\yii2handbook\v2\search\DynamicElementsSearch;
 use concepture\yii2handbook\v2\forms\DynamicElementsMultipleForm;
-use concepture\yii2handbook\v2\services\DynamicElementsService;
-use concepture\yii2handbook\services\DomainService;
 # todo: разобраться
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditRollbackAction;
 use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
@@ -50,7 +47,8 @@ class DynamicElementsController extends Controller
                     'allow' => true,
                     'roles' => [
                         AccessEnum::ADMIN,
-                        AccessHelper::getAccessPermission($this, PermissionEnum::DOMAIN)
+                        AccessHelper::getAccessPermission($this, PermissionEnum::EDITOR),
+                        AccessHelper::getDomainAccessPermission($this, PermissionEnum::EDITOR)
                     ],
                 ],
                 [
