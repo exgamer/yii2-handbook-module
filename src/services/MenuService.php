@@ -37,6 +37,14 @@ class MenuService extends Service
     }
 
     /**
+     * @param ActiveQuery $query
+     */
+    protected function extendQuery(ActiveQuery $query)
+    {
+        $this->applyDomain($query);
+    }
+
+    /**
      * @param string $entity_type_position
      * @return \Closure
      */
