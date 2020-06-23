@@ -97,7 +97,7 @@ class EntityTypeActiveQuery extends Base
             $result = [];
             $names = [];
             foreach ($types as $id => $ids) {
-                $name = \Yii::$app->entityTypeService->catalogValue($id);
+                $name = \Yii::$app->entityTypeService->catalogValue($id, 'id', 'table_name');
                 $names[$id] = $name;
                 /**
                  * @TODO Настройку если модель лежит не тут (пока устраивает)
