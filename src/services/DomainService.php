@@ -115,7 +115,7 @@ class DomainService extends Service
 
         $result = [];
         foreach ($items as $id => $data){
-            if ($domainData[$data->alias]){
+            if (isset($domainData[$data->alias])){
                 $domainData[$data->alias]['domain_id'] = $id;
                 $result[$id] = $domainData[$data->alias];
             }
