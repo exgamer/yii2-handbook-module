@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\db;
 
+use concepture\yii2logic\helpers\StringHelper;
 use Yii;
 use concepture\yii2logic\db\ActiveQuery as Base;
 use yii\db\ActiveRecordInterface;
@@ -103,7 +104,11 @@ class EntityTypeActiveQuery extends Base
                  * @TODO Настройку если модель лежит не тут (пока устраивает)
                  */
                 $nameSpace = '\common\models\\';
-                $modelClass = $nameSpace . ucfirst($name);
+                $parts = explode('_', $name);
+                $parts = array_map(function($v){
+                    return ucfirst($v);
+                }, $parts);
+                $modelClass = $nameSpace . implode('', $parts);
                 $q = $modelClass::find()->andWhere(['id' => $ids])->asArray($this->asArray)->indexBy('id');
                 /**
                  * Поддержка связей для связанных сущностей
