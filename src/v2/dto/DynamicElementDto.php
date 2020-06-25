@@ -18,4 +18,5 @@ class DynamicElementDto extends Pojo
     public $general;
     public $no_control;
     public $multi_domain;
+    public $apply_unique_params;
 }

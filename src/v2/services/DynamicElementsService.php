@@ -118,6 +118,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private $callIds = [];
 
     /**
+     * @var array
+     */
+    private $unique_params;
+
+    /**
      * @inheritDoc
      */
     public function init()
@@ -251,8 +256,13 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 'general' => $this->dto->general,
                 'multi_domain' => $this->dto->multi_domain,
             ];
+            $item = &$this->writeItems[$this->dto->key];
+            if($this->unique_params && $this->dto->apply_unique_params) {
+                $item['unique_params'] = $this->unique_params;
+            }
+
             if($this->dto->value_params_keys) {
-                $this->writeItems[$this->dto->key]['value_params'] = Json::encode($this->dto->value_params_keys);
+                $item['value_params'] = Json::encode($this->dto->value_params_keys);
             }
 
             $event->value = $this->dto->value;
@@ -284,6 +294,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $this->dto->general = $options['general'] ?? false;
         $this->dto->no_control = $options['no_control'] ?? false;
         $this->dto->multi_domain = $options['multi_domain'] ?? true;
+        $this->dto->apply_unique_params = $options['apply_unique_params'] ?? true;
         if(isset($options['value_params']) && is_array($options['value_params'])) {
             $this->dto->value_params_keys = array_keys($options['value_params']);
             $this->dto->value_params_values = array_values($options['value_params']);
@@ -312,6 +323,30 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         return $this->dynamicElementsService()->getManageControl();
+    }
+
+    /**
+     * Установить уникальные параметры для роута
+     *
+     * @param array $params
+     */
+    public function applyUniqueParams(array $params)
+    {
+        $this->unique_params = Json::encode($params);
+    }
+
+    /**
+     * Получение хэша уникальных параметров для роута
+     *
+     * @return string|null
+     */
+    private function getUniqueParamsHash()
+    {
+        if(! $this->unique_params) {
+            return null;
+        }
+
+        return md5($this->unique_params);
     }
 
     /**
@@ -402,6 +437,13 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                 ['route_hash' => $this->getCurrentRouteHash()],
                 ['general' => 1]
             ]);
+            if($this->unique_params) {
+                $query->andWhere([
+                    'OR',
+                    ['unique_params_hash' => $this->getUniqueParamsHash()],
+                    ['unique_params_hash' => null]
+                ]);
+            }
             $query->orderBy('general', 'route_hash');
         });
 

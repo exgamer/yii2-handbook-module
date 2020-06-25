@@ -103,13 +103,15 @@ class DynamicElements extends ActiveRecord
             ],
             [
                 [
-                    'value_params'
+                    'value_params',
+                    'unique_params'
                 ],
                 'string'
             ],
             [
                 [
-                    'value_params'
+                    'value_params',
+                    'unique_params'
                 ],
                 'default',
                 'value' => null
@@ -131,8 +133,17 @@ class DynamicElements extends ActiveRecord
             ],
             [
                 [
+                    'unique_params_hash',
+                ],
+                MD5Validator::class,
+                'source' => 'unique_params',
+                'skipOnEmpty' => false
+            ],
+            [
+                [
                     'route_hash',
                     'route_params_hash',
+                    'unique_params_hash'
                 ],
                 'string',
                 'max' => 32

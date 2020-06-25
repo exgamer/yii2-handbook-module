@@ -25,6 +25,8 @@ class DynamicElementsForm extends BaseForm
     public $multi_domain = true;
     public $value;
     public $value_params;
+    public $unique_params;
+    public $unique_params_hash;
 
     /**
      * @inheritDoc
