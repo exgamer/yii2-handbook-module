@@ -16,7 +16,7 @@ class DynamicElementsCommand extends ConsoleCommand
     /**
      * @return DynamicElementsService
      */
-    private function getDynamicElementsService()
+    public function getDynamicElementsService()
     {
         return Yii::$app->dynamicElementsService;
     }
