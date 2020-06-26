@@ -5,6 +5,7 @@ namespace concepture\yii2handbook\console\controllers;
 use yii\db\Query;
 use yii\di\Instance;
 use yii\db\Connection;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 use yii\console\Exception;
 use yii\helpers\FileHelper;
@@ -132,6 +133,7 @@ class MessageController extends Base
     private function importToDb()
     {
         $files = FileHelper::findFiles(realpath($this->config['sourcePath']), $this->config);
+        $this->includeFiles($files);
 
         $messages = [];
         foreach ($files as $file) {
@@ -153,6 +155,23 @@ class MessageController extends Base
             $this->config['languages'],
             $this->config['markUnused']
         );
+    }
+
+    /**
+     * Включает исключенные файлы или директории указанные в конфиге
+     * @param array $files
+     */
+    private function includeFiles(&$files)
+    {
+        if (isset($this->config['include']) && !empty($this->config['include'])) {
+            $includeFiles = [];
+            foreach ($this->config['include'] as $path) {
+                $includeFiles = ArrayHelper::merge($includeFiles, FileHelper::findFiles($path, $this->config));
+            }
+            if ($includeFiles) {
+                $files = ArrayHelper::merge($files, $includeFiles);
+            }
+        }
     }
 
     /**
