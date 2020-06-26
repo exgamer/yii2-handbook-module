@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Html;
 use concepture\yii2handbook\enum\SettingsTypeEnum;
 use concepture\yii2handbook\v2\models\DynamicElements;
 
@@ -8,10 +9,17 @@ if(isset($originModel) && $originModel instanceof DynamicElements && $originMode
     $hint = Yii::$app->dynamicElementsService->getValueParamsHint($originModel);
 }
 
+$badge = null;
+if($originModel->multi_domain == false) {
+    $badge = Html::tag('span', Yii::t('yii2admin', 'Только текущая версия'), ['class' => 'badge badge-flat border-info text-info-600']);
+}
+
 ?>
 <?php if ($originModel->type == SettingsTypeEnum::TEXT) : ?>
     <?= $form
-        ->field($model, $attribute)->textInput(['maxlength' => true])
+        ->field($model, $attribute)->textInput([
+            'maxlength' => true
+        ])
         ->label($label ?? $model->getAttributeLabel('values'))
         ->hint($hint);
     ?>
@@ -58,3 +66,6 @@ if(isset($originModel) && $originModel instanceof DynamicElements && $originMode
         ->hint($hint);
     ?>
 <?php endif;?>
+<div class="d-block" style="margin-top: -1rem !important">
+    <?= $badge;?>
+</div>
