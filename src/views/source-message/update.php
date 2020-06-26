@@ -11,8 +11,8 @@ $this->setTitle(Yii::t('yii2admin', 'Редактирование'));
 $this->pushBreadcrumbs(['label' => Message::label(), 'url' => ['index']]);
 $this->pushBreadcrumbs($this->title);
 
-$this->registerJs(
-    '$(document).on("click", ".source-message-copy", function () {
+$this->registerJs('
+    $(document).on("click", ".source-message-copy", function () {
         let $form = $(this).closest(".tab-pane");
         if ($form.length === 0) {
             return;
@@ -21,10 +21,21 @@ $this->registerJs(
         if ($firstInput.length === 0) {
             return;
         }
-
+        
         let value = $firstInput.val();
         $(this).parents(".input-group").find("input[type=\"text\"]").val(value);
-    });',
+        
+        let $pluralsForCopy = $firstInput.parents(".translate-inputs").find(".plurals input[type=\"text\"]");
+        let $plurals = $(this).parents(".translate-inputs").find(".plurals input[type=\"text\"]");
+        
+        if ($pluralsForCopy.length !== 0 && $plurals.length !== 0) {
+            $pluralsForCopy.each(function(index) {
+//                console.log(index, $plurals.get(index));
+                $plurals.eq(index).val($(this).val())
+            });
+        }
+    });
+',
     \yii\web\View::POS_END,
     'source-message-copy-handler'
 );
@@ -132,10 +143,11 @@ $saveRedirectButton = Html::saveRedirectButton();
                                     ';
                                     }
                                     ?>
-                                    <?=
-                                    $form
-                                        ->field($model, $item->language, [
-                                            'template' => '
+                                    <div class="translate-inputs">
+                                        <?=
+                                        $form
+                                            ->field($model, $item->language, [
+                                                'template' => '
                                                 <div style="margin-left: 46px">{label}</div>
                                                 <div class="input-group">
                                                     <span class="input-group-prepend">'.$copyBtn .'</span>
@@ -143,25 +155,27 @@ $saveRedirectButton = Html::saveRedirectButton();
                                                 </div>
                                                 {error}
                                             '
-                                        ])
-                                        ->textInput(['value' => !$isPlural ? $item->translation : preg_replace('/{n, plural, \S\w*{.*}/', '{plural}', $item->translation)])
-                                        ->label($label);
-                                    ?>
-                                    <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
-                                    <?= $form->field($model, 'languages[]', ['template' => '{input}'])->hiddenInput(['value' => $item->language]);?>
+                                            ])
+                                            ->textInput(['value' => !$isPlural ? $item->translation : preg_replace('/{n, plural, \S\w*{.*}/', '{plural}', $item->translation)])
+                                            ->label($label);
+                                        ?>
+                                        <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
+                                        <?= $form->field($model, 'languages[]', ['template' => '{input}'])->hiddenInput(['value' => $item->language]);?>
 
-                                    <?php if ($isPlural): ?>
-                                        <div style="margin-left: 92px">
-                                            <?= Plural::widget([
-                                                'form' => $form,
-                                                'model' => $model,
-                                                'originText' => $model->originText,
-                                                'pluralAttr' => 'plurals',
-                                                'targetAttr' => $countries[$item->language]->iso,
-                                                'token' => '{plural}',
-                                            ]); ?>
-                                        </div>
-                                    <?php endif; ?>
+                                        <?php if ($isPlural): ?>
+                                            <div class="plurals" style="margin-left: 92px">
+                                                <?= Plural::widget([
+                                                    'form' => $form,
+                                                    'model' => $model,
+                                                    'originText' => $model->originText,
+                                                    'pluralAttr' => 'plurals',
+                                                    'targetAttr' => $countries[$item->language]->iso,
+                                                    'token' => '{plural}',
+                                                ]); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
                                 </div>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
