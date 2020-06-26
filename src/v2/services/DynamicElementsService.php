@@ -259,6 +259,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $item = &$this->writeItems[$this->dto->key];
             if($this->unique_params && $this->dto->apply_unique_params) {
                 $item['unique_params'] = $this->unique_params;
+                $item['multi_domain'] = false;
             }
 
             if($this->dto->value_params_keys) {
