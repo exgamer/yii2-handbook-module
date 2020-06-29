@@ -8,7 +8,6 @@ use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use yii\web\Application;
 use yii\web\Cookie;
 use concepture\yii2handbook\models\Domain;
 use concepture\yii2logic\services\Service;
@@ -85,7 +84,7 @@ class DomainService extends Service
         $map = $this->getDomainMap();
         foreach ($map as $url => $data){
             $data['host'] = $url;
-            if(Yii::$app instanceof Application) {
+            if(Yii::$app instanceof \yii\web\Application) {
                 $data['host_with_scheme'] = UrlHelper::getCurrentSchema() . "://" . $url;
             }
 
