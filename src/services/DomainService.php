@@ -8,6 +8,7 @@ use concepture\yii2logic\helpers\UrlHelper;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use yii\web\Application;
 use yii\web\Cookie;
 use concepture\yii2handbook\models\Domain;
 use concepture\yii2logic\services\Service;
@@ -84,7 +85,10 @@ class DomainService extends Service
         $map = $this->getDomainMap();
         foreach ($map as $url => $data){
             $data['host'] = $url;
-            $data['host_with_scheme'] = UrlHelper::getCurrentSchema() . "://" . $url;
+            if(Yii::$app instanceof Application) {
+                $data['host_with_scheme'] = UrlHelper::getCurrentSchema() . "://" . $url;
+            }
+
             $data['language_id'] = $languageId = Yii::$app->localeService->catalogValue($data['language'], 'locale', 'id');
             $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
             $data['country_id'] = $countryId = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'id');
