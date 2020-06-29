@@ -1,14 +1,16 @@
 <?php
     use yii\helpers\Html;
+
+    $domainsData = Yii::$app->domainService->getModelDomains($model ?? null);
 ?>
 
 <div class="sidebar bg-transparent sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
     <div class="sidebar-content">
         <div class="card">
             <div class="card-header bg-transparent header-elements-inline">
-                            <span class="card-title font-weight-semibold">
-                                <?= Yii::t('yii2admin', 'Версии');?>
-                            </span>
+                <span class="card-title font-weight-semibold">
+                    <?= Yii::t('yii2admin', 'Версии');?>
+                </span>
             </div>
             <div class="card-body p-0">
                 <ul class="nav nav-tabs nav-tabs-vertical flex-column border-bottom-0">

@@ -178,13 +178,10 @@ class DynamicElementsController extends Controller
             }
         }
 
-        $domainsData = $this->domainService()->getModelDomains($model);
-
         return $this->render('update', [
             'model' => $form,
             'originModel' => $model,
             'domain_id' => $domain_id,
-            'domainsData' => $domainsData
         ]);
     }
 
@@ -227,14 +224,11 @@ class DynamicElementsController extends Controller
             }
         }
 
-        $domainsData = $this->domainService()->getDomainsData();
-
         return $this->render('update-multiple', [
             'items' => $items,
             'model' => $form,
             'domain_id' => $domain_id,
             'ids' => $stringIds,
-            'domainsData' => $domainsData
         ]);
     }
 

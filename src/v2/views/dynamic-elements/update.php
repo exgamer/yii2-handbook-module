@@ -10,5 +10,4 @@ $this->viewHelper()->pushPageHeader(['index'], $model::label(),'icon-list');
     'model' => $model,
     'originModel' => $originModel,
     'domain_id' => $domain_id,
-    'domainsData' => $domainsData
 ]) ?>
