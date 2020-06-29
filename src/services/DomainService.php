@@ -84,7 +84,7 @@ class DomainService extends Service
         $map = $this->getDomainMap();
         foreach ($map as $url => $data){
             $data['host'] = $url;
-            if(Yii::$app instanceof \yii\web\Application) {
+            if (Yii::$app instanceof \yii\web\Application) {
                 $data['host_with_scheme'] = UrlHelper::getCurrentSchema() . "://" . $url;
             }
 
