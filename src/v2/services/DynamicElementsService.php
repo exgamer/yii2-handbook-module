@@ -158,6 +158,15 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -166,11 +175,27 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
      * @return string
      */
     public function getKeywords()
     {
         return $this->keywords;
+    }
+
+    /**
+     * @param string $keywords
+     */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $keywords;
     }
 
     /**
