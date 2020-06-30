@@ -97,8 +97,15 @@ class HreflangService extends Service
             foreach ($domainMap as $domain => $settings) {
                 if(
                     ! isset($settings['hreflang'])
-                    || ($rule->patterns && ! isset($rule->patterns[$settings['alias']]))
+                    || (
+                        $rule->patterns
+                        && ! isset($rule->patterns[$settings['alias']])
+                    )
                 ) {
+                    continue;
+                }
+
+                if(! isset($settings['enabled']) && $settings['enabled'] !== true) {
                     continue;
                 }
 
