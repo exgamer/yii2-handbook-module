@@ -139,6 +139,7 @@ class QueueManager extends BaseQueueManager
             $domain = $this->getDomainService()->findById((int) $payload['domain_id']);
             if($domain) {
                 $payload['alias'] = $domain['alias'];
+                unset($payload['domain_id']);
             }
         }
 
@@ -153,7 +154,6 @@ class QueueManager extends BaseQueueManager
 
         return $result;
     }
-
 
     /**
      * Освобождение коллекции задачь
