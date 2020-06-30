@@ -7,6 +7,7 @@ use yii\helpers\Json;
 use udokmeci\yii2beanstalk\Beanstalk;
 use Pheanstalk\PheanstalkInterface;
 use concepture\yii2handbook\components\queue\BaseQueueManager;
+use concepture\yii2handbook\services\DomainService;
 
 /**
  * Сервис для работы с очередями через менеджер - beanstalkd
@@ -108,6 +109,14 @@ class QueueManager extends BaseQueueManager
     }
 
     /**
+     * @return DomainService
+     */
+    protected function getDomainService()
+    {
+        return Yii::$app->domainService;
+    }
+
+    /**
      * Добавление задачи в трубу
      *
      * @param string $tube
@@ -124,6 +133,13 @@ class QueueManager extends BaseQueueManager
         $allowedTubes = $enumClass::values();
         if(! in_array($tube, $allowedTubes)) {
             throw new QueueManagerException("Tube constant is not declarate in `{$enumClass}`");
+        }
+        # если явно передали идентификатор домена подменяем альяс
+        if(isset($payload['domain_id'])) {
+            $domain = $this->getDomainService()->findById((int) $payload['domain_id']);
+            if($domain) {
+                $payload['alias'] = $domain['alias'];
+            }
         }
 
         $this->beforeSend($tube, $payload);
