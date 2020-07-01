@@ -73,7 +73,7 @@ class SitemapService extends Service
     {
         $queryParams = [];
         foreach ($urlParamAttrs as $key => $attribute){
-            if (filter_var($key, FILTER_VALIDATE_INT) === true) {
+            if (filter_var($key, FILTER_VALIDATE_INT) !== false) {
                 $queryParams[$attribute] = $model->{$attribute};
                 continue;
             }
