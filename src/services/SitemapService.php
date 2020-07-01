@@ -6,6 +6,7 @@ use concepture\yii2handbook\forms\SitemapForm;
 use concepture\yii2handbook\services\traits\SitemapGeneratorTrait;
 use concepture\yii2handbook\services\traits\SitemapModifyTrait;
 use concepture\yii2handbook\traits\ServicesTrait;
+use concepture\yii2logic\console\traits\OutputTrait;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\helpers\ClassHelper;
 use concepture\yii2logic\helpers\UrlHelper;
@@ -23,7 +24,6 @@ use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
-use concepture\yii2logic\console\traits\OutputTrait;
 
 /**
  * Class SitemapService
@@ -39,7 +39,7 @@ class SitemapService extends Service
     use SitemapGeneratorTrait;
     use SitemapModifyTrait;
     use OutputTrait;
-    
+
     /**
      * @inheritDoc
      */
@@ -72,8 +72,13 @@ class SitemapService extends Service
     protected function getLocation($model, &$controllerId, $urlParamAttrs)
     {
         $queryParams = [];
-        foreach ($urlParamAttrs as $attribute){
-            $queryParams[$attribute] = $model->{$attribute};
+        foreach ($urlParamAttrs as $key => $attribute){
+            if (filter_var($key, FILTER_VALIDATE_INT) === true) {
+                $queryParams[$attribute] = $model->{$attribute};
+                continue;
+            }
+
+            $queryParams[$key] = $attribute;
         }
 
         $className = ClassHelper::getShortClassName($model);
