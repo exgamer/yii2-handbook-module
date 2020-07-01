@@ -23,6 +23,7 @@ use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
+use concepture\yii2logic\console\traits\OutputTrait;
 
 /**
  * Class SitemapService
@@ -37,7 +38,8 @@ class SitemapService extends Service
     use HandbookReadSupportTrait;
     use SitemapGeneratorTrait;
     use SitemapModifyTrait;
-
+    use OutputTrait;
+    
     /**
      * @inheritDoc
      */
