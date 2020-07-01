@@ -5,7 +5,7 @@ use concepture\yii2logic\enum\StatusEnum;
 use Yii;
 
 /**
- * 
+ *
  * Trait ReadSupportTrait
  * @package concepture\yii2handbook\services\traits
  */
@@ -22,7 +22,7 @@ trait SitemapSupportTrait
      */
     public function sitemapRefresh($model, $controllerId = null, $urlParamAttrs = ['seo_name'], $forceDelete = false)
     {
-        if ($forceDelete || $model->status != StatusEnum::ACTIVE){
+        if ($forceDelete || $model->status != $model->getActiveStatusValue()){
             return Yii::$app->sitemapService->remove($model);
         }
 
