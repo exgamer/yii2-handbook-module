@@ -19,6 +19,7 @@ use Exception;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Console;
 use yii\helpers\Url;
 
 /**
@@ -35,6 +36,7 @@ trait SitemapGeneratorTrait
      */
     public function regenerate($scheme = 'https')
     {
+        $this->outputSuccess('regenerate sitemap start');
         Sitemap::deleteAll([
             'domain_id' => $this->domainService()->getCurrentDomainId(),
             'type'=> SitemapTypeEnum::DYNAMIC
@@ -49,9 +51,10 @@ trait SitemapGeneratorTrait
 
             $traits = ClassHelper::getTraits($service);
             if (! in_array(SitemapSupportTrait::class, $traits) && ! $service instanceof SitemapServiceInterface){
+//                $this->outputDone('skip regenerating sitemap for ' . $entity);
                 continue;
             }
-
+            $this->outputSuccess('regenerate sitemap for ' . $entity);
             /**
              * @todo тут надо заменить выборку всего на использование  concepture\yii2logic\dataprocessor\DataProcessor
              * иначе на больших данных умрет
@@ -60,16 +63,21 @@ trait SitemapGeneratorTrait
                 $query->active();
                 $query->notDeleted();
             });
+
             if (empty($models)){
                 continue;
             }
 
-            foreach ($models as $model){
+            $count = count($models);
+            Console::startProgress(0, $count);
+            foreach ($models as $k => $model){
                 $service->updateById($model->id, [], '', false);
+                Console::updateProgress($k + 1 , $count);
             }
         }
 
         $this->generate($scheme);
+        $this->outputSuccess('regenerate sitemap done');
     }
 
     /**
