@@ -36,12 +36,14 @@ class FileExtensionEnum extends Enum
 
     const XML = "xml";
     const TXT = "txt";
+    const MANIFEST = "manifest";
 
     public static function getContentTypes()
     {
         return [
             static::XML => 'text/xml',
             static::TXT => 'text/plain',
+            static::MANIFEST => 'application/manifest+json',
         ];
     }
 
@@ -50,6 +52,7 @@ class FileExtensionEnum extends Enum
         return [
             self::XML => Yii::t('handbook', "xml"),
             self::TXT => Yii::t('handbook', "Текстовый"),
+            self::MANIFEST => Yii::t('handbook', "Веб манифест"),
         ];
     }
 
