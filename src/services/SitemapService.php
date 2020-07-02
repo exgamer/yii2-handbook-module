@@ -86,7 +86,11 @@ class SitemapService extends Service
             $controllerId = Inflector::camel2id($className);
         }
 
-        $urlParams = ArrayHelper::merge([$controllerId . '/view'], $queryParams);
+        if (! is_array($controllerId)) {
+            $controllerId = [$controllerId . '/view'];
+        }
+
+        $urlParams = ArrayHelper::merge($controllerId, $queryParams);
         $frontendUrlManager = UrlHelper::getFrontendUrlManager();
 
         return $frontendUrlManager->createUrl($urlParams);

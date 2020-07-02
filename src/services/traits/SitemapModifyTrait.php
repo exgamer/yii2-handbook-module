@@ -44,6 +44,14 @@ trait SitemapModifyTrait
 
         $form = new SitemapForm();
         $form->entity_type_id = $entity_type->id;
+        /**
+         * Если массив значит прилетел роут
+         */
+        if (is_array($controllerId)) {
+            $parts = explode('/',$controllerId[0]);
+            $controllerId = $parts[0];
+        }
+        
         $form->controller_id = $controllerId;
         $form->entity_id = $model->id;
         $form->location = $location;
