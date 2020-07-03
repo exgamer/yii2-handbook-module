@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\search;
 
+use concepture\yii2handbook\enum\MessageCategoryEnum;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -47,7 +48,7 @@ class SourceMessageSearch extends SourceMessage
         $query->andFilterWhere(['like', static::tableName() . ".message", $this->message]);
         $query->andFilterWhere(['like',  "message.translation", $this->translation]);
         if (!\Yii::$app->user->can(AccessEnum::SUPERADMIN)) {
-            $query->andFilterWhere(['category' => 'frontend']);
+            $query->andFilterWhere(['category' => [MessageCategoryEnum::FRONTEND, MessageCategoryEnum::GENERAL]]);
             $query->andFilterWhere(['not like', static::tableName() . ".message", '@@']);
         } else {
             $query->andFilterWhere(['like', static::tableName() . ".category", $this->category]);
