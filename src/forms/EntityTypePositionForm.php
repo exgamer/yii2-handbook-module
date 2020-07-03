@@ -19,6 +19,7 @@ use kamaelkz\yii2admin\v1\forms\BaseForm;
  */
 class EntityTypePositionForm extends BaseForm
 {
+    public $id;
     public $caption; 
     public $alias; 
     public $status = StatusEnum::ACTIVE;
@@ -39,7 +40,7 @@ class EntityTypePositionForm extends BaseForm
                     'max_count',
                 ],
                 'required'
-            ]
+            ],
         ];
     }
 }

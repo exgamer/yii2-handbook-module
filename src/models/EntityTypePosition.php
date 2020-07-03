@@ -2,11 +2,11 @@
 
 namespace concepture\yii2handbook\models;
 
-use concepture\yii2logic\validators\DomainBasedUniqueValidator;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\validators\TranslitValidator;
 use concepture\yii2logic\models\traits\StatusTrait;
+use yii\validators\UniqueValidator;
 
 /**
  * Позиции сущностей в приложении
@@ -88,7 +88,8 @@ class EntityTypePosition extends ActiveRecord
                 [
                     'alias',
                 ],
-                DomainBasedUniqueValidator::class
+                'unique',
+                'targetAttribute' => ['alias', 'domain_id'],
             ],
         ];
     }
