@@ -51,7 +51,7 @@ trait SitemapModifyTrait
             $parts = explode('/',$controllerId[0]);
             $controllerId = $parts[0];
         }
-        
+
         $form->controller_id = $controllerId;
         $form->entity_id = $model->id;
         $form->location = $location;

@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\traits;
 
+use concepture\yii2handbook\services\SeoService;
 use concepture\yii2handbook\services\SitemapService;
 use concepture\yii2handbook\services\StaticFileService;
 use concepture\yii2handbook\services\UrlHistoryService;
@@ -31,6 +32,14 @@ trait ServicesTrait
     public function domainService()
     {
         return Yii::$app->domainService;
+    }
+
+    /**
+     * @return SeoService
+     */
+    public function seoService()
+    {
+        return Yii::$app->seoService;
     }
 
     /**
