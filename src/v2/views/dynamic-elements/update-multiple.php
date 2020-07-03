@@ -22,21 +22,8 @@ if (AuditService::isAuditAllowed(DynamicElements::class)) {
     );
 }
 
-$saveButton = Html::submitButton(
-    '<b><i class="icon-checkmark3"></i></b>' . Yii::t('yii2admin', 'Сохранить'),
-    [
-        'class' => 'btn bg-success btn-labeled btn-labeled-left ml-1'
-    ]
-);
-
-$saveRedirectButton = Html::submitButton(
-    '<b><i class="icon-list"></i></b>' . Yii::t('yii2admin', 'Сохранить и перейти к списку'),
-    [
-        'class' => 'btn bg-info btn-labeled btn-labeled-left ml-1',
-        'name' => RequestHelper::REDIRECT_BTN_PARAM,
-        'value' => 'index'
-    ]
-);
+$saveButton = Html::saveButton();
+$saveRedirectButton = Html::saveRedirectButton();
 $hasAccess = true;
 if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id])) {
     $hasAccess = false;

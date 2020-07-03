@@ -1,10 +1,11 @@
 <?php
     use yii\helpers\Html;
 
+    Yii::$app->getView()->viewHelper()->setSecondSidebarState(true);
     $domainsData = Yii::$app->domainService->getModelDomains($model ?? null);
 ?>
 
-<div class="sidebar bg-transparent sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
+<div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
     <div class="sidebar-content">
         <div class="card">
             <div class="card-header bg-transparent header-elements-inline">
