@@ -153,7 +153,7 @@ $saveRedirectButton = Html::saveRedirectButton();
                                                     <span class="input-group-prepend">'.$copyBtn .'</span>
                                                     {input}
                                                 </div>
-                                                {error}
+                                                <div style="margin-left: 46px">{error}</div>
                                             '
                                             ])
                                             ->textInput(['value' => !$isPlural ? $item->translation : preg_replace('/{n, plural, \S\w*{.*}/', '{plural}', $item->translation)])
