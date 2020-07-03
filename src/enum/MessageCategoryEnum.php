@@ -14,6 +14,7 @@ class MessageCategoryEnum extends Enum
     const FRONTEND = 'frontend';
 //    const ADMIN = 'yii2admin';
     const COMMON = 'common';
+    const GENERAL = 'general';
 
     /**
      * @inheritDoc
@@ -24,6 +25,7 @@ class MessageCategoryEnum extends Enum
             self::FRONTEND => self::FRONTEND,
 //            self::ADMIN => self::ADMIN,
             self::COMMON => self::COMMON,
+            self::GENERAL => self::GENERAL,
         ];
     }
 }
