@@ -61,4 +61,7 @@ return [
     'messageService' => [
         'class' => 'concepture\yii2handbook\services\MessageService'
     ],
+    'seoService' => [
+        'class' => 'concepture\yii2handbook\services\SeoService'
+    ],
 ];
