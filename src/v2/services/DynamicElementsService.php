@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\v2\services;
 
+use concepture\yii2handbook\components\i18n\TranslationHelper;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -123,6 +124,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private $unique_params;
 
     /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
+    /**
      * @inheritDoc
      */
     public function init()
@@ -131,6 +137,9 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $this->view = \Yii::$app->getView();
         $this->dto = DynamicElementDto::instance();
         $this->setRouteData();
+        if($this->canManage()) {
+            $this->translationHelper = Yii::createObject(TranslationHelper::class);
+        }
     }
 
     /**
@@ -164,7 +173,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     {
         $this->title = $title;
     }
-
 
     /**
      * @return string
@@ -672,22 +680,33 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
 
         Bundle::register(Yii::$app->getView());
 
-        $ids = [];
+        $ids = [
+            'dynamic_elements' => [],
+        ];
         $totalCount = count($this->callIds);
         foreach ($this->callIds as $id) {
-            $ids[] = $id;
+            $ids['dynamic_elements'][] = $id;
         }
 
         $this->callIds = [];
-        echo $this->view->render('@concepture/yii2handbook/v2/views/dynamic-elements/_manage_panel', [
+
+        if($this->translationHelper) {
+            $message_ids = $this->translationHelper->getMessageIds();
+            $ids['translation'] = $message_ids;
+            $totalCount += count($message_ids);
+        }
+
+        $params = [
             'url' => $this->getUpdateUrl($ids),
             'count' => $totalCount,
             'interactiveMode' => $this->getInteractiveMode()
-        ]);
+        ];
+
+        echo $this->view->render('@concepture/yii2handbook/v2/views/dynamic-elements/_manage_panel', $params);
     }
 
     /**
-     * Признак интерактивного мода режима на внешней стороне
+     * Признак интерактивного режима на внешней стороне
      *
      * @return mixed
      */
@@ -725,6 +744,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return $result;
         }
 
+        # todo: а вот если юзер авторизуется он увидит панельку гавно
         $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
 
         return $result;
@@ -893,7 +913,8 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         if(is_array($id)) {
             $url = [
                 'admin/handbook/dynamic-elements/update-multiple',
-                'ids' => implode(',', $id),
+                'de' => isset($id['dynamic_elements']) ? implode(',', $id['dynamic_elements']) : null,
+                'tr' => isset($id['translation']) ? implode(',', $id['translation']) : null,
                 'domain_id' => $domain_id
             ];
         } else {

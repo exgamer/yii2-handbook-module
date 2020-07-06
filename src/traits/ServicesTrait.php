@@ -2,11 +2,12 @@
 
 namespace concepture\yii2handbook\traits;
 
+use Yii;
 use concepture\yii2handbook\services\SeoService;
 use concepture\yii2handbook\services\SitemapService;
+use concepture\yii2handbook\services\SourceMessageService;
 use concepture\yii2handbook\services\StaticFileService;
 use concepture\yii2handbook\services\UrlHistoryService;
-use Yii;
 use concepture\yii2handbook\services\CountryService;
 use concepture\yii2handbook\services\CurrencyService;
 use concepture\yii2handbook\services\DomainService;
@@ -153,6 +154,14 @@ trait ServicesTrait
     public function urlHistoryService()
     {
         return Yii::$app->urlHistoryService;
+    }
+
+    /**
+     * @return SourceMessageService
+     */
+    public function sourceMessageService()
+    {
+        return Yii::$app->sourceMessageService;
     }
 }
 

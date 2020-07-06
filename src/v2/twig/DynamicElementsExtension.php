@@ -6,7 +6,10 @@ use Yii;
 use yii\web\View;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use yii\base\Event;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServicesTrait;
+use concepture\yii2handbook\components\i18n\CallTranslationEvent;
+use concepture\yii2handbook\components\i18n\GettextMessageSource;
 
 /**
  * Расширения twig для динамических элементов

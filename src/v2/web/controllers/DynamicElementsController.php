@@ -191,11 +191,11 @@ class DynamicElementsController extends Controller
      * @param string $ids
      * @param string $domainAlias
      */
-    public function actionUpdateMultiple($ids, $domain_id)
+    public function actionUpdateMultiple($de, $domain_id)
     {
         $form = new DynamicElementsMultipleForm();
-        $stringIds = $ids;
-        $ids = explode(',', $ids);
+        $stringIds = $de;
+        $ids = explode(',', $de);
         if(! $ids || ! is_array($ids)) {
             throw new BadRequestHttpException('Bad Request');
         }
