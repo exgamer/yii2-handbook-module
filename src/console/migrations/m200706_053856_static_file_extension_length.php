@@ -12,7 +12,7 @@ class m200706_053856_static_file_extension_length extends Migration
      */
     public function safeUp()
     {
-        $this->execute("ALTER TABLE `static_file` CHANGE `extension` `extension` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL;");
+
     }
 
     /**
