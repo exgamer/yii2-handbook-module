@@ -74,7 +74,7 @@ class StaticFile extends ActiveRecord
                     'extension',
                 ],
                 'string',
-                'max' => 10
+                'max' => 50
             ],
             [
                 [
