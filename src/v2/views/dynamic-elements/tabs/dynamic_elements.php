@@ -31,15 +31,19 @@ $is_superadmin = Yii::$app->getUser()->can(AccessEnum::SUPERADMIN);
 HTML;
             },
             'format' => 'raw'
-        ],
+    ],
         [
             'attribute' => 'value',
             'value' => function($model) {
-                if($model->type === \concepture\yii2handbook\v2\enum\DynamicElementsTypeEnum::TEXT_EDITOR) {
-                    return '...';
+                if(! $model->value) {
+                    return null;
                 }
 
-                return  $model->value;
+                if($model->type === \concepture\yii2handbook\v2\enum\DynamicElementsTypeEnum::TEXT_EDITOR) {
+                    return htmlspecialchars_decode(strip_tags(mb_substr($model->value, 0, 150))) . ' ...';
+                }
+
+                return $model->value;
             },
             'headerOptions' => [
                 'style' => 'width:60%',

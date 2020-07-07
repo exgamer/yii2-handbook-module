@@ -34,6 +34,7 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
                     <?= $saveButton; ?>
                 </div>
             </div>
+            <?= $form->errorSummary($originModel);?>
         <?php endif;?>
         <div class="card">
             <div class="card-body">
@@ -57,9 +58,11 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
                         </div>
                     <?php else:?>
                         <?php if(isset($originModel)) :?>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
                             <legend class="font-weight-semibold text-uppercase font-size-sm">
                                 <?= Yii::t('de', $originModel->caption);?>
                             </legend>
+                        </div>
                         <?php endif ;?>
                     <?php endif;?>
                     <div class="col-lg-12 col-md-12 col-sm-12">
