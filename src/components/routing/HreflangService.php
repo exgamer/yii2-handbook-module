@@ -2,10 +2,14 @@
 
 namespace concepture\yii2handbook\components\routing;
 
+use concepture\yii2logic\helpers\ClassHelper;
 use Yii;
-use concepture\yii2logic\services\Service;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use concepture\yii2logic\models\ActiveRecord;
+use concepture\yii2logic\services\Service;
+use concepture\yii2logic\models\traits\v2\property\HasDomainPropertyTrait;
+use concepture\yii2handbook\traits\ServicesTrait as HandbookServicesTrait;
 
 /**
  * Сервис формирования альтарнативных адресов страниц по локалям
@@ -14,10 +18,24 @@ use yii\helpers\Html;
  */
 class HreflangService extends Service
 {
+    use HandbookServicesTrait;
+
     /**
      * @var bool признак активности
      */
     private $_active = true;
+
+    /**
+     * @var array дополнительные параметры по доменам
+     *
+     * "a" => [
+     *  "name" => "abc"
+     * ],
+     * "b" => [
+     * "name" => "bca"
+     * ]
+     */
+    private $domainsRouteParams = [];
 
     /**
      * Включение вывода элементов
@@ -36,13 +54,19 @@ class HreflangService extends Service
     }
 
     /**
-     * Список локалей для отображения элементов
-     *
-     * @param array $array
+     * @param array $params
      */
-    public function allowedLocales($items)
+    public function setDomainsRouteParams(array $params)
     {
-        # todo : реализовать
+        $this->domainsRouteParams = $params;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDomainsRouteParams()
+    {
+        return $this->domainsRouteParams;
     }
 
     /**
@@ -71,6 +95,46 @@ class HreflangService extends Service
         }
 
         return implode('', $tags);
+    }
+
+    /**
+     * Установка параметров домена по Моделе с пропертями
+     *
+     * @param ActiveRecord $model
+     *
+     * @param array $attributes ['param' => 'property_attribute']
+     *
+     * @throws HreflangServiceException
+     */
+    public function setDomainParamsByModelProps(ActiveRecord $model, array $attributes)
+    {
+        $traits = ClassHelper::getTraits($model);
+        if (in_array(HasDomainPropertyTrait::class, $traits)) {
+            $domainsData = $this->domainService()->getEnbaledDomainData();
+            $props = $model->getProperties()->all();
+            if($props) {
+                $params = [];
+                foreach ($props as $domain_id => $property) {
+                    if(! isset($domainsData[$domain_id])) {
+                        continue;
+                    }
+
+                    $alias = $domainsData[$domain_id]['alias'];
+                    $params[$alias] = [];
+                    $link = &$params[$alias];
+                    $class = get_class($model);
+                    foreach ($attributes as $param => $attribute) {
+                        if(! $property->hasAttribute($attribute)) {
+                            throw new HreflangServiceException("Class `{$class}` doesn't have property `{$attribute}` is not defined");
+                        }
+
+                        $link[$param] = $property->{$attribute};
+                    }
+                }
+
+                $this->setDomainsRouteParams($params);
+            }
+        }
     }
 
     /**
@@ -108,12 +172,23 @@ class HreflangService extends Service
                 if(! isset($settings['enabled']) && $settings['enabled'] !== true) {
                     continue;
                 }
+                # установка переданных параметров для формирования урла
+                $domainsParams = $this->getDomainsRouteParams();
+                $domainParams = $domainsParams[$settings['alias']] ?? null;
+                # если передали параметры домена, и значение не нашлось, нельзя выводить тэг
+                if(count($domainsParams) > 0 && ! $domainParams) {
+                    continue;
+                }
 
                 if(
                     is_array($rule->patterns)
                     && count($rule->patterns) > 1
                 ) {
                     $rule->reinit($settings['alias']);
+                }
+
+                if($domainParams) {
+                    $params = ArrayHelper::merge($params, $domainParams);
                 }
 
                 $schema = $settings['schema'] ?? 'https';

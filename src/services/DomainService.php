@@ -129,6 +129,29 @@ class DomainService extends Service
         return $result;
     }
 
+    /**
+     * Получение данных по включенным доменам
+     *
+     * @return array
+     */
+    public function getEnbaledDomainData()
+    {
+        static $result;
+
+        if(! $result) {
+            $data = $this->getDomainsData();
+            $result =  array_filter($data, function ($item) {
+                if(! isset($item['enabled']) || $item['enabled'] === false) {
+                    return null;
+                }
+
+                return $item;
+            });
+        }
+
+        return $result;
+
+    }
 
     /**
      * Возвращает домены для которых есть свойства у модели
