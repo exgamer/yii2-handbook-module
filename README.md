@@ -124,8 +124,9 @@ return [
         {{ de(de_const('Type::TEXT'), de_const('Name::TITLE'), 'Title', {'value' : 'Index title', 'no_control' : true}) }}
         {{ de(de_const('Type::TEXT_AREA'), de_const('Name::DESCRIPTION') , 'Description', {'value' : 'Index descriptions', 'no_control' : true}) }}
         {{ de(de_const('Type::TEXT_AREA'), de_const('Name::KEYWORDS'), 'Keywords', {'value' : 'Index keywords', 'no_control' : true}) }}
-        {{ de(de_const('Type::TEXT'), 'TEST_MULTIPLE_DOMAIN', 'Test multiple domain', {'value' : 'Test multiple domain', 'multi_domain' : false}) }}
-        {{ de(de_const('Type::TEXT'), 'TEST_MULTIPLE_DOMAIN_2', 'Test multiple domain', {'value' : 'Test multiple domain', 'general' : true, 'multi_domain' : false}) }}
+        {{ de(de_const('Type::TEXT'), 'MULTIPLE_DOMAIN', 'Test multiple domain', {'value' : 'Test multiple domain', 'multi_domain' : false}) }}
+        {{ de(de_const('Type::TEXT'), 'MULTIPLE_DOMAIN_2', 'Test multiple domain', {'value' : 'Test multiple domain', 'general' : true, 'multi_domain' : false}) }}
+              {{ de(de_const('Type::TEXT'), 'PARAMS', 'Test multiple domain', {'value' : 'Test {token} params', 'value_params' : {'token' : 'abc'}}) }}
     ```
 - Консольные команды
     - Подключение (например console\config\main.php)
