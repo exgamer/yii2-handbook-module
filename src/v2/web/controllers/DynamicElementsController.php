@@ -169,9 +169,7 @@ class DynamicElementsController extends Controller
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             if (($result = $service->update($form, $model)) != false) {
                 if ( RequestHelper::isMagicModal()){
-                    return $this->responseJson([
-                        'data' => $result,
-                    ]);
+                    return $this->responseNotify();
                 }
 
                 if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
