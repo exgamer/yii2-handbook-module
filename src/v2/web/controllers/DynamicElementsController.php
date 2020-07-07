@@ -19,6 +19,7 @@ use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
 use concepture\yii2logic\enum\AccessEnum;
 use concepture\yii2handbook\web\controllers\Controller;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServicesTrait;
+use concepture\yii2handbook\search\SourceMessageSearch;
 
 /**
  * Динамические элементы
@@ -43,6 +44,7 @@ class DynamicElementsController extends Controller
                     'actions' => [
                         'interactive-mode',
                         'update-multiple',
+                        'manage'
                     ],
                     'allow' => true,
                     'roles' => [
@@ -167,7 +169,14 @@ class DynamicElementsController extends Controller
 
         if ($form->load(Yii::$app->request->post()) && $model->validate()) {
             if (($result = $service->update($form, $model)) != false) {
+                if ( RequestHelper::isMagicModal()){
+                    return $this->responseJson([
+                        'data' => $result,
+                    ]);
+                }
+
                 if(Yii::$app->request->post(RequestHelper::REDIRECT_BTN_PARAM)) {
+
                     $redirectStore = $this->redirectStoreUrl();
                     if($redirectStore) {
                         return $redirectStore;
@@ -191,11 +200,11 @@ class DynamicElementsController extends Controller
      * @param string $ids
      * @param string $domainAlias
      */
-    public function actionUpdateMultiple($de, $domain_id)
+    public function actionUpdateMultiple($ids, $domain_id)
     {
         $form = new DynamicElementsMultipleForm();
-        $stringIds = $de;
-        $ids = explode(',', $de);
+        $stringIds = $ids;
+        $ids = explode(',', $ids);
         if(! $ids || ! is_array($ids)) {
             throw new BadRequestHttpException('Bad Request');
         }
@@ -224,13 +233,32 @@ class DynamicElementsController extends Controller
             }
         }
 
+        $domainsData = $this->domainService()->getDomainsData();
+
         return $this->render('update-multiple', [
             'items' => $items,
             'model' => $form,
             'domain_id' => $domain_id,
             'ids' => $stringIds,
+            'domainsData' => $domainsData
         ]);
     }
+
+    /**
+     * Управление элементами
+     *
+     * @param integer $domain_id
+     * @param string $dynamic_elements_ids
+     * @param null|string $translation_ids
+     * @param string $tab
+     * @return string|\yii\web\Response|null
+     * @throws BadRequestHttpException
+     */
+    public function actionManage($domain_id, $dynamic_elements_ids, $translation_ids = null, $manage_tab = 'de')
+    {
+        return $this->dynamicElementsService()->renderManageTables($domain_id, $dynamic_elements_ids, $translation_ids, $manage_tab);
+    }
+
 
     /**
      * Интерактивный мод

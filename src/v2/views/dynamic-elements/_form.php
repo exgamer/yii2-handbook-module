@@ -17,7 +17,7 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
 }
 ?>
 
-<?php Pjax::begin(['formSelector' => '#dynamic-elements-form']); ?>
+<?php Pjax::begin(['formSelector' => '#dynamic-elements-form', 'enablePushState' => false]); ?>
 <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form', 'model' => new DynamicElements()]); ?>
 <div class="d-md-flex align-items-md-start">
     <?= $this->render('@concepture/yii2handbook/views/include/_domains_sidebar', [

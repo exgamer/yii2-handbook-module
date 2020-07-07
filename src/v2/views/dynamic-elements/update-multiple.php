@@ -34,9 +34,9 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id])) {
 <?php $form = ActiveForm::begin(['id' => 'dynamic-elements-form', 'model' => new DynamicElements()]); ?>
 <div class="d-md-flex align-items-md-start">
     <?= $this->render('@concepture/yii2handbook/views/include/_domains_sidebar', [
-            'domain_id' => $domain_id,
-            'url' => ['update-multiple', 'ids' => $ids]
-        ]);
+        'domain_id' => $domain_id,
+        'url' => ['update-multiple', 'ids' => $ids]
+    ]);
     ?>
     <div class="w-100">
         <?php if ($hasAccess) :?>

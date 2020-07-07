@@ -18,6 +18,11 @@ use concepture\yii2handbook\models\SourceMessage;
 class SourceMessageSearch extends SourceMessage
 {
     /**
+     * @var array
+     */
+    public $ids = [];
+
+    /**
      * @var string
      */
     public $translation;
@@ -35,7 +40,14 @@ class SourceMessageSearch extends SourceMessage
                     'category',
                 ],
                 'string'
-            ]
+            ],
+            [
+                [
+                    'ids',
+                ],
+                'each',
+                'rule' => ['integer']
+            ],
         ];
     }
 
@@ -55,6 +67,9 @@ class SourceMessageSearch extends SourceMessage
         }
 
         $query->groupBy(['message', 'category', 'id']);
+        $query->andFilterWhere([
+            static::tableName() . '.id' => $this->ids
+        ]);
     }
 
     /**
@@ -63,7 +78,9 @@ class SourceMessageSearch extends SourceMessage
     public function extendDataProvider(ActiveDataProvider $dataProvider)
     {
         parent::extendDataProvider($dataProvider);
-        $dataProvider->pagination->pageSize = 50;
+        if($dataProvider->pagination) {
+            $dataProvider->pagination->pageSize = 50;
+        }
     }
 
     /**

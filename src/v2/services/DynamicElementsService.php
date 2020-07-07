@@ -3,10 +3,12 @@
 namespace concepture\yii2handbook\v2\services;
 
 use concepture\yii2handbook\components\i18n\TranslationHelper;
+use concepture\yii2handbook\v2\search\DynamicElementsSearch;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\View;
 use yii\helpers\Url;
@@ -33,6 +35,8 @@ use concepture\yii2handbook\services\events\DynamicElementsEventInterface;
 use concepture\yii2handbook\bundles\dynamic_elements\Bundle;
 use concepture\yii2handbook\v2\dto\DynamicElementDto;
 use concepture\yii2handbook\v2\models\DynamicElements;
+use yii\widgets\ActiveForm;
+use concepture\yii2handbook\search\SourceMessageSearch;
 
 /**
  * Сервис динамическх элементов версия 2
@@ -127,6 +131,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @var TranslationHelper
      */
     private $translationHelper;
+
+    /**
+     * @var array
+     */
+    private $entity_manage_url = [];
 
     /**
      * @inheritDoc
@@ -253,6 +262,25 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      * @inheritDoc
      */
     protected function extendQuery(ActiveQuery $query) {}
+
+    /**
+     * Вывод списков динамических элемнтов и переводов со страницы
+     *
+     * @return string HTML
+     */
+    public function extendActiveForm()
+    {
+        $request = Yii::$app->getRequest();
+        $dynamic_elements_ids = $request->get('dynamic_elements_ids', []);
+        $translation_ids = $request->get('translation_ids', []);
+        if($dynamic_elements_ids || $translation_ids) {
+            $manage_tab = $request->get('manage_tab', 'de');
+            $domain_id = $this->domainService()->getCurrentDomainId();
+            Event::on(ActiveForm::class, ActiveForm::EVENT_AFTER_RUN, function($event) use($domain_id, $dynamic_elements_ids, $translation_ids, $manage_tab) {
+                echo $this->renderManageTables($domain_id, $dynamic_elements_ids, $translation_ids, $manage_tab, true);
+            });
+        }
+    }
 
     /**
      * Получение элементов
@@ -417,6 +445,16 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         $this->trigger(static::EVENT_AFTER_APPLY, $event);
+    }
+
+    /**
+     * Установка адреса управления страницей сущности
+     *
+     * @param string $url
+     */
+    public function setEntityManageUrl(array $url)
+    {
+        $this->entity_manage_url = $url;
     }
 
     /**
@@ -663,7 +701,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $this->dto->value,
             [
                 'class' => $class,
-                'data-url' => $this->getUpdateUrl($id),
+                'data-url' => $this->getManageUrl($id),
                 'data-title' => $this->dto->caption,
             ]
         );
@@ -683,7 +721,6 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         $ids = [
             'dynamic_elements' => [],
         ];
-        $totalCount = count($this->callIds);
         foreach ($this->callIds as $id) {
             $ids['dynamic_elements'][] = $id;
         }
@@ -693,16 +730,81 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         if($this->translationHelper) {
             $message_ids = $this->translationHelper->getMessageIds();
             $ids['translation'] = $message_ids;
-            $totalCount += count($message_ids);
         }
 
         $params = [
-            'url' => $this->getUpdateUrl($ids),
-            'count' => $totalCount,
+            'url' => $this->getManageUrl($ids),
             'interactiveMode' => $this->getInteractiveMode()
         ];
 
         echo $this->view->render('@concepture/yii2handbook/v2/views/dynamic-elements/_manage_panel', $params);
+    }
+
+    /**
+     * Вывод таблиц управления динамическими элементами и переводами страницы
+     *
+     * @param integer $domain_id
+     * @param string $dynamic_elements_ids
+     * @param string $translation_ids
+     * @param string $manage_tab
+     * @throws InvalidConfigException
+     * @return string
+     */
+    public function renderManageTables($domain_id, $dynamic_elements_ids, $translation_ids, $manage_tab, $autoRender = false)
+    {
+        $translation_array_ids = [];
+        # идентификаторы динамических элементов
+        $dynamic_elements_array_ids = @explode(',', $dynamic_elements_ids);
+        # индетификаторы переводов
+        if($translation_ids) {
+            $translation_array_ids = @explode(',', $translation_ids);
+        }
+
+        $dynamicElementSearch = Yii::createObject(DynamicElementsSearch::class);
+        $dynamicElementSearch->ids = $dynamic_elements_array_ids;
+        $config = [
+            'pagination' => false,
+            'sort' => [
+                'attributes' => [
+                    'id',
+                    'general'
+                ],
+                'defaultOrder' => [
+                    'id' => SORT_ASC,
+                ]
+            ]
+        ];
+        $dynamicElementsDataProvider = $this->getDataProvider([], $config, $dynamicElementSearch);
+
+        $sourceMessageSearch = Yii::createObject(SourceMessageSearch::class);
+        $config = [
+            'pagination' => false,
+            'sort' => [
+                'attributes' => [
+                    'id',
+                ],
+                'defaultOrder' => [
+                    'id' => SORT_ASC,
+                ]
+            ]
+        ];
+        $sourceMessageSearch->ids = $translation_array_ids;
+        $sourceMessageDataProvider =  $this->sourceMessageService()->getDataProvider([], $config, $sourceMessageSearch);
+        if(! $autoRender) {
+            $renderObject = Yii::$app->controller;
+        } else {
+            $renderObject = $this->view;
+        }
+
+        return $renderObject->render('@concepture/yii2handbook/v2/views/dynamic-elements/manage', [
+            'manage_tab' => $manage_tab,
+            'autoRender' => $autoRender,
+            'domain_id' => $domain_id,
+            'dynamicElementSearch' => $dynamicElementSearch,
+            'dynamicElementsDataProvider' => $dynamicElementsDataProvider,
+            'sourceMessageSearch' => $sourceMessageSearch,
+            'sourceMessageDataProvider' => $sourceMessageDataProvider,
+        ]);
     }
 
     /**
@@ -906,17 +1008,22 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      *
      * @return string
      */
-    private function getUpdateUrl($id)
+    private function getManageUrl($id)
     {
         $domain_id = $this->domainService()->getCurrentDomainId();
 
         if(is_array($id)) {
-            $url = [
-                'admin/handbook/dynamic-elements/update-multiple',
-                'de' => isset($id['dynamic_elements']) ? implode(',', $id['dynamic_elements']) : null,
-                'tr' => isset($id['translation']) ? implode(',', $id['translation']) : null,
-                'domain_id' => $domain_id
-            ];
+            if(! $this->entity_manage_url) {
+                $url = ['admin/handbook/dynamic-elements/manage'];
+            } else {
+                $url = $this->entity_manage_url;
+            }
+
+            $url = ArrayHelper::merge($url, [
+                'domain_id' => $domain_id,
+                'dynamic_elements_ids' => isset($id['dynamic_elements']) ? implode(',', $id['dynamic_elements']) : null,
+                'translation_ids' => isset($id['translation']) ? implode(',', $id['translation']) : null,
+            ]);
         } else {
             $url = [
                 'admin/handbook/dynamic-elements/update',

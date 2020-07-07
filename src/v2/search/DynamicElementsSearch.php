@@ -13,6 +13,11 @@ use concepture\yii2handbook\v2\models\DynamicElements;
 class DynamicElementsSearch extends DynamicElements
 {
     /**
+     * @var array
+     */
+    public $ids;
+
+    /**
      * @inheritDoc/
      */
     public function rules()
@@ -37,7 +42,14 @@ class DynamicElementsSearch extends DynamicElements
                         ],
                         'string',
                         'max' => 32
-                    ]
+                    ],
+                    [
+                        [
+                            'ids',
+                        ],
+                        'each',
+                        'rule' => ['integer']
+                    ],
         ];
     }
 
@@ -61,6 +73,9 @@ class DynamicElementsSearch extends DynamicElements
         ]);
         $query->andFilterWhere([
             'route_hash' => $this->route_hash
+        ]);
+        $query->andFilterWhere([
+            'id' => $this->ids
         ]);
     }
 }

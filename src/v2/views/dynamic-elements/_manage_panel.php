@@ -9,7 +9,7 @@
     <ul class="yii2-handbook-dynamic-elements-manage-panel__items">
         <li>
             <a href="<?= $url;?>" target="_blank">
-                <?= Yii::t('handbook', 'Динамические элементы')?> (<?= $count;?>)
+                <?= Yii::t('yii2-admin', 'Управление страницей')?>
             </a>
         </li>
         <li>
