@@ -134,7 +134,7 @@ class DomainService extends Service
      *
      * @return array
      */
-    public function getEnbaledDomainData()
+    public function getEnabledDomainData()
     {
         static $result;
 

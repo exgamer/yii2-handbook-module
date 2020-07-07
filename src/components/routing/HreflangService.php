@@ -110,7 +110,7 @@ class HreflangService extends Service
     {
         $traits = ClassHelper::getTraits($model);
         if (in_array(HasDomainPropertyTrait::class, $traits)) {
-            $domainsData = $this->domainService()->getEnbaledDomainData();
+            $domainsData = $this->domainService()->getEnabledDomainData();
             $props = $model->getProperties()->all();
             if($props) {
                 $params = [];
