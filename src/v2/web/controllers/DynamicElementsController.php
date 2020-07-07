@@ -166,7 +166,7 @@ class DynamicElementsController extends Controller
             $form->customizeForm($model);
         }
 
-        if ($form->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             if (($result = $service->update($form, $model)) != false) {
                 if ( RequestHelper::isMagicModal()){
                     return $this->responseJson([

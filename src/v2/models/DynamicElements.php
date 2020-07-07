@@ -90,7 +90,8 @@ class DynamicElements extends ActiveRecord
                 [
                     'value',
                 ],
-                'string'
+                'string',
+                'max' => 512
             ],
             [
                 [

@@ -35,6 +35,7 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
                 </div>
             </div>
         <?php endif;?>
+        <?= $form->errorSummary($model);?>
         <div class="card">
             <div class="card-body">
                 <div class="row">
