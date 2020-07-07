@@ -19,7 +19,6 @@ use kamaelkz\yii2admin\v1\modules\audit\actions\AuditDynamicElementsAction;
 use concepture\yii2logic\enum\AccessEnum;
 use concepture\yii2handbook\web\controllers\Controller;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServicesTrait;
-use concepture\yii2handbook\search\SourceMessageSearch;
 
 /**
  * Динамические элементы
@@ -258,7 +257,6 @@ class DynamicElementsController extends Controller
     {
         return $this->dynamicElementsService()->renderManageTables($domain_id, $dynamic_elements_ids, $translation_ids, $manage_tab);
     }
-
 
     /**
      * Интерактивный мод
