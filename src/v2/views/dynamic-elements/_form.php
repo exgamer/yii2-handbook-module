@@ -34,7 +34,6 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
                     <?= $saveButton; ?>
                 </div>
             </div>
-            <?= $form->errorSummary($originModel);?>
         <?php endif;?>
         <div class="card">
             <div class="card-body">
