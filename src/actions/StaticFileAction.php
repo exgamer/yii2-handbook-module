@@ -27,6 +27,7 @@ class StaticFileAction extends Action
         $this->controller->layout = null;
         $item = $this->staticFileService()->getFile($filename);
         if(! $item) {
+            \Yii::warning('Requested static file not found in db <requested file: ' . $filename . '>');
             throw  new NotFoundHttpException();
         }
 
