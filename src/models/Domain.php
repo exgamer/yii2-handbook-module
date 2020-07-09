@@ -58,6 +58,7 @@ class Domain extends ActiveRecord
                 [
                     'status',
                     'sort',
+                    'country_id'
                 ],
                 'integer'
             ],

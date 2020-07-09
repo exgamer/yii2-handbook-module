@@ -17,6 +17,7 @@ class DomainForm extends Form
     public $caption;
     public $alias;
     public $description;
+    public $country_id;
 
     /**
      * @see CForm::formRules()
