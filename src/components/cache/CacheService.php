@@ -460,7 +460,7 @@ class CacheService extends Component
     
     public function clearAllCache()
     {
-    	$this->getClient()->flushDb();
+    	$this->getClient()->flushdb();
     }
     
     private function addLog($str) 
