@@ -105,7 +105,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     /**
      * @var string
      */
-    private $currentUrlHash = null;
+    private $currentRouteHash = null;
 
     /**
      * @var array
@@ -905,9 +905,9 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function getCurrentRouteHash()
     {
-        if($this->currentUrlHash) {
+        if($this->currentRouteHash) {
 
-            return $this->currentUrlHash;
+            return $this->currentRouteHash;
         }
 
         return md5($this->getCurrentRoute());
@@ -920,7 +920,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function setCurrentRouteHash($hash)
     {
-        $this->currentUrlHash = $hash;
+        $this->currentRouteHash = $hash;
     }
 
     /**
