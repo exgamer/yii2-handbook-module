@@ -8,6 +8,7 @@ use concepture\yii2logic\models\traits\StatusTrait;
 use concepture\yii2logic\models\traits\IsDeletedTrait;
 use concepture\yii2logic\models\LocalizedActiveRecord;
 use concepture\yii2handbook\converters\LocaleConverter;
+use concepture\yii2logic\models\traits\HasLocalizationTrait;
 
 /**
  * Class PaymentSystem
@@ -32,6 +33,7 @@ class PaymentSystem extends LocalizedActiveRecord
     use StatusTrait;
     use IsDeletedTrait;
     use ModelTrait;
+    use HasLocalizationTrait;
 
     /** @var bool */
     public $allow_physical_delete = false;
