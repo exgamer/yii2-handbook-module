@@ -14,10 +14,11 @@ $saveButton = Html::saveButton();
 
 <?php  Pjax::begin(['formSelector' => '#menu-form']); ?>
 <?php  $form = ActiveForm::begin(['id' => 'menu-form']); ?>
-<div class="card">
-    <div class="card-body text-right">
-        <?=  $saveRedirectButton?>
-        <?=  $saveButton?>
+    <div class="card">
+        <div class="card-body text-right">
+            <?=  $saveRedirectButton?>
+            <?=  $saveButton?>
+        </div>
     </div>
     <div class="card">
         <div class="card-body">
@@ -113,13 +114,12 @@ $saveButton = Html::saveButton();
             </div>
         </div>
     </div>
-
-
-    <div class="card-body text-right">
-        <?=  $saveRedirectButton?>
-        <?=  $saveButton?>
+    <div class="card">
+        <div class="card-body text-right">
+            <?=  $saveRedirectButton?>
+            <?=  $saveButton?>
+        </div>
     </div>
-</div>
 <?php  ActiveForm::end(); ?>
 <?php  Pjax::end(); ?>
 
