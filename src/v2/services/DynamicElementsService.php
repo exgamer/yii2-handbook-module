@@ -1022,7 +1022,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $url = ArrayHelper::merge($url, [
                 'domain_id' => $domain_id,
                 'dynamic_elements_ids' => isset($id['dynamic_elements']) ? implode(',', $id['dynamic_elements']) : null,
-                'translation_ids' => isset($id['translation']) ? implode(',', $id['translation']) : null,
+                'translation_ids' => isset($id['translation']) && is_array($id['translation']) ? implode(',', $id['translation']) : null,
             ]);
         } else {
             $url = [
