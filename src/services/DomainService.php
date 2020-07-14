@@ -71,9 +71,11 @@ class DomainService extends Service
     /**
      * Возвращает все данные по domainMap
      *
+     * @param \Closure $extendData function($data) { ... $data['a'] = 'b' return $data;}
+     *
      * @return array
      */
-    public function getDomainsData()
+    public function getDomainsData(\Closure $extendData = null)
     {
         static $_items = null;
         if ($_items){
@@ -82,7 +84,7 @@ class DomainService extends Service
 
         $items = $this->modelsCatalog();
         $map = $this->getDomainMap();
-        foreach ($map as $url => $data){
+        foreach ($map as $url => $data) {
             $data['host'] = $url;
             if (Yii::$app instanceof \yii\web\Application) {
                 $data['host_with_scheme'] = UrlHelper::getCurrentSchema() . "://" . $url;
@@ -92,6 +94,10 @@ class DomainService extends Service
             $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
             $data['country_id'] = $countryId = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'id');
             $data['country_caption'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'caption');
+
+            if($extendData) {
+                $data = call_user_func($extendData, $data);
+            }
 
             // TODO нужно как то лакончиней сделать
             $country_caption_by_language = Yii::$app->countryService->getOneByCondition(function (ActiveQuery $query) use ($languageId, $countryId) {
@@ -149,6 +155,8 @@ class DomainService extends Service
             });
         }
 
+//        d($result);
+
         return $result;
 
     }
@@ -162,7 +170,6 @@ class DomainService extends Service
      */
     public function getModelDomains($model = null, $propsRelationName = 'properties')
     {
-
         static $items = null;
 
         $result = $this->getDomainsData();
