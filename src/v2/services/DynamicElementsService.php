@@ -295,6 +295,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function getElement(int $type, string $name, string $caption, $options)
     {
+        $is_cli = (! Yii::$app instanceof \yii\web\Application);
         try {
             $this->dto->name = $name;
             $this->dto->caption = $caption;
@@ -302,10 +303,12 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $this->dto->key = "{$this->getCurrentRoutePrefix()}_{$this->dto->name}";
             $event = $this->elementsGetEvent($type, $this->dto->key, $this->dto->caption, $this->dto->value, $this->dto->general);
             $this->trigger(static::EVENT_BEFORE_GET_ELEMENT, $event);
-            $reset = (!Yii::$app instanceof \yii\web\Application);
-            $dataSet = $this->getDataSet(null, $reset);
+            $dataSet = $this->getDataSet(null, $is_cli);
             # если такого элемента нет, заполняем массив для записи в бд
-            if (!property_exists($dataSet, strtolower($this->dto->key))) {
+            if (! property_exists($dataSet, strtolower($this->dto->key))) {
+                if($is_cli) {
+                    throw new \Exception("Dynamic element is not wound : {$this->dto->key}");
+                }
                 # todo: убрал отлов ошибок
                 $this->writeItems[$this->dto->key] = [
                     'route' => $this->getCurrentRoute(),
@@ -345,8 +348,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
 
             return $this->elementValue();
 
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             \Yii::warning($e->getTraceAsString());
+            if($is_cli) {
+                throw new \Exception("Dynamic element is not wound : {$name}");
+            }
         }
     }
 
@@ -993,10 +999,17 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     /**
      * Установка данных роута
      */
-    private function setRouteData()
+    public function setRouteData($data = null)
     {
+        if ($data) {
+            $this->routeData = $data;
+
+            return;
+        }
+
         $controller = Yii::$app->controller;
-        if(! $controller) {
+        if (! $controller) {
+
             return;
         }
         
@@ -1006,9 +1019,17 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             'prefix' => $prefix,
             'value' => $value,
         ];
-        if(property_exists($controller, 'actionParams')) {
+        if (property_exists($controller, 'actionParams')) {
             $this->routeData['params'] = $controller->actionParams;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRouteData()
+    {
+        return $this->routeData;
     }
 
     /**

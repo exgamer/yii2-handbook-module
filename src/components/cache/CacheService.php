@@ -367,6 +367,10 @@ class CacheService extends Component
     	$options = $params['options'] ?? null;
         $this->getDynamicElementsService()->setCurrentRouteHash(null);
     	if($options) {
+    	    if(isset($options['current_route_data'])) {
+                $this->getDynamicElementsService()->setRouteData($options['current_route_data']);
+            }
+
             if(isset($options['current_route_hash'])) {
                 $this->getDynamicElementsService()->setCurrentRouteHash($options['current_route_hash']);
             }

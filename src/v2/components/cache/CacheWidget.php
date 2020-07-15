@@ -65,6 +65,13 @@ abstract class CacheWidget extends Widget
             $this->setOptions([
                 'current_route_hash' => $this->dynamicElementsService()->getCurrentRouteHash()
             ]);
+
+            $routeData = $this->dynamicElementsService()->getRouteData();
+            if($routeData) {
+                $this->setOptions([
+                    'current_route_data' => $routeData
+                ]);
+            }
         }
 
         $this->setPropertiesOptions();
