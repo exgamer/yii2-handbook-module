@@ -295,54 +295,59 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function getElement(int $type, string $name, string $caption, $options)
     {
-        $this->dto->name = $name;
-        $this->dto->caption = $caption;
-        $this->applyOptions($options);
-        $this->dto->key = "{$this->getCurrentRoutePrefix()}_{$this->dto->name}";
-        $event = $this->elementsGetEvent($type, $this->dto->key, $this->dto->caption, $this->dto->value, $this->dto->general);
-        $this->trigger(static::EVENT_BEFORE_GET_ELEMENT, $event);
-        $reset = (! Yii::$app instanceof \yii\web\Application);
-        $dataSet = $this->getDataSet(null, $reset);
-        # если такого элемента нет, заполняем массив для записи в бд
-        if(! property_exists($dataSet, strtolower($this->dto->key))) {
-            # todo: убрал отлов ошибок
-            $this->writeItems[$this->dto->key] = [
-                'route' => $this->getCurrentRoute(),
-                'route_params' => $this->getCurrentRouteParams(),
-                'domain_id' => $this->domainService()->getCurrentDomainId(),
-                'type' => $type,
-                'name' => $this->dto->key,
-                'value' => $this->dto->value,
-                'caption' => $this->dto->caption,
-                'general' => $this->dto->general,
-                'multi_domain' => $this->dto->multi_domain,
-            ];
-            $item = &$this->writeItems[$this->dto->key];
-            if($this->unique_params && $this->dto->apply_unique_params) {
-                $item['unique_params'] = $this->unique_params;
-                $item['multi_domain'] = false;
+        try {
+            $this->dto->name = $name;
+            $this->dto->caption = $caption;
+            $this->applyOptions($options);
+            $this->dto->key = "{$this->getCurrentRoutePrefix()}_{$this->dto->name}";
+            $event = $this->elementsGetEvent($type, $this->dto->key, $this->dto->caption, $this->dto->value, $this->dto->general);
+            $this->trigger(static::EVENT_BEFORE_GET_ELEMENT, $event);
+            $reset = (!Yii::$app instanceof \yii\web\Application);
+            $dataSet = $this->getDataSet(null, $reset);
+            # если такого элемента нет, заполняем массив для записи в бд
+            if (!property_exists($dataSet, strtolower($this->dto->key))) {
+                # todo: убрал отлов ошибок
+                $this->writeItems[$this->dto->key] = [
+                    'route' => $this->getCurrentRoute(),
+                    'route_params' => $this->getCurrentRouteParams(),
+                    'domain_id' => $this->domainService()->getCurrentDomainId(),
+                    'type' => $type,
+                    'name' => $this->dto->key,
+                    'value' => $this->dto->value,
+                    'caption' => $this->dto->caption,
+                    'general' => $this->dto->general,
+                    'multi_domain' => $this->dto->multi_domain,
+                ];
+                $item = &$this->writeItems[$this->dto->key];
+                if ($this->unique_params && $this->dto->apply_unique_params) {
+                    $item['unique_params'] = $this->unique_params;
+                    $item['multi_domain'] = false;
+                }
+
+                if ($this->dto->value_params_keys) {
+                    $item['value_params'] = Json::encode($this->dto->value_params_keys);
+                }
+
+                $event->value = $this->dto->value;
+                $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
+
+                return $this->elementValue($event->value);
             }
 
-            if($this->dto->value_params_keys) {
-                $item['value_params'] = Json::encode($this->dto->value_params_keys);
-            }
-
-            $event->value = $this->dto->value;
+            $value = ($dataSet->{strtolower($this->dto->key)} ?? null);
+            $event->value = $this->dto->value = $value;
             $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
+            if (isset($this->modelStack[$this->dto->key])) {
+                $id = $this->modelStack[$this->dto->key]['id'];
+                $this->callStack[$this->dto->key] = $id;
+                $this->callIds[] = $id;
+            }
 
-            return $this->elementValue($event->value);
+            return $this->elementValue();
+
+        }catch(\Exception $e){
+            \Yii::warning($e->getTraceAsString());
         }
-
-        $value = ($dataSet->{strtolower($this->dto->key)} ?? null);
-        $event->value = $this->dto->value = $value;
-        $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
-        if(isset($this->modelStack[$this->dto->key])) {
-            $id = $this->modelStack[$this->dto->key]['id'];
-            $this->callStack[$this->dto->key] = $id;
-            $this->callIds[] = $id;
-        }
-
-        return $this->elementValue();
     }
 
     /**
@@ -370,21 +375,26 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     private function elementValue()
     {
-        # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
-        if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
-            return null;
-        }
+        try{
+            # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
+            if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
+                return null;
+            }
 
-        if($this->dto->value_params_keys) {
-            $params = array_combine($this->dto->value_params_keys, $this->dto->value_params_values);
-            $this->dto->value = Yii::$app->getI18n()->format($this->dto->value, $params , Yii::$app->language);
-        }
+            if($this->dto->value_params_keys) {
+                $params = array_combine($this->dto->value_params_keys, $this->dto->value_params_values);
+                $this->dto->value = Yii::$app->getI18n()->format($this->dto->value, $params , Yii::$app->language);
+            }
 
-        if($this->dto->no_control) {
-            return $this->dto->value;
-        }
+            if($this->dto->no_control) {
+                return $this->dto->value;
+            }
 
-        return $this->dynamicElementsService()->getManageControl();
+            return $this->dynamicElementsService()->getManageControl();
+            
+        }catch(\Exception $e){
+            \Yii::warning($e->getTraceAsString());
+        }
     }
 
     /**
@@ -961,7 +971,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     private function getCurrentRouteParams()
     {
-        return Json::encode($this->routeData['params']);
+        return Json::encode($this->routeData['params'] ?? []);
     }
 
     /**

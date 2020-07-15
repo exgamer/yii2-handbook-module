@@ -352,7 +352,8 @@ class CacheService extends Component
 		    	    $this->getClient()->del($this->prefix_callback . $key);
 			}
 		} catch(\Exception $e) {
-			$this->addLog(sprintf($message, $e->getMessage(), $callback['class'], $e->getFile(), $e->getLine()));
+            $this->addLog(sprintf($message, $e->getMessage(), $callback['class'], $e->getFile(), $e->getLine()));
+            $this->addLog($e->getTraceAsString());
     		$this->getClient()->del($this->prefix . $key);
     		$this->getClient()->del($this->prefix_callback . $key);
             print $e->getMessage();
@@ -429,7 +430,7 @@ class CacheService extends Component
     {
     	$keys = $this->getKeysByTag($tag);
 
-    	
+
     	if($keys){
     		$this->addLog('Remove by tag: %s', $tag);
     		// remove tag
