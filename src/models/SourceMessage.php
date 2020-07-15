@@ -17,26 +17,6 @@ use concepture\yii2logic\models\ActiveRecord;
 class SourceMessage extends ActiveRecord
 {
     /**
-     * @var string
-     */
-    public $defaultTranslation;
-
-    /**
-     * @var int
-     */
-    public $messageCount = [];
-
-    /**
-     * @var int
-     */
-    public $allCount;
-
-    /**
-     * @var int
-     */
-    public $fillCount;
-
-    /**
      * @return string
      */
     public static function tableName(): string
@@ -58,6 +38,7 @@ class SourceMessage extends ActiveRecord
     public function getMessages()
     {
         $countries = \Yii::$app->domainService->getDomainMapAttributes('country');
+
         return $this->hasMany(Message::class, ['id' => 'id'])->andWhere(['in', 'language', $countries]);
     }
 
@@ -72,39 +53,5 @@ class SourceMessage extends ActiveRecord
             'messageState' => Yii::t('common', 'Переводы'),
             'defaultTranslation' => Yii::t('common', 'Русский')
         ];
-    }
-
-    /**
-     * Состояние сообщений
-     *
-     * @return string
-     */
-    public function getMessageState()
-    {
-        return "{$this->fillCount}/{$this->allCount}";
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function afterFind()
-    {
-        $this->messageCount = $this->messages;
-        $count = count($this->messageCount);
-        $fillCount = 0;
-        foreach ($this->messageCount as $message) {
-            if($message->language == 'ru') {
-                $this->defaultTranslation = $message->translation;
-            }
-
-            if(! empty($message->translation)) {
-                $fillCount ++;
-            }
-        }
-
-        $this->allCount = $count;
-        $this->fillCount = $fillCount;
-
-        parent::afterFind();
     }
 }

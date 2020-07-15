@@ -28,6 +28,26 @@ class SourceMessageSearch extends SourceMessage
     public $translation;
 
     /**
+     * @var string
+     */
+    public $defaultTranslation;
+
+    /**
+     * @var int
+     */
+    public $messageCount = [];
+
+    /**
+     * @var int
+     */
+    public $allCount;
+
+    /**
+     * @var int
+     */
+    public $fillCount;
+
+    /**
      * @return array
      */
     public function rules()
@@ -54,6 +74,30 @@ class SourceMessageSearch extends SourceMessage
     /**
      * @inheritDoc
      */
+    public function afterFind()
+    {
+        $this->messageCount = $this->messages;
+        $count = count($this->messageCount);
+        $fillCount = 0;
+        foreach ($this->messageCount as $message) {
+            if($message->language == 'ru') {
+                $this->defaultTranslation = $message->translation;
+            }
+
+            if(! empty($message->translation)) {
+                $fillCount ++;
+            }
+        }
+
+        $this->allCount = $count;
+        $this->fillCount = $fillCount;
+
+        parent::afterFind();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function extendQuery(ActiveQuery $query)
     {
         $query->innerJoinWith(['messages']);
@@ -70,6 +114,7 @@ class SourceMessageSearch extends SourceMessage
         $query->andFilterWhere([
             static::tableName() . '.id' => $this->ids
         ]);
+        $query->with(['messages']);
     }
 
     /**
@@ -94,5 +139,15 @@ class SourceMessageSearch extends SourceMessage
                 'translation' => Yii::t('common', 'Перевод')
             ]
         );
+    }
+    
+    /**
+     * Состояние сообщений
+     *
+     * @return string
+     */
+    public function getMessageState()
+    {
+        return "{$this->fillCount}/{$this->allCount}";
     }
 }
