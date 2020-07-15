@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use concepture\yii2handbook\enum\SettingsTypeEnum;
 use concepture\yii2handbook\v2\models\DynamicElements;
 use concepture\yii2handbook\v2\enum\DynamicElementsTypeEnum;
 use kamaelkz\yii2cdnuploader\widgets\CdnUploader;
@@ -18,7 +17,7 @@ if($originModel->multi_domain == false) {
 }
 
 ?>
-<?php if ($model->type == SettingsTypeEnum::TEXT) : ?>
+<?php if ($model->type == DynamicElementsTypeEnum::TEXT) : ?>
     <?= $form
         ->field($model, $attribute)->textInput([
             'maxlength' => true
@@ -28,7 +27,7 @@ if($originModel->multi_domain == false) {
     ?>
 <?php endif;?>
 
-<?php if ($model->type == SettingsTypeEnum::TEXT_AREA) : ?>
+<?php if ($model->type == DynamicElementsTypeEnum::TEXT_AREA) : ?>
     <?= $form
         ->field($model, $attribute)->textarea()
         ->label($label ?? $model->getAttributeLabel('value'))
@@ -36,7 +35,7 @@ if($originModel->multi_domain == false) {
     ?>
 <?php endif;?>
 
-<?php if ($model->type == SettingsTypeEnum::TEXT_EDITOR) : ?>
+<?php if ($model->type == DynamicElementsTypeEnum::TEXT_EDITOR) : ?>
     <?= $this->render('@concepture/yii2handbook/views/include/_editor.php', [
         'form' => $form,
         'model' => $model,
@@ -46,7 +45,7 @@ if($originModel->multi_domain == false) {
         'hint' => $hint
     ]) ?>
 <?php endif;?>
-<?php if ($model->type == SettingsTypeEnum::CHECKBOX) : ?>
+<?php if ($model->type == DynamicElementsTypeEnum::CHECKBOX) : ?>
     <?= $form
         ->field($model, $attribute, [
             'template' => '
