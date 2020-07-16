@@ -137,7 +137,9 @@ class LinkedEntityBehavior extends Behavior
             return $this->owner->{$attribute};
         }
 
-        $current_only = $this->getAttributeConfigData($linkAttrs[$attribute], 'current_only');
+        if (!$current_only) {
+            $current_only = $this->getAttributeConfigData($linkAttrs[$attribute], 'current_only');
+        }
         $class = $this->getAttributeConfigData($linkAttrs[$attribute], 'class');
         $service = $class::getService();
         $linkClass = $this->getAttributeConfigData($linkAttrs[$attribute], 'link_class');
