@@ -35,7 +35,7 @@ class PaymentSystemSearch extends PaymentSystem
         ]);
         $query->andFilterWhere([
             'like',
-            'name',
+            'lower('.static::localizationAlias() . '.name)',
             $this->name
         ]);
     }

@@ -63,8 +63,15 @@ abstract class CacheWidget extends Widget
     {
         if(Yii::$app instanceof \yii\web\Application) {
             $this->setOptions([
-                'route_hash' => $this->dynamicElementsService()->getCurrentRouteHash()
+                'current_route_hash' => $this->dynamicElementsService()->getCurrentRouteHash()
             ]);
+
+            $routeData = $this->dynamicElementsService()->getRouteData();
+            if($routeData) {
+                $this->setOptions([
+                    'current_route_data' => $routeData
+                ]);
+            }
         }
 
         $this->setPropertiesOptions();

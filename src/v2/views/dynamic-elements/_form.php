@@ -44,7 +44,7 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
                             <?= $form
                                 ->field($model, 'type')
                                 ->dropDownList(DynamicElementsTypeEnum::arrayList(), [
-                                    'class' => 'form-control custom-select',
+                                    'class' => 'form-control custom-select active-form-refresh-control',
                                 ]);
                             ?>
                         </div>
@@ -66,10 +66,11 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
                         <?php endif ;?>
                     <?php endif;?>
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <?= $this->render('@concepture/yii2handbook/views/include/_value_field', [
+                        <?= $this->render('_value_field', [
                             'form' => $form,
                             'model' => $model,
                             'originModel' => $originModel,
+                            'attribute' => 'value',
                         ]) ?>
                     </div>
                 </div>

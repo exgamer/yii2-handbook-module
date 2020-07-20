@@ -16,14 +16,16 @@ class DynamicElementsTypeEnum extends Enum
     const TEXT_AREA = 1;
     const TEXT_EDITOR = 2;
     const CHECKBOX = 3;
+    const IMAGE_UPLOADER = 4;
 
     public static function labels()
     {
         return [
-            self::TEXT => Yii::t('handbook', "Текст"),
-            self::TEXT_AREA => Yii::t('handbook', "Многострочный текст"),
-            self::TEXT_EDITOR => Yii::t('handbook', "Текстовый редактор"),
-            self::CHECKBOX => Yii::t('handbook', "Чекбокс"),
+            self::TEXT => Yii::t('yii2admin', "Текст"),
+            self::TEXT_AREA => Yii::t('yii2admin', "Многострочный текст"),
+            self::TEXT_EDITOR => Yii::t('yii2admin', "Текстовый редактор"),
+            self::CHECKBOX => Yii::t('yii2admin', "Чекбокс"),
+            self::IMAGE_UPLOADER => Yii::t('yii2admin', "Загрузка изображений"),
         ];
     }
 }

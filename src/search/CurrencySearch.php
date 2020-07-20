@@ -1,9 +1,8 @@
 <?php
-
 namespace concepture\yii2handbook\search;
 
-use concepture\yii2handbook\models\Currency;
 use yii\db\ActiveQuery;
+use concepture\yii2handbook\models\Currency;
 
 /**
  * Class LocaleSearch
@@ -19,6 +18,7 @@ class CurrencySearch extends Currency
     {
         return [
             [['id'], 'integer'],
+            [['name'], 'string'],
             [['code'], 'string'],
         ];
     }
@@ -31,6 +31,11 @@ class CurrencySearch extends Currency
         $query->andFilterWhere([
             'id' => $this->id,
             'code' => $this->code,
+        ]);
+        $query->andFilterWhere([
+            'like',
+            'lower('.static::localizationAlias() . '.name)',
+            $this->name
         ]);
     }
 

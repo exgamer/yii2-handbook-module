@@ -352,7 +352,8 @@ class CacheService extends Component
 		    	    $this->getClient()->del($this->prefix_callback . $key);
 			}
 		} catch(\Exception $e) {
-			$this->addLog(sprintf($message, $e->getMessage(), $callback['class'], $e->getFile(), $e->getLine()));
+            $this->addLog(sprintf($message, $e->getMessage(), $callback['class'], $e->getFile(), $e->getLine()));
+            $this->addLog($e->getTraceAsString());
     		$this->getClient()->del($this->prefix . $key);
     		$this->getClient()->del($this->prefix_callback . $key);
             print $e->getMessage();
@@ -364,10 +365,14 @@ class CacheService extends Component
     	$this->addLog('Exec widget %s', json_encode($params));
     	$object = new $params['class']();
     	$options = $params['options'] ?? null;
-        $this->getDynamicElementsService()->setCurrentUlrHash(null);
+        $this->getDynamicElementsService()->setCurrentRouteHash(null);
     	if($options) {
-            if(isset($options['currrent_url_hash'])) {
-                $this->getDynamicElementsService()->setCurrentUlrHash($options['currrent_url_hash']);
+    	    if(isset($options['current_route_data'])) {
+                $this->getDynamicElementsService()->setRouteData($options['current_route_data']);
+            }
+
+            if(isset($options['current_route_hash'])) {
+                $this->getDynamicElementsService()->setCurrentRouteHash($options['current_route_hash']);
             }
 
             $object->setOptions($options);
@@ -429,7 +434,7 @@ class CacheService extends Component
     {
     	$keys = $this->getKeysByTag($tag);
 
-    	
+
     	if($keys){
     		$this->addLog('Remove by tag: %s', $tag);
     		// remove tag

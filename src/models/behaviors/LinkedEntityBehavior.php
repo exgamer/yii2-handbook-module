@@ -117,7 +117,16 @@ class LinkedEntityBehavior extends Behavior
         return $linkAttrs;
     }
 
-    public function getLinkModels($attribute)
+    /**
+     * Возвращает список привязанных моделей
+     *
+     * @param string $attribute
+     * @param bool $current_only Если true вернет только привязанные сущности,
+     *                           а не весь список, по умолчанию новая пустая модель
+     * @return array|mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getLinkModels($attribute, $current_only = false)
     {
         $linkAttrs = $this->getLinkAttributes();
         if (! isset($linkAttrs[$attribute])){
@@ -132,7 +141,11 @@ class LinkedEntityBehavior extends Behavior
         $service = $class::getService();
         $linkClass = $this->getAttributeConfigData($linkAttrs[$attribute], 'link_class');
         $linkService = $linkClass::getService();
-        $allLinked = $service->getAllModelsForList();
+        $allLinked = [];
+        if (!$current_only) {
+            $allLinked = $service->getAllModelsForList();
+        }
+
         if (!$allLinked) {
             $model = Yii::createObject($this->pojoClass);
 
@@ -143,6 +156,7 @@ class LinkedEntityBehavior extends Behavior
         $tableName = trim($class::tableName(), '{}%');
         $entity_type_id =  $this->getCurrentEntityTypeId();
         $linkAttribute = $tableName . "_id";
+
         $linkModels = $linkService->getAllByCondition(function (ActiveQuery $query) use ($entity_type_id, $entity_id, $linkAttribute) {
             $query->andWhere([
                 'entity_type_id' => $entity_type_id,
