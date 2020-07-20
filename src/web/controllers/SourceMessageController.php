@@ -32,25 +32,6 @@ class SourceMessageController extends BaseController
     }
 
     /**
-     * @return array
-     */
-    protected function getAccessRules()
-    {
-        return [
-            [
-                'actions' => [
-                    'index',
-                    'update'
-                ],
-                'allow' => true,
-                'roles' => [
-                    UserRoleEnum::ADMIN
-                ],
-            ]
-        ];
-    }
-
-    /**
      * @inheritDoc
      */
     public function actions()
