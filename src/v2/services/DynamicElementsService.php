@@ -1085,4 +1085,12 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
 
         return $event;
     }
+
+    /**
+     * @return DynamicElementDto
+     */
+    public function getDto()
+    {
+        return $this->dto;
+    }
 }
