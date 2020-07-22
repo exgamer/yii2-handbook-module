@@ -137,14 +137,14 @@ class LinkedEntityBehavior extends Behavior
             return $this->owner->{$attribute};
         }
 
+        if (!$current_only) {
+            $current_only = $this->getAttributeConfigData($linkAttrs[$attribute], 'current_only');
+        }
         $class = $this->getAttributeConfigData($linkAttrs[$attribute], 'class');
         $service = $class::getService();
         $linkClass = $this->getAttributeConfigData($linkAttrs[$attribute], 'link_class');
         $linkService = $linkClass::getService();
-        $allLinked = [];
-        if (!$current_only) {
-            $allLinked = $service->getAllModelsForList();
-        }
+        $allLinked = $service->getAllModelsForList();
 
         if (!$allLinked) {
             $model = Yii::createObject($this->pojoClass);
@@ -183,6 +183,10 @@ class LinkedEntityBehavior extends Behavior
                 $link = $currentLinkModels[$model->id];
             }else {
                 $link = isset($linkModels[$model->id]) ? $linkModels[$model->id] : null;
+            }
+
+            if ($current_only && !$link) {
+                continue;
             }
 
             $sort = $link ? $link->sort : 1;
