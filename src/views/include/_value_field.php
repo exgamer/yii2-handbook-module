@@ -5,7 +5,7 @@ use concepture\yii2handbook\v2\models\DynamicElements;
 
 $hint = null;
 if(isset($originModel) && $originModel instanceof DynamicElements && $originModel->value_params) {
-    $hint = Yii::$app->dynamicElementsService->getValueParamsHint($originModel);
+    $hint = Yii::$app->dynamicElementsService->getHint($originModel);
 }
 
 ?>

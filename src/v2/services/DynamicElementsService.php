@@ -331,6 +331,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                     $item['value_params'] = Json::encode($this->dto->value_params_keys);
                 }
 
+                if($this->dto->hint) {
+                    $item['hint'] = $this->dto->hint;
+                }
+
                 $event->value = $this->dto->value;
                 $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
 
@@ -372,6 +376,8 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $this->dto->value_params_keys = array_keys($options['value_params']);
             $this->dto->value_params_values = array_values($options['value_params']);
         }
+
+        $this->dto->hint = $options['hint'] ?? '';
     }
 
     /**
@@ -382,14 +388,30 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private function elementValue()
     {
         try{
-            # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
-            if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
-                return null;
-            }
-
+            $formatValue = null;
             if($this->dto->value_params_keys) {
                 $params = array_combine($this->dto->value_params_keys, $this->dto->value_params_values);
-                $this->dto->value = Yii::$app->getI18n()->format($this->dto->value, $params , Yii::$app->language);
+                $formatValue = Yii::$app->getI18n()->format($this->dto->value, $params , Yii::$app->language);
+                $this->dto->value = $formatValue;
+            }
+
+            # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
+            if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
+                if($formatValue) {
+                    switch ($this->dto->name) {
+                        case DynamicElementsNameEnum::TITLE :
+                            $this->setTitle($formatValue);
+                            break;
+                        case DynamicElementsNameEnum::DESCRIPTION :
+                            $this->setDescription($formatValue);
+                            break;
+                        case DynamicElementsNameEnum::KEYWORDS :
+                            $this->setKeywords($formatValue);
+                            break;
+                    }
+                }
+
+                return null;
             }
 
             if($this->dto->no_control) {
@@ -944,10 +966,19 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      *
      * @param DynamicElements $model
      */
-    public function getValueParamsHint(DynamicElements $model)
+    public function getHint(DynamicElements $model)
     {
+        $hint = Html::tag('span', Yii::t('yii2admin', 'Пример') . ': ' . $model->hint , ['class' => 'text-muted']);
+        # явная подсказка
+        if($model->hint && ! $model->value_params) {
+
+            return $hint;
+        }
+
         $result = null;
+        # допустимые параметры
         if(! $model->value_params) {
+
             return $result;
         }
 
@@ -956,8 +987,12 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $param = "{{$param}}";
         }
 
-        return Html::tag('span', Yii::t('yii2admin', 'Допустимые параметры') . ': ' . implode(' ', $params) , ['class' => 'text-muted']);
+        $result =  Html::tag('span', Yii::t('yii2admin', 'Допустимые параметры') . ': ' . implode(' ', $params) , ['class' => 'text-muted']);
+        if($model->hint) {
+            $result .= " {$hint}";
+        }
 
+        return $result;
     }
 
     /**
