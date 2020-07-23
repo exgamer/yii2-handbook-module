@@ -8,7 +8,7 @@ use kamaelkz\yii2cdnuploader\enum\StrategiesEnum;
 
 $hint = null;
 if(isset($originModel) && $originModel instanceof DynamicElements && $originModel->value_params) {
-    $hint = Yii::$app->dynamicElementsService->getValueParamsHint($originModel);
+    $hint = Yii::$app->dynamicElementsService->getHint($originModel);
 }
 
 $badge = null;

@@ -2,6 +2,7 @@
 
 use concepture\yii2logic\helpers\AccessHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 use concepture\yii2handbook\v2\models\DynamicElements;
@@ -34,6 +35,7 @@ if (! AccessHelper::checkCurrentRouteAccess(['domain_id' => $domain_id]) && isse
                     <?= $saveButton; ?>
                 </div>
             </div>
+<!--            --><?//= Html::a('test', '#', ['class' => 'magic-modal-control','data-modal-size'=> 'modal-full', 'data-url' => Url::to(['/handbook/source-message/update', 'id' => 102])]);?>
         <?php endif;?>
         <?= $form->errorSummary($model);?>
         <div class="card">
