@@ -469,10 +469,15 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $this->title = $data->seo_title ?? $model->{$titleAttribute};
         }
 
-        $description = $data->{strtolower($this->getCurrentRoutePrefix()) . "_description"} ?? null;
-        $this->description = $data->seo_description ?? $description ?? null;
-        $keywords = $data->{strtolower($this->getCurrentRoutePrefix()) . "_keywords"} ?? null;
-        $this->keywords = $data->seo_keywords ?? $keywords ?? null;
+        if(! $this->description) {
+            $description = $data->{strtolower($this->getCurrentRoutePrefix()) . "_description"} ?? null;
+            $this->description = $data->seo_description ?? $description ?? null;
+        }
+
+        if(! $this->keywords) {
+            $keywords = $data->{strtolower($this->getCurrentRoutePrefix()) . "_keywords"} ?? null;
+            $this->keywords = $data->seo_keywords ?? $keywords ?? null;
+        }
 
         if(null !== $data->seo_h1) {
             $this->heading = $data->seo_h1;
