@@ -11,6 +11,9 @@ use concepture\yii2handbook\components\routing\HreflangService;
 /**
  * Рсширение twig для формирования альтарнативных адресов страниц по локалям
  *
+ * @deprecated функционал в SeoExtension
+ * @todo на удаление
+ *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
 class HreflangExtension extends AbstractExtension

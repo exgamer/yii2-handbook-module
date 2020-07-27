@@ -10,6 +10,9 @@ use Twig\TwigFunction;
 /**
  * Расширения twig для работы с сео блоками
  *
+ * @deprecated функционал в SeoExtension
+ * @todo на удаление
+ *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
 class SeoBlockExtension extends AbstractExtension
