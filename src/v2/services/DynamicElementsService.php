@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\v2\services;
 
 use concepture\yii2handbook\components\i18n\TranslationHelper;
 use concepture\yii2handbook\v2\search\DynamicElementsSearch;
+use concepture\yii2logic\enum\AccessEnum;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -889,8 +890,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return $result;
         }
 
-        # todo: а вот если юзер авторизуется он увидит панельку гавно
-        $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
+        $result = (! Yii::$app->getUser()->getIsGuest() && Yii::$app->getUser()->can(AccessEnum::ADMIN));
 
         return $result;
     }
