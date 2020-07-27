@@ -891,7 +891,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
         }
 
         $result = (! Yii::$app->getUser()->getIsGuest() /*&& Yii::$app->getUser()->can(AccessEnum::ADMIN)*/);
-  
+
         return $result;
     }
 
