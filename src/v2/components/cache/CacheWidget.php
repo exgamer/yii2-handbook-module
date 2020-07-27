@@ -247,8 +247,8 @@ abstract class CacheWidget extends Widget
      */
     protected function excludeOptions()
     {
-        return ['cache', 'cache_ttl'];
-    }
+        return ['cache', 'cache_ttl', 'current_route_data', 'current_route_hash'];
+    } 
 
     /**
      * Название виджета
