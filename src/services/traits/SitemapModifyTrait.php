@@ -54,6 +54,10 @@ trait SitemapModifyTrait
 
         $form->controller_id = $controllerId;
         $form->entity_id = $model->id;
+        if ($model->hasAttribute('domain_id')) {
+            $form->domain_id = $model->domain_id;
+        }
+        
         $form->location = $location;
         $form->section = $section;
 
