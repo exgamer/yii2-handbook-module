@@ -2,6 +2,8 @@
 
 namespace concepture\yii2handbook\traits;
 
+use concepture\yii2handbook\components\routing\HreflangService;
+use concepture\yii2handbook\services\SeoBlockService;
 use Yii;
 use concepture\yii2handbook\services\SeoService;
 use concepture\yii2handbook\services\SitemapService;
@@ -162,6 +164,22 @@ trait ServicesTrait
     public function sourceMessageService()
     {
         return Yii::$app->sourceMessageService;
+    }
+
+    /**
+     * @return HreflangService
+     */
+    public function hreflangService()
+    {
+        return Yii::$app->hreflangService;
+    }
+
+    /**
+     * @return SeoBlockService
+     */
+    public function seoBlockService()
+    {
+        return Yii::$app->seoBlockService;
     }
 }
 

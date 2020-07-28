@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\v2\services;
 
 use concepture\yii2handbook\components\i18n\TranslationHelper;
 use concepture\yii2handbook\v2\search\DynamicElementsSearch;
+use concepture\yii2logic\enum\AccessEnum;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -331,6 +332,10 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                     $item['value_params'] = Json::encode($this->dto->value_params_keys);
                 }
 
+                if($this->dto->hint) {
+                    $item['hint'] = $this->dto->hint;
+                }
+
                 $event->value = $this->dto->value;
                 $this->trigger(static::EVENT_AFTER_GET_ELEMENT, $event);
 
@@ -372,6 +377,8 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $this->dto->value_params_keys = array_keys($options['value_params']);
             $this->dto->value_params_values = array_values($options['value_params']);
         }
+
+        $this->dto->hint = $options['hint'] ?? '';
     }
 
     /**
@@ -382,14 +389,30 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     private function elementValue()
     {
         try{
-            # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
-            if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
-                return null;
-            }
-
+            $formatValue = null;
             if($this->dto->value_params_keys) {
                 $params = array_combine($this->dto->value_params_keys, $this->dto->value_params_values);
-                $this->dto->value = Yii::$app->getI18n()->format($this->dto->value, $params , Yii::$app->language);
+                $formatValue = Yii::$app->getI18n()->format($this->dto->value, $params , Yii::$app->language);
+                $this->dto->value = $formatValue;
+            }
+
+            # если это мета теги или title не возвращаем ничего, проставяться автоматически в методе apply
+            if(in_array($this->dto->name, DynamicElementsNameEnum::metaValues())) {
+                if($formatValue) {
+                    switch ($this->dto->name) {
+                        case DynamicElementsNameEnum::TITLE :
+                            $this->setTitle($formatValue);
+                            break;
+                        case DynamicElementsNameEnum::DESCRIPTION :
+                            $this->setDescription($formatValue);
+                            break;
+                        case DynamicElementsNameEnum::KEYWORDS :
+                            $this->setKeywords($formatValue);
+                            break;
+                    }
+                }
+
+                return null;
             }
 
             if($this->dto->no_control) {
@@ -447,10 +470,15 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $this->title = $data->seo_title ?? $model->{$titleAttribute};
         }
 
-        $description = $data->{strtolower($this->getCurrentRoutePrefix()) . "_description"} ?? null;
-        $this->description = $data->seo_description ?? $description ?? null;
-        $keywords = $data->{strtolower($this->getCurrentRoutePrefix()) . "_keywords"} ?? null;
-        $this->keywords = $data->seo_keywords ?? $keywords ?? null;
+        if(! $this->description) {
+            $description = $data->{strtolower($this->getCurrentRoutePrefix()) . "_description"} ?? null;
+            $this->description = $data->seo_description ?? $description ?? null;
+        }
+
+        if(! $this->keywords) {
+            $keywords = $data->{strtolower($this->getCurrentRoutePrefix()) . "_keywords"} ?? null;
+            $this->keywords = $data->seo_keywords ?? $keywords ?? null;
+        }
 
         if(null !== $data->seo_h1) {
             $this->heading = $data->seo_h1;
@@ -862,8 +890,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return $result;
         }
 
-        # todo: а вот если юзер авторизуется он увидит панельку гавно
-        $result = ( Yii::$app->getUser()->getIsGuest() ? false : true );
+        $result = (! Yii::$app->getUser()->getIsGuest() /*&& Yii::$app->getUser()->can(AccessEnum::ADMIN)*/);
 
         return $result;
     }
@@ -944,10 +971,19 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      *
      * @param DynamicElements $model
      */
-    public function getValueParamsHint(DynamicElements $model)
+    public function getHint(DynamicElements $model)
     {
+        $hint = Html::tag('span', Yii::t('yii2admin', 'Пример') . ': ' . $model->hint , ['class' => 'text-muted']);
+        # явная подсказка
+        if($model->hint && ! $model->value_params) {
+
+            return $hint;
+        }
+
         $result = null;
+        # допустимые параметры
         if(! $model->value_params) {
+
             return $result;
         }
 
@@ -956,8 +992,12 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             $param = "{{$param}}";
         }
 
-        return Html::tag('span', Yii::t('yii2admin', 'Допустимые параметры') . ': ' . implode(' ', $params) , ['class' => 'text-muted']);
+        $result =  Html::tag('span', Yii::t('yii2admin', 'Допустимые параметры') . ': ' . implode(' ', $params) , ['class' => 'text-muted']);
+        if($model->hint) {
+            $result .= " {$hint}";
+        }
 
+        return $result;
     }
 
     /**

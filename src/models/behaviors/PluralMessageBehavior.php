@@ -26,7 +26,7 @@ class PluralMessageBehavior extends Behavior
     /** @var string */
     public $pluralAttr = null;
     /** @var array */
-    private $excludedTypes = ['other'];
+    private $excludedTypes = [];
 
     /**
      * @return array

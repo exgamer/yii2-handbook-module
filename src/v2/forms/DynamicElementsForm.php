@@ -27,6 +27,7 @@ class DynamicElementsForm extends BaseForm
     public $value_params;
     public $unique_params;
     public $unique_params_hash;
+    public $hint;
 
     /**
      * @inheritDoc

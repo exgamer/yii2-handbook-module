@@ -35,12 +35,16 @@ HTML;
         [
             'attribute' => 'value',
             'value' => function($model) {
-                if(! $model->value) {
+                if($model->value === '' OR $model->value === null) {
                     return null;
                 }
 
                 if($model->type === \concepture\yii2handbook\v2\enum\DynamicElementsTypeEnum::TEXT_EDITOR) {
                     return htmlspecialchars_decode(strip_tags(mb_substr($model->value, 0, 150))) . ' ...';
+                }
+
+                if($model->type === \concepture\yii2handbook\v2\enum\DynamicElementsTypeEnum::CHECKBOX) {
+                    return Yii::$app->formatter->asBoolean($model->value);
                 }
 
                 return $model->value;

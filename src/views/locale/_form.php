@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
+use concepture\yii2handbook\enum\DeclinationFormatEnum;
 
 $saveRedirectButton = Html::saveRedirectButton();
 $saveButton = Html::saveButton();
@@ -47,6 +48,9 @@ $saveButton = Html::saveButton();
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <?= $form->field($model, 'declination_format')->dropDownList(DeclinationFormatEnum::arrayList()) ?>
             </div>
         </div>
     </div>

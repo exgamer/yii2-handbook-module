@@ -17,6 +17,7 @@ class LocaleForm extends Form
     public $locale;
     public $caption;
     public $locale_id;
+    public $declination_format;
 
     /**
      * @see CForm::formRules()
@@ -29,6 +30,7 @@ class LocaleForm extends Form
                     'locale',
                     'caption',
                     'locale_id',
+                    'declination_format',
                 ],
                 'required'
             ],

@@ -6,6 +6,7 @@ use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\plural\Plural;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
+use \concepture\yii2handbook\enum\DeclinationFormatEnum;
 
 $this->setTitle(Yii::t('yii2admin', 'Редактирование'));
 $this->pushBreadcrumbs(['label' => Message::label(), 'url' => ['index']]);
@@ -113,8 +114,6 @@ $saveRedirectButton = Html::saveRedirectButton();
                                     </div>
                                 </div>
                             <?php endif; ?>
-
-
                             <?php $i = 0; ?>
                             <?php foreach ($items as $key => $item) :?>
                                 <div id="<?= $item->language;?>" class="col-lg-12 col-md-12 col-sm-12">
@@ -161,7 +160,6 @@ $saveRedirectButton = Html::saveRedirectButton();
                                         ?>
                                         <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
                                         <?= $form->field($model, 'languages[]', ['template' => '{input}'])->hiddenInput(['value' => $item->language]);?>
-
                                         <?php if ($isPlural): ?>
                                             <div class="plurals" style="margin-left: 92px">
                                                 <?= Plural::widget([
@@ -171,6 +169,7 @@ $saveRedirectButton = Html::saveRedirectButton();
                                                     'pluralAttr' => 'plurals',
                                                     'targetAttr' => $countries[$item->language]->iso,
                                                     'token' => '{plural}',
+                                                    'declination_format' => $languages[$item->language]->declination_format ?? DeclinationFormatEnum::FULL
                                                 ]); ?>
                                             </div>
                                         <?php endif; ?>

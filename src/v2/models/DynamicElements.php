@@ -27,6 +27,7 @@ use concepture\yii2logic\validators\v2\UniquePropertyValidator;
  * @property boolean $is_deleted
  * @property integer $sort
  * @property string $value_params
+ * @property string $hint
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -89,6 +90,7 @@ class DynamicElements extends ActiveRecord
             [
                 [
                     'value',
+                    'hint'
                 ],
                 'string'
             ],
