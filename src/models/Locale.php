@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\models;
 
+use concepture\yii2handbook\enum\DeclinationFormatEnum;
 use Yii;
 use concepture\yii2logic\models\ActiveRecord;
 use concepture\yii2logic\models\traits\StatusTrait;
@@ -19,6 +20,7 @@ use concepture\yii2handbook\converters\SqlLocaleConverter;
  * @property integer $status
  * @property datetime $created_at
  * @property datetime $updated_at
+ * @property integer $declination_format
  *
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
@@ -65,6 +67,7 @@ class Locale extends LocalizedActiveRecord
                     'status',
                     'sort',
                     'locale_id',
+                    'declination_format'
                 ],
                 'integer'
             ],
@@ -87,6 +90,20 @@ class Locale extends LocalizedActiveRecord
                     'locale'
                 ],
                 'unique'
+            ],
+            [
+                [
+                    'declination_format'
+                ],
+                'default',
+                'value' => DeclinationFormatEnum::FULL
+            ],
+            [
+                [
+                    'declination_format'
+                ],
+                'in',
+                'range' => DeclinationFormatEnum::values()
             ]
         ];
     }
@@ -102,6 +119,7 @@ class Locale extends LocalizedActiveRecord
             'caption' => Yii::t('handbook','Наименование'),
             'created_at' => Yii::t('handbook','Дата создания'),
             'updated_at' => Yii::t('handbook','Дата обновления'),
+            'declination_format' => Yii::t('handbook','Формат склонения'),
         ];
     }
 
