@@ -169,7 +169,7 @@ $saveRedirectButton = Html::saveRedirectButton();
                                                     'pluralAttr' => 'plurals',
                                                     'targetAttr' => $countries[$item->language]->iso,
                                                     'token' => '{plural}',
-                                                    'declination_format' => $languages[$item->language]->declination_format ?? DeclinationFormatEnum::FULL
+                                                    'declination_format' => $languages[$lang]->declination_format ?? DeclinationFormatEnum::FULL
                                                 ]); ?>
                                             </div>
                                         <?php endif; ?>
