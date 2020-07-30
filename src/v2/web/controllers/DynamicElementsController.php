@@ -48,6 +48,7 @@ class DynamicElementsController extends Controller
                     'allow' => true,
                     'roles' => [
                         AccessEnum::ADMIN,
+                        AccessEnum::SUPERADMIN,
                         AccessHelper::getAccessPermission($this, PermissionEnum::EDITOR),
                         AccessHelper::getDomainAccessPermission($this, PermissionEnum::EDITOR)
                     ],
