@@ -275,8 +275,8 @@ class QueueManager extends BaseQueueManager
     private function preparePayload($payload)
     {
         // md5 or... nothing
-        $payload = json_encode($payload);
-        return mb_strlen($payload) > 160 ? md5($payload) : $payload;
+        return json_encode($payload);
+        //return mb_strlen($payload) > 160 ? md5($payload) : $payload;
     }
 }
 
