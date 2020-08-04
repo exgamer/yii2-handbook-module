@@ -276,7 +276,7 @@ class QueueManager extends BaseQueueManager
     {
         // md5 or... nothing
         $payload = json_encode($payload);
-        return mb_strlen($payload) > 60 ? md5($payload) : $payload;
+        return mb_strlen($payload) > 160 ? md5($payload) : $payload;
     }
 }
 
