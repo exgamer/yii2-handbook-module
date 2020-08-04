@@ -14,6 +14,7 @@ use concepture\yii2handbook\components\queue\BaseQueueManager;
 use concepture\yii2handbook\services\DomainService;
 use concepture\yii2handbook\components\queue\beanstalkd\BaseTubeEnum;
 use udokmeci\yii2beanstalk\BeanstalkController;
+use concepture\yii2handbook\components\queue\beanstalkd\QueueCollection;
 
 /**
  * Сервис для работы с очередями через менеджер - beanstalkd
