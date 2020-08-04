@@ -17,4 +17,8 @@ class ExecuteJob extends Event
      * @var array
      */
     public $payload = [];
+    /**
+     * @var string
+     */
+    public $error = '';
 }

@@ -69,19 +69,24 @@ class QueueManager extends BaseQueueManager
      * @var QueueCollection
      */
     private $_collection;
-
+    /**
+     * Redis buffer key prefix
+     * @var string
+     */
     const REDIS_KEY_PREFIX = 'deduplication_buffer_';
-
+    /**
+     * Buffer lifetime in seconds
+     * @var integer
+     */
+    const DEDUPLICATION_BUFFER_TTL = 30;
     /**
      * @var deduplicateQueue
      */
     public $deduplicateQueue = [];
-
     /**
      * @var redisComponent
      */
     public $redisComponent;
-
     /**
      * @var redis
      */
@@ -114,11 +119,13 @@ class QueueManager extends BaseQueueManager
         $self = $this;
         $queues = $this->deduplicateQueue;
         Event::on(BaseWorker::class, BaseWorker::EVENT_EXECUTE_JOB_DELETE, function($event) use ($self, $queues){
+            \Yii::warning('Event triggered DELETE' . $event->queueName);
             if(in_array($event->queueName, $queues)) {
                 $self->unregisterPayload($event->queueName, $event->payload);
             }
         });
         Event::on(BaseWorker::class, BaseWorker::EVENT_EXECUTE_JOB_BURY, function($event) use ($self, $queues){
+            \Yii::warning('Event triggered BURY ' . $event->queueName . ' ' . $event->error);
             if(in_array($event->queueName, $queues)) {
                 $self->unregisterPayload($event->queueName, $event->payload);
             }
@@ -247,7 +254,9 @@ class QueueManager extends BaseQueueManager
      */
     private function existsPayload($tube, $payload)
     {
-        return (bool)$this->redis->executeCommand('SISMEMBER', [self::REDIS_KEY_PREFIX . $tube, $this->preparePayload($payload)]);
+        return (bool)$this->redis->executeCommand('EXISTS', [
+            self::REDIS_KEY_PREFIX . $tube . $this->preparePayload($payload)
+        ]);
     }
 
     /**
@@ -259,7 +268,11 @@ class QueueManager extends BaseQueueManager
      */
     private function registerPayload($tube, $payload)
     {
-        return $this->redis->executeCommand('SADD', [self::REDIS_KEY_PREFIX . $tube, $this->preparePayload($payload)]);
+        return $this->redis->executeCommand('SETEX', [
+            self::REDIS_KEY_PREFIX . $tube . $this->preparePayload($payload),
+            self::DEDUPLICATION_BUFFER_TTL,
+            1
+        ]);
     }
 
     /**
@@ -271,14 +284,15 @@ class QueueManager extends BaseQueueManager
      */
     public function unregisterPayload($tube, $payload)
     {
-        return @$this->redis->executeCommand('SREM', [self::REDIS_KEY_PREFIX . $tube, $this->preparePayload($payload)]);
+        return $this->redis->executeCommand('DEL', [
+            self::REDIS_KEY_PREFIX . $tube . $this->preparePayload($payload)
+        ]);
     }
 
     private function preparePayload($payload)
     {
         // md5 or... nothing
-        return json_encode($payload);
-        //return mb_strlen($payload) > 160 ? md5($payload) : $payload;
+        return md5(json_encode($payload));
     }
 }
 

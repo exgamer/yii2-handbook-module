@@ -175,6 +175,7 @@ abstract class BaseWorker extends BeanstalkController implements WorkerInterface
             $this->stderr($e->getMessage() . "\n", Console::FG_RED);
             $this->stderr($e->getTraceAsString() . "\n", Console::FG_RED);
             $this->stderr('</ERROR>');
+            $event->error = $e->getMessage();
             $this->trigger(self::EVENT_EXECUTE_JOB_BURY, $event);
 
             return self::BURY;
@@ -237,6 +238,7 @@ abstract class BaseWorker extends BeanstalkController implements WorkerInterface
             $this->stderr($e->getMessage() . "\n", Console::FG_RED);
             $this->stderr($e->getTraceAsString() . "\n", Console::FG_RED);
             $this->stderr('</ERROR>');
+            $event->error = $e->getMessage();
             $this->trigger(self::EVENT_EXECUTE_JOB_BURY, $event);
             return self::BURY;
         }
