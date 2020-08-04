@@ -193,7 +193,9 @@ class QueueManager extends BaseQueueManager
             throw new QueueManagerException('Failed to put the task into the tube.');
         }
 
-        $this->registerPayload($tube, $payload);
+        if(in_array($tube, $this->deduplicateQueue)){
+            $this->registerPayload($tube, $payload);
+        }
         $this->afterSend($tube, $payload);
 
         return $result;
