@@ -6,7 +6,7 @@
 ?>
 <?php if(count($domainsData) > 1) :?>
     <div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
-        <div class="sidebar-content">
+        <div class="sidebar-content" data-current-domain-id="<?= $domain_id;?>">
             <div class="card">
                 <div class="card-header bg-transparent header-elements-inline">
                     <span class="card-title font-weight-semibold">
