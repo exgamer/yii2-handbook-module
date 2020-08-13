@@ -145,6 +145,13 @@ class HreflangService extends Service
      */
     public function setDomainParamsByData(array $data, array $attributes)
     {
+        # если меньше двух записей ничего не выводим
+        if(count($data) < 2) {
+            $this->disable();
+
+            return;
+        }
+
         $domainsData = $this->domainService()->getEnabledDomainData();
         $keys = array_flip($attributes);
         $params = [];
