@@ -138,6 +138,37 @@ class HreflangService extends Service
     }
 
     /**
+     * Установка параметров домена по переданным данным
+     *
+     * @param array $data [domain_id => ['a' => 'b', 'c' => 'd']]
+     * @param array $attributes
+     */
+    public function setDomainParamsByData(array $data, array $attributes)
+    {
+        $domainsData = $this->domainService()->getEnabledDomainData();
+        $keys = array_flip($attributes);
+        $params = [];
+        foreach ($data as $domain_id => $item) {
+            if(! isset($domainsData[$domain_id])) {
+                continue;
+            }
+
+            $domainData = $domainsData[$domain_id];
+            $intersect = array_intersect_key($item, $keys);
+            if(! $intersect) {
+                Yii::warning("Hreflang service " . __FUNCTION__ . " wrong attributes");
+                continue;
+            }
+
+            $params[$domainData['alias']] = $intersect;
+        }
+
+        if($params) {
+            $this->setDomainsRouteParams($params);
+        }
+    }
+
+    /**
      * Получение элементов для формирования тэгов
      *
      * @return $array

@@ -29,6 +29,7 @@
                                     $url,
                                     [
                                         'class' => "nav-link {$active}",
+//                                        'data-pjax' => 0
                                     ]
                                 ) ?>
                             </li>
