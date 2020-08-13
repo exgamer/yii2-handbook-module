@@ -23,6 +23,17 @@ trait ReadSupportTrait
     }
 
     /**
+     * Добавялет в запрос условие выборки где domain_id текущий
+     *
+     * @param ActiveQuery $query
+     */
+    protected function applyCurrentDomain(ActiveQuery $query)
+    {
+        $table = $this->getTableName();
+        $query->andWhere("{$table}.domain_id = :domain_id", [':domain_id' => Yii::$app->domainService->getCurrentDomainId()]);
+    }
+
+    /**
      * Добавялет в запрос условие выборки где локаль текущая
      *
      * @param ActiveQuery $query
