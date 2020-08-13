@@ -48,6 +48,7 @@ class DynamicElementsController extends Controller
                     'allow' => true,
                     'roles' => [
                         AccessEnum::ADMIN,
+                        AccessEnum::SUPERADMIN,
                         AccessHelper::getAccessPermission($this, PermissionEnum::EDITOR),
                         AccessHelper::getDomainAccessPermission($this, PermissionEnum::EDITOR)
                     ],
@@ -253,6 +254,8 @@ class DynamicElementsController extends Controller
      */
     public function actionManage($domain_id, $dynamic_elements_ids, $translation_ids = null, $manage_tab = 'de')
     {
+        $this->dynamicElementsService()->switchDomain();
+
         return $this->dynamicElementsService()->renderManageTables($domain_id, $dynamic_elements_ids, $translation_ids, $manage_tab);
     }
 

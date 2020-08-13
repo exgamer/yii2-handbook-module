@@ -25,7 +25,7 @@ class MessageService extends Service
         $data = [];
         $attributes = $form->getAttributes();
         foreach ($attributes as $key => $value) {
-            if(in_array($key, ['ids', 'languages', 'plurals', 'originText'])) {
+            if(in_array($key, ['ids', 'languages', 'plurals', 'originText', 'isNewRecord'])) {
                 continue;
             }
 

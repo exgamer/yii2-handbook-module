@@ -34,6 +34,12 @@ class MenuSearch extends Menu
                 ],
                 'string',
             ],
+            [
+                [
+                    'is_deleted',
+                ],
+                'boolean',
+            ],
         ];
     }
 
@@ -47,6 +53,7 @@ class MenuSearch extends Menu
             'type' => $this->type,
             'domain_id' => $this->domain_id,
             'status' => $this->status,
+            'is_deleted' => $this->is_deleted,
         ]);
         $query->andFilterWhere([
             'like',

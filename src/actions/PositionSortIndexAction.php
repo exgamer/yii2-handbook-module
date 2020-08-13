@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\actions;
 
+use concepture\yii2logic\enum\IsDeletedEnum;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
@@ -83,6 +84,10 @@ class PositionSortIndexAction extends Action
         $entitySearchModel = Yii::createObject($entitySearchClass);
         $this->extendSearch($entitySearchModel);
         $entitySearchModel->load(Yii::$app->request->queryParams);
+        # если существует атрибут признак удаленной записи и значение пустое
+        if($entitySearchModel->hasAttribute('is_deleted') && null == $entitySearchModel->is_deleted) {
+            $entitySearchModel->is_deleted = IsDeletedEnum::NOT_DELETED;
+        }
         $tableName = trim($entityService->getTableName(), '{}');
         $entity_type = $this->getEntityTypeService()->getOneByCondition([
             'table_name' => $tableName,

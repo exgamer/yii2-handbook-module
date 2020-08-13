@@ -11,6 +11,7 @@ use yii\base\Exception;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
+use yii\web\Application;
 use yii\web\View;
 use yii\helpers\Url;
 use yii\helpers\Html;
@@ -47,6 +48,8 @@ use concepture\yii2handbook\search\SourceMessageSearch;
 class DynamicElementsService extends Service implements DynamicElementsEventInterface
 {
     const INTERACTIVE_MODE_SESSION = 'ineractive_mode';
+
+    const SWITCH_DOMAIN_REQUEST_PARAM = 'switch_domain_id';
 
     use HandbookServices;
     use ReadSupportTrait;
@@ -716,6 +719,30 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     }
 
     /**
+     * Переключение домена по гет параметру
+     */
+    public function switchDomain()
+    {
+        if(! Yii::$app instanceof Application) {
+            return;
+        }
+
+        $request = Yii::$app->getRequest();
+        $domain_id = $request->get(self::SWITCH_DOMAIN_REQUEST_PARAM, null);
+        if(! $domain_id) {
+            return;
+        }
+
+        $domain = $this->domainService()->findById($domain_id);
+        if(! $domain) {
+            return;
+        }
+
+        $this->domainService()->setVirtualDomainId($domain->id);
+        $this->domainService()->setCookie($domain->alias);
+    }
+
+    /**
      * Возвращает элемент управления элементом
      */
     public function getManageControl()
@@ -890,7 +917,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return $result;
         }
 
-        $result = (! Yii::$app->getUser()->getIsGuest() /*&& Yii::$app->getUser()->can(AccessEnum::ADMIN)*/);
+        $result = (! Yii::$app->getUser()->getIsGuest() && Yii::$app->getUser()->canManageAdminPanel());
 
         return $result;
     }
@@ -1092,6 +1119,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
 
             $url = ArrayHelper::merge($url, [
                 'domain_id' => $domain_id,
+                self::SWITCH_DOMAIN_REQUEST_PARAM => $domain_id,
                 'dynamic_elements_ids' => isset($id['dynamic_elements']) ? implode(',', $id['dynamic_elements']) : null,
                 'translation_ids' => isset($id['translation']) && is_array($id['translation']) ? implode(',', $id['translation']) : null,
             ]);

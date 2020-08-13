@@ -295,7 +295,7 @@ class DomainService extends Service
      *
      * @param string $alias
      */
-    public function setCookie(string $alias)
+    public function setCookie(string $alias, $request = false)
     {
         $cookies = Yii::$app->getResponse()->cookies;
         $cookies->add(new Cookie([
