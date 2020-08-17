@@ -94,6 +94,7 @@ class DomainService extends Service
             $data['locale_caption'] = Yii::$app->localeService->catalogValue($data['locale'], 'locale', 'caption');
             $data['country_id'] = $countryId = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'id');
             $data['country_caption'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'caption');
+            $data['country_currency_id'] = Yii::$app->countryService->catalogValue($data['country'], 'iso', 'currency_id');
             if($extendData) {
                 $data = call_user_func($extendData, $data);
             }
