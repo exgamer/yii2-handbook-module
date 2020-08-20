@@ -20,21 +20,21 @@ class m200109_042471__robots_create extends Migration
      */
     public function safeUp()
     {
-        $model = Yii::$app->staticFileService->getOneByCondition([
-            'type' => StaticFileTypeEnum::ROBOTS
-        ]);
-        if ($model){
-            return;
-        }
-
-        $form = new StaticFileForm();
-        $form->filename = "robots";
-        $form->extension = FileExtensionEnum::TXT;
-        $form->type = StaticFileTypeEnum::ROBOTS;
-        $form->status = 1;
-        $form->content = "";
-
-        Yii::$app->staticFileService->create($form);
+//        $model = Yii::$app->staticFileService->getOneByCondition([
+//            'type' => StaticFileTypeEnum::ROBOTS
+//        ]);
+//        if ($model){
+//            return;
+//        }
+//
+//        $form = new StaticFileForm();
+//        $form->filename = "robots";
+//        $form->extension = FileExtensionEnum::TXT;
+//        $form->type = StaticFileTypeEnum::ROBOTS;
+//        $form->status = 1;
+//        $form->content = "";
+//
+//        Yii::$app->staticFileService->create($form);
     }
 
     /**
