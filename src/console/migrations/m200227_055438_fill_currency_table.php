@@ -27,7 +27,7 @@ class m200227_055438_fill_currency_table extends Migration
 
         $rows = [];
         $data = $this->getCurrencyMap();
-        if (!$data) throw new Exception('No data');
+        if (!$data) return;
 
         foreach ($data as $code => $item) {
             $rows[$code] = [
