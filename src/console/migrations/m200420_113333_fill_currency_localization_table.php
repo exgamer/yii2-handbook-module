@@ -29,7 +29,7 @@ class m200420_113333_fill_currency_localization_table extends Migration
         $locales = $connection->createCommand('SELECT id, locale FROM locale ORDER BY id')->queryAll();
 
         if (!$currencies || !$locales) {
-            throw new \yii\base\Exception('Locales or currencies is not found');
+            return;
         }
 
         $rows = [];
