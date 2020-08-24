@@ -57,8 +57,12 @@ class m200227_055438_fill_currency_table extends Migration
      */
     private function getCurrencyMap()
     {
-        return \yii\helpers\Json::decode(
-            file_get_contents("http://www.localeplanet.com/api/auto/currencymap.json?name=Y")
-        );
+        try {
+            return \yii\helpers\Json::decode(
+                file_get_contents("http://www.localeplanet.com/api/auto/currencymap.json?name=Y")
+            );
+        }catch (Exception $ex) {
+            return null;
+        }
     }
 }
