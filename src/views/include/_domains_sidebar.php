@@ -17,7 +17,11 @@
                     <ul class="nav nav-tabs nav-tabs-vertical flex-column border-bottom-0">
                         <?php foreach ($domainsData as $id => $data) :?>
                             <?php
-                                if (! \Yii::$app->user->hasDomainAccess($id)) {
+
+                                if (
+                                    ! \Yii::$app->user->hasDomainAccess($id)
+                                    || (isset($onlyAliases) && ! in_array($data['alias'], $onlyAliases))
+                                ) {
                                     continue;
                                 }
                             ?>

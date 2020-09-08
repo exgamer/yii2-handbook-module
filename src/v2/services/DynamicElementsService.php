@@ -897,7 +897,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
      */
     public function setInteractiveMode($value)
     {
-        $this->getSession()->set(self::INTERACTIVE_MODE_SESSION, $value);
+        return $this->getSession()->set(self::INTERACTIVE_MODE_SESSION, $value);
     }
 
     /**
