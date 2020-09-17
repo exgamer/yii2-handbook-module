@@ -323,7 +323,7 @@ class DomainService extends Service
      * @param bool $reset
      * @return mixed|string
      */
-    public function getCurrentLocaleId()
+    public function getCurrentDomainLocaleId()
     {
         $data = $this->getCurrentDomainData();
         $locale_id = $data['locale_id'] ?? null;
