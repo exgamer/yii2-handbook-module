@@ -30,6 +30,23 @@ trait ModifySupportTrait
     }
 
     /**
+     * @param Model $model
+     * @param bool $ignoreSetted
+     */
+    protected function setCurrentDomainLocale(Model $model, $ignoreSetted = true)
+    {
+        if (! $ignoreSetted){
+            return;
+        }
+
+        if ($model->locale_id){
+            return;
+        }
+
+        $model->locale_id = Yii::$app->domainService->getCurrentDomainLocaleId();
+    }
+
+    /**
      * Устанавливает текущую локаль
      * @param Model $model
      * @param bool $ignoreSetted
