@@ -43,7 +43,8 @@ trait ModifySupportTrait
             return;
         }
 
-        $model->locale_id = Yii::$app->domainService->getCurrentDomainLocaleId();
+        $data = Yii::$app->domainService->getDomainDataById($model->domain_id);
+        $model->locale_id = $data['language_id'];
     }
 
     /**
