@@ -326,7 +326,7 @@ class DomainService extends Service
     public function getCurrentDomainLocaleId()
     {
         $data = $this->getCurrentDomainData();
-        $locale_id = $data['locale_id'] ?? null;
+        $locale_id = $data['language_id'] ?? null;
         // если явно передан гет параметр подставляем его
         if (
             Yii::$app->has('request')
