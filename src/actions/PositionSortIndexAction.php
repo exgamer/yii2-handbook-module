@@ -118,12 +118,12 @@ class PositionSortIndexAction extends Action
         ]);
         $itemsIds = ArrayHelper::getColumn($items, 'id');
         $sortDataProvider->setKeys($itemsIds);
-        $entityDataProvider = $entityService->getDataProvider([], [], $entitySearchModel, null, function(ActiveQuery $query) use($entity_ids) {
+        $entityDataProvider = $entityService->getDataProvider([], [], $entitySearchModel, null, function(ActiveQuery $query) use($entity_ids, $tableName) {
             if(! $entity_ids) {
                 return;
             }
 
-            $query->andWhere(['not in', 'id', $entity_ids]);
+            $query->andWhere(['not in', $tableName . '.id', $entity_ids]);
         });
         $positions = $this->getEntityTypePositionService()->getDropDownList([], '', function (ActiveQuery $query) use ($entity_type) {
             $query->andWhere(['entity_type_id' => $entity_type->id]);
