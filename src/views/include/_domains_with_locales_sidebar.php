@@ -1,11 +1,11 @@
 <?php
-    use yii\helpers\Html;
+use yii\helpers\Html;
 
-    Yii::$app->getView()->viewHelper()->setSecondSidebarState(true);
-    $domainsData = Yii::$app->domainService->getModelDomains($originModel ?? null);
-    if (! isset($locale_id)) {
-        $locale_id = $domainsData[$domain_id]['language_id'];
-    }
+Yii::$app->getView()->viewHelper()->setSecondSidebarState(true);
+$domainsData = Yii::$app->domainService->getModelDomains($originModel ?? null);
+if (! isset($locale_id)) {
+    $locale_id = $domainsData[$domain_id]['language_id'];
+}
 ?>
 <?php if(count($domainsData) > 0) :?>
     <div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
@@ -41,16 +41,23 @@
                             </li>
 
                             <?php
-                                $langs = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) use ($data) {
-                                    $iso = $data['languages'] ?? [];
-                                    $query->andWhere(['locale' => $iso]);
-                                    $query->orderBy('sort ASC, id ASC');
-                                });
+                            $langs = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) use ($data) {
+                                $iso = $data['languages'] ?? [];
+                                $query->andWhere(['locale' => $iso]);
+                                $query->orderBy('sort ASC, id ASC');
+                            });
                             ?>
 
                             <?php foreach ($langs as $lang) :?>
                                 <?php $url['locale_id'] = $lang['id'];?>
-                                <?php $active = ($locale_id == $lang['id'] ? 'active' : "");?>
+                                <?php
+                                $active = "";
+                                if ($locale_id == $lang['id'] && $id == $domain_id ) {
+                                    $active = "active";
+                                }
+
+                                ?>
+
                                 <li class="nav-item">
                                     <?= Html::a(
                                         $lang['caption'],
