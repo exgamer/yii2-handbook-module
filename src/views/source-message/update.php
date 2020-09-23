@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use concepture\yii2handbook\models\Message;
-use kamaelkz\yii2admin\v1\helpers\RequestHelper;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use kamaelkz\yii2admin\v1\widgets\formelements\plural\Plural;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
@@ -61,8 +61,14 @@ $saveRedirectButton = Html::saveRedirectButton();
                 <ul class="nav nav-tabs nav-tabs-vertical flex-column border-bottom-0">
                     <?php foreach (array_keys($itemsByLanguage) as $lang): ?>
                         <li class="nav-item">
+                            <?php
+                                $iso = $lang;
+                                if(strpos($lang, '-') !== false) {
+                                    list($iso,) = explode('-', $lang);
+                                }
+                            ?>
                             <?= Html::a(
-                                $languages[$lang]->caption,
+                                $languages[$iso]->caption,
                                 "#tab-{$lang}",
                                 [
                                     'class' => 'nav-link ' . ('ru' === $lang ? 'active' : null),
@@ -118,14 +124,20 @@ $saveRedirectButton = Html::saveRedirectButton();
                             <?php foreach ($items as $key => $item) :?>
                                 <div id="<?= $item->language;?>" class="col-lg-12 col-md-12 col-sm-12">
                                     <?php
-                                    $label = $countries[$item->language]->caption ?? null;
-                                    $language = strtoupper($item->language);
+                                    $itemLang = $item->language;
+                                    if(strpos($itemLang, '-') !== false) {
+                                        list($languageIso, $itemLang) = explode('-', $itemLang);
+
+                                    }
+
+                                    $label = $countries[$itemLang]->caption ?? null;
+                                    $language = strtoupper($itemLang);
                                     if($label) {
                                         $label = "{$label} ({$language})";
                                     } else {
                                         $label = $language;
                                     }
-                                    $label = '<span class="icon flag-' . $countries[$item->language]->iso . ' flag"></span>' . $label;
+                                    $label = '<span class="icon flag-' . $countries[$itemLang]->iso . ' flag"></span>' . $label;
                                     ?>
                                     <?php
                                     // TODO очень похоже на костыль
@@ -142,22 +154,30 @@ $saveRedirectButton = Html::saveRedirectButton();
                                     ';
                                     }
                                     ?>
+                                    <?php
+                                        $formName = $model->formName();
+                                        $inputId = Inflector::underscore($formName . "_{$item->language}");
+                                    ?>
                                     <div class="translate-inputs">
-                                        <?=
-                                        $form
-                                            ->field($model, $item->language, [
-                                                'template' => '
-                                                <div style="margin-left: 46px">{label}</div>
-                                                <div class="input-group">
-                                                    <span class="input-group-prepend">'.$copyBtn .'</span>
-                                                    {input}
-                                                </div>
-                                                <div style="margin-left: 46px">{error}</div>
-                                            '
-                                            ])
-                                            ->textInput(['value' => !$isPlural ? $item->translation : preg_replace('/{n, plural, \S\w*{.*}/', '{plural}', $item->translation)])
-                                            ->label($label);
+                                        <div style="margin-left: 46px">
+                                            <label class="control-label" for="<?= $inputId;?>">
+                                                <?= $label;?>
+                                            </label>
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-prepend">
+                                                <?= $copyBtn;?>
+                                            </span>
+                                        <?= Html::textInput(
+                                                "{$formName}[$item->language]",
+                                                ! $isPlural ? $item->translation : preg_replace('/{n, plural, \S\w*{.*}/', '{plural}', $item->translation),
+                                                [
+                                                    'id' => $inputId,
+                                                    'class' => 'form-control'
+                                                ]
+                                            );
                                         ?>
+                                        </div>
                                         <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
                                         <?= $form->field($model, 'languages[]', ['template' => '{input}'])->hiddenInput(['value' => $item->language]);?>
                                         <?php if ($isPlural): ?>
@@ -167,9 +187,9 @@ $saveRedirectButton = Html::saveRedirectButton();
                                                     'model' => $model,
                                                     'originText' => $model->originText,
                                                     'pluralAttr' => 'plurals',
-                                                    'targetAttr' => $countries[$item->language]->iso,
+                                                    'targetAttr' => $item->language,
                                                     'token' => '{plural}',
-                                                    'declination_format' => $languages[$lang]->declination_format ?? DeclinationFormatEnum::FULL
+                                                    'declination_format' => $languages[($languageIso ?? $lang)]->declination_format ?? DeclinationFormatEnum::FULL
                                                 ]); ?>
                                             </div>
                                         <?php endif; ?>

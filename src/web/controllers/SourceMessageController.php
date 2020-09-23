@@ -81,21 +81,30 @@ class SourceMessageController extends BaseController
                 new Expression("CASE WHEN language ='ru' THEN 1 ELSE -1 END as priority")
             ]);
             $query->andWhere(['id' => (int) $id]);
-            $query->andWhere(['in', 'language', ArrayHelper::getColumn($countries, 'iso')]);
+//            $query->andWhere(['in', 'language', ArrayHelper::getColumn($countries, 'iso')]);
             $query->orderBy(['priority' => SORT_DESC,'id' => SORT_DESC]);
             $query->indexBy('language');
         });
-//        foreach ($items as $item) {
-//            $form->setVirtualAttribute($item->language, $item->translation);
-//            $form->setStringValidator($item->language, $item->translation);
-//        }
+
         $itemsByLanguage = [];
         $domainMap = \Yii::$app->domainService->getDomainMap();
-        $countryLanguage = ArrayHelper::map($domainMap, 'country', 'country', 'language');
+        $countryLanguage = [];
+        foreach ($domainMap as $domain) {
+            $countryIso = $domain['country'];
+            $languageIso = $domain['language'];
+            $countryLanguage[$languageIso][$countryIso] = $countryIso;
+            $languages = $domain['languages'] ?? null;
+            if($languages && is_array($languages)) {
+                foreach ($languages as $language) {
+                    $countryLanguage["{$language}-{$countryIso}"][$countryIso] = "{$language}-{$countryIso}";
+                }
+            }
+        }
 
         foreach ($countryLanguage as $lang => $item) {
             foreach ($item as $iso) {
-                if (!isset($items[$iso])) {
+                if (! isset($items[$iso])) {
+
                     continue;
                 }
                 $itemsByLanguage[$lang][] = $items[$iso];
@@ -120,7 +129,7 @@ class SourceMessageController extends BaseController
         $config = ['pagination' => false];
         $langs = array_keys($countryLanguage);
         $condition = function(CoreActiveQuery $query) use ($langs) {
-            $query->andFilterWhere(['in', 'locale', $langs]);
+//            $query->andFilterWhere(['in', 'locale', $langs]);
             $query->indexBy('locale');
         };
         $search = $this->localeService()->getRelatedSearchModel();
