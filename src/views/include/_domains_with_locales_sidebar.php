@@ -42,7 +42,7 @@ if ( empty($languages)) {
                             ?>
                             <?php $active = ($domain_id == $id ? 'active' : "");?>
                             <?php $url['domain_id'] = $id;?>
-                            <?php if (isset($data['languages'])) : ?>
+                            <?php if (isset($data['languages']) && ! empty($data['languages'])) : ?>
                                 <li class="nav-item">
                                     <?= Html::a(
                                         '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
