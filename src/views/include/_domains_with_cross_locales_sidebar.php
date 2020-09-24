@@ -54,12 +54,12 @@ if ( empty($languages)) {
                             $labeArr = [];
                             $onDomains = $data['on_domains'];
                             foreach ($onDomains as $domain) {
-                                $labeArr[] = '<span class="icon flag-' . $domain['country'] . ' flag"></span>' . $domain['country_caption'] ;
+                                $labeArr[] = '<div class="mb-2"> <span class="icon flag-' . $domain['country'] . ' flag"></span>' . $domain['country_caption'] . "</div>" ;
                             }
                             ?>
                             <li class="nav-item">
                                 <?= Html::a(
-                                    $data['language_caption'] . " <span data-html='true' data-popup='popover' data-trigger='hover' data-original-title='" . Yii::t('yii2admin', 'Используется на версиях') . "' data-content='" . implode('<br/>', $labeArr)."' class='icon-question4 font-size-sm ml-auto'> </span>",
+                                    $data['language_caption'] . " <span data-html='true' data-popup='popover' data-trigger='hover' data-original-title='" . Yii::t('yii2admin', 'Используется на версиях') . "' data-content='" . implode(' ', $labeArr)."' class='icon-question4 font-size-sm ml-auto'> </span>",
                                     $url,
                                     [
                                         'class' => "nav-link d-flex align-items-center {$active}",
