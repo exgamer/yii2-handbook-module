@@ -78,7 +78,7 @@ class SourceMessageController extends BaseController
         $items = $this->getMessageService()->getAllByCondition(function(ActiveQuery $query) use($id, $countries) {
             $query->select([
                 "*",
-                new Expression("CASE WHEN language ='ru' THEN 1 ELSE -1 END as priority")
+                new Expression("CASE WHEN language ='ru-ru' THEN 1 ELSE -1 END as priority")
             ]);
             $query->andWhere(['id' => (int) $id]);
 //            $query->andWhere(['in', 'language', ArrayHelper::getColumn($countries, 'iso')]);
@@ -92,11 +92,11 @@ class SourceMessageController extends BaseController
         foreach ($domainMap as $domain) {
             $countryIso = $domain['country'];
             $languageIso = $domain['language'];
-            $countryLanguage[$languageIso][$countryIso] = $countryIso;
+            $countryLanguage[$languageIso][$countryIso] = "{$languageIso}-{$countryIso}";
             $languages = $domain['languages'] ?? null;
             if($languages && is_array($languages)) {
                 foreach ($languages as $language) {
-                    $countryLanguage["{$language}-{$countryIso}"][$countryIso] = "{$language}-{$countryIso}";
+                    $countryLanguage[$language][$countryIso] = "{$language}-{$countryIso}";
                 }
             }
         }
