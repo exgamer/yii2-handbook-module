@@ -340,6 +340,28 @@ class DomainService extends Service
     }
 
     /**
+     * Возвращает текущий язык домена
+     *
+     * @param bool $reset
+     * @return mixed|string
+     */
+    public function getDomainLocaleId($domain_id)
+    {
+        $data = $this->getDomainDataById($domain_id);
+        $locale_id = $data['language_id'] ?? null;
+        // если явно передан гет параметр подставляем его
+        if (
+            Yii::$app->has('request')
+            && Yii::$app->getRequest() instanceof \yii\web\Request
+            && Yii::$app->getRequest()->getQueryParam('locale_id')
+        ) {
+            $locale_id = Yii::$app->getRequest()->getQueryParam('locale_id');
+        }
+
+        return $locale_id;
+    }
+
+    /**
      * Возвращает локаль по domain map
      *
      * @return integer
