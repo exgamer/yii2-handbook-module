@@ -424,7 +424,13 @@ class DomainService extends Service
             return [];
         }
 
-        return $result;
+        $languages = $currentDomainData['languages'];
+        $res = [];
+        foreach ($languages as $lang) {
+            $res[$locales[$lang]['id']] = $result[$locales[$lang]['id']];
+        }
+
+        return $res;
     }
 
     /**
