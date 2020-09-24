@@ -20,7 +20,6 @@ if ( empty($languages)) {
     return;
 }
 ?>
-
 <?php if(count($domainsData) > 0) :?>
     <div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
         <div class="sidebar-content" data-current-domain-id="<?= $domain_id;?>">
@@ -47,7 +46,7 @@ if ( empty($languages)) {
                             <?php $url['locale_id'] = $language_id;?>
                             <?php
                             $active = "";
-                            if ($locale_id == $language_id && $usedDomainId == $edited_domain_id ) {
+                            if ($locale_id == $language_id ) {
                                 $active = "active";
                             };
                             ?>
@@ -55,18 +54,18 @@ if ( empty($languages)) {
                             $labeArr = [];
                             $onDomains = $data['on_domains'];
                             foreach ($onDomains as $domain) {
-                                $labeArr[] = '<span class="icon flag-' . $domain['country'] . ' flag" title="' . $domain['country_caption'] . '"></span>';
+                                $labeArr[] = '<span class="icon flag-' . $domain['country'] . ' flag"></span>' . $domain['country_caption'] ;
                             }
                             ?>
                             <li class="nav-item">
                                 <?= Html::a(
-                                    implode(' ', $labeArr).
-                                    $data['language_caption'],
+                                    $data['language_caption'] . " <span data-html='true' data-popup='popover' data-trigger='hover' data-original-title='" . Yii::t('yii2admin', 'Используется на версиях') . "' data-content='" . implode('<br/>', $labeArr)."' class='icon-question4 font-size-sm ml-auto'> </span>",
                                     $url,
                                     [
-                                        'class' => "nav-link {$active}",
+                                        'class' => "nav-link d-flex align-items-center {$active}",
                                     ]
-                                ) ?>
+                                )
+                                ?>
                             </li>
 
                         <?php endforeach;?>
