@@ -5,6 +5,7 @@ namespace concepture\yii2handbook\services;
 use concepture\yii2handbook\models\Country;
 use concepture\yii2logic\db\ActiveQuery;
 use concepture\yii2logic\helpers\UrlHelper;
+use Exception;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -359,6 +360,71 @@ class DomainService extends Service
         }
 
         return $locale_id;
+    }
+
+
+    /**
+     * Возвращает массив доменов сгруппированных по языкам
+     * [
+     *      locale_id_1 => [
+     *          'used_domain_id' => domain_id_1, // domain_id которое редактируется
+     *          'on_domains' => [  // домены на которых используется
+     *                              [
+     *                                   'domain_id' => 3,
+     *                                   'country_image' => "{"id":7218,"path":"/static/08/55/Russia.svg","size":352,"height":null,"width":null}",
+     *                                   'country_caption' => "Россия",
+     *                              ],
+     *                              [
+     *                                   'domain_id' => 3,
+     *                                   'country_image' => "{"id":7218,"path":"/static/08/55/Russia.svg","size":352,"height":null,"width":null}",
+     *                                   'country_caption' => "Россия",
+     *                              ],
+     *                      ]
+     *      ],
+     *
+     * ]
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function getDomainsByLocales()
+    {
+        $result = [];
+        $domainsData = $this->getDomainsData();
+        $domainsData = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
+        $locales = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) {
+            $query->orderBy('sort ASC, id ASC');
+            $query->indexBy('locale');
+        });
+        foreach ($domainsData as $data) {
+            if (! isset($data['languages'])) {
+                continue;
+            }
+
+            $languages = $data['languages'];
+            foreach ($languages as $dAlias => $lang) {
+                $language_id = $locales[$lang]['id'] ?? null;
+                $language_caption = $locales[$lang]['caption'] ?? null;
+                $used_domain_id = $domainsData[$dAlias]['domain_id'] ?? null;
+                $domain_id = $data['domain_id'] ?? null;
+                $result[$language_id]['used_domain_id'] = $used_domain_id;
+                $result[$language_id]['language_caption'] = $language_caption;
+                $result[$language_id]['used_domain_id'] = $used_domain_id;
+                $result[$language_id]['on_domains'][] = [
+                    'domain_id' => $domain_id,
+                    'country_image' => $data['country_image'],
+                    'country' => $data['country'],
+                    'country_caption' => $data['country_caption'],
+                ];
+            }
+        }
+
+        $currentDomainData = $this->getCurrentDomainData();
+        if (! isset($currentDomainData['languages'])) {
+            return [];
+        }
+
+        return $result;
     }
 
     /**
