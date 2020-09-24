@@ -27,7 +27,7 @@ if ( empty($languages)) {
             <div class="card">
                 <div class="card-header bg-transparent header-elements-inline">
                     <span class="card-title font-weight-semibold">
-                        <?= Yii::t('yii2admin', 'Версии');?>
+                        <?= Yii::t('yii2admin', 'Языки');?>
                     </span>
                 </div>
                 <div class="card-body p-0">
