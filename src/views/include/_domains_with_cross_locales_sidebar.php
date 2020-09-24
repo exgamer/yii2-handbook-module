@@ -9,18 +9,8 @@ $domainsData = Yii::$app->domainService->getModelDomains($originModel ?? null);
 if (! isset($locale_id)) {
     $locale_id = $domainsData[$domain_id]['language_id'];
 }
-// Если в domain-map не указаны используемые языки, выводим стандартный саидбар
-if ( empty($languages)) {
-    echo $this->render('@concepture/yii2handbook/views/include/_domains_sidebar', [
-        'domain_id' => $domain_id,
-        'locale_id' => $locale_id,
-        'url' => $url,
-        'originModel' => $originModel,
-    ]);
-    return;
-}
 ?>
-<?php if(count($domainsData) > 0) :?>
+<?php if(count($domainsData) > 0 && ! empty($languages)) :?>
     <div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
         <div class="sidebar-content" data-current-domain-id="<?= $domain_id;?>">
             <div class="card">
