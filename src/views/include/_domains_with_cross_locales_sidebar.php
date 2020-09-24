@@ -20,7 +20,7 @@ if ( empty($languages)) {
     return;
 }
 ?>
-    ?>
+
 <?php if(count($domainsData) > 0) :?>
     <div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
         <div class="sidebar-content" data-current-domain-id="<?= $domain_id;?>">
