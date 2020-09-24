@@ -80,7 +80,7 @@ class SourceMessageSearch extends SourceMessage
         $count = count($this->messageCount);
         $fillCount = 0;
         foreach ($this->messageCount as $message) {
-            if($message->language == 'ru') {
+            if($message->language == 'ru-ru') {
                 $this->defaultTranslation = $message->translation;
             }
 
