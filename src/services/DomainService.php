@@ -41,6 +41,40 @@ class DomainService extends Service
         $this->setDomainMap();
     }
 
+
+    /**
+     * Установит язык в зависимости от домена
+     *
+     * Если $domainByLocale = true domain_id будет установлен в зависимости от ключа из domain-map['languages']
+     *
+     * @param $domain_id
+     * @param $locale_id
+     * @param bool $domainByLocale
+     */
+    public function resolveLocaleId(&$domain_id, &$locale_id, $domainByLocale = false)
+    {
+        if (! $locale_id && ! $domainByLocale) {
+            $locale_id = $this->getDomainLocaleId($domain_id);
+
+            return;
+        }
+
+        //Для случая создания сущности, когда у домена указаны используемые языки версий, чтобы подставить верную связку домена и языка
+        if (! $locale_id && $domainByLocale) {
+            $domainsData = $this->getDomainsData();
+            $domainsDataByAlias = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
+            $editedDomainData = $domainsData[$domain_id];
+            if (isset($editedDomainData['languages']) && ! empty($editedDomainData['languages'])) {
+                foreach ($editedDomainData['languages'] as $domain => $language) {
+                    $data = $domainsDataByAlias[$domain];
+                    $domain_id = $data['domain_id'];
+                    $locale_id = Yii::$app->localeService->catalogKey($language, 'id', 'locale');
+                    break;
+                }
+            }
+        }
+    }
+    
     /**
      * Возвращает карту доменов из параметров
      *
