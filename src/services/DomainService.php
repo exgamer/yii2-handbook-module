@@ -379,6 +379,14 @@ class DomainService extends Service
     {
         $data = $this->getCurrentDomainData();
         $locale_id = $data['language_id'] ?? null;
+        // если явно передан гет параметр подставляем его
+        if (
+            Yii::$app->has('request')
+            && Yii::$app->getRequest() instanceof \yii\web\Request
+            && Yii::$app->getRequest()->getQueryParam('locale_id')
+        ) {
+            $locale_id = Yii::$app->getRequest()->getQueryParam('locale_id');
+        }
 
         return $locale_id;
     }
@@ -393,6 +401,14 @@ class DomainService extends Service
     {
         $data = $this->getDomainDataById($domain_id);
         $locale_id = $data['language_id'] ?? null;
+        // если явно передан гет параметр подставляем его
+        if (
+            Yii::$app->has('request')
+            && Yii::$app->getRequest() instanceof \yii\web\Request
+            && Yii::$app->getRequest()->getQueryParam('locale_id')
+        ) {
+            $locale_id = Yii::$app->getRequest()->getQueryParam('locale_id');
+        }
 
         return $locale_id;
     }
