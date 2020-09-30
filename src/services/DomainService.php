@@ -43,6 +43,44 @@ class DomainService extends Service
 
 
     /**
+     * Возвращает массив с Id домена и локали
+     * Используется в моделях для метода  uniqueFieldValue() для получения корректных данных по domain_id и locale_id с учетом languages в domain map
+     */
+    public function getResolvedCurrentDomainAndLocale()
+    {
+        $domain_id = $this->getCurrentDomainId();
+        $locale_id = $this->getCurrentDomainLocaleId();
+        // если явно передан гет параметр подставляем его
+        if (
+            Yii::$app->has('request')
+            && Yii::$app->getRequest() instanceof \yii\web\Request
+            && Yii::$app->getRequest()->getQueryParam('locale_id')
+        ) {
+            $locale_id = Yii::$app->getRequest()->getQueryParam('locale_id');
+        }
+
+        $domainsData = $this->getDomainsData();
+        $domainsDataByAlias = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
+        $editedDomainData = $domainsData[$domain_id];
+        if (isset($editedDomainData['languages']) && ! empty($editedDomainData['languages'])) {
+            foreach ($editedDomainData['languages'] as $domain => $language) {
+                $data = $domainsDataByAlias[$domain];
+                $lang_domain_id = $data['domain_id'];
+                $lang_locale_id = Yii::$app->localeService->catalogKey($language, 'id', 'locale');
+                if ($lang_locale_id == $locale_id) {
+                    $domain_id = $lang_domain_id;
+                    break;
+                }
+            }
+        }
+
+        return [
+            "domain_id" => $domain_id,
+            "locale_id" => $locale_id,
+        ];
+    }
+
+    /**
      * Установит язык в зависимости от домена
      *
      * Если $domainByLocale = true domain_id будет установлен в зависимости от ключа из domain-map['languages']
