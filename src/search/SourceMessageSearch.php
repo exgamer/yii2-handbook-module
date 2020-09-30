@@ -104,17 +104,29 @@ class SourceMessageSearch extends SourceMessage
         $query->andFilterWhere(['like', static::tableName() . ".message", $this->message]);
         $query->andFilterWhere(['like',  "message.translation", $this->translation]);
         if (!\Yii::$app->user->can(AccessEnum::SUPERADMIN)) {
-            $query->andFilterWhere(['category' => [MessageCategoryEnum::FRONTEND, MessageCategoryEnum::GENERAL]]);
+            $query->andFilterWhere(['category' => static::visibleCategories()]);
             $query->andFilterWhere(['not like', static::tableName() . ".message", '@@']);
-        } else {
-            $query->andFilterWhere(['like', static::tableName() . ".category", $this->category]);
         }
 
+        $query->andFilterWhere(['like', static::tableName() . ".category", $this->category]);
         $query->groupBy(['message', 'category', 'id']);
         $query->andFilterWhere([
             static::tableName() . '.id' => $this->ids
         ]);
         $query->with(['messages']);
+    }
+
+    /**
+     * Видимые категории переводов для всех
+     *
+     * @return array
+     */
+    public static function visibleCategories()
+    {
+        return [
+            MessageCategoryEnum::FRONTEND,
+            MessageCategoryEnum::GENERAL
+        ];
     }
 
     /**

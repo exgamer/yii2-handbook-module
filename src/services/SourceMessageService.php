@@ -11,5 +11,8 @@ use concepture\yii2logic\services\Service;
  */
 class SourceMessageService extends Service
 {
-
+    /**
+     * @var string класс перечисления словарей для переводов
+     */
+    public $messageCategoryEnumClass = '\concepture\yii2handbook\enum\MessageCategoryEnum';
 }

@@ -1112,7 +1112,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
 
         if(is_array($id)) {
             if(! $this->entity_manage_url) {
-                $url = ['admin/handbook/dynamic-elements/manage'];
+                $url = ['/admin/handbook/dynamic-elements/manage'];
             } else {
                 $url = $this->entity_manage_url;
             }
@@ -1125,7 +1125,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             ]);
         } else {
             $url = [
-                'admin/handbook/dynamic-elements/update',
+                '/admin/handbook/dynamic-elements/update',
                 'id' => $id,
                 'domain_id' => $domain_id
             ];
