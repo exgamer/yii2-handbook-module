@@ -65,7 +65,6 @@ HTML;
             ],
             [
                 'attribute' => 'category',
-                'visible' => \Yii::$app->user->can(AccessEnum::SUPERADMIN)
             ],
         ],
     ]); ?>
