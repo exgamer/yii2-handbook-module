@@ -53,14 +53,19 @@ class DomainService extends Service
      */
     public function resolveLocaleId(&$domain_id, &$locale_id, $domainByLocale = false)
     {
-        if (! $locale_id && ! $domainByLocale) {
+        if ($domain_id && $locale_id) {
+
+            return;
+        }
+
+        if (! $domainByLocale) {
             $locale_id = $this->getDomainLocaleId($domain_id);
 
             return;
         }
 
         //Для случая создания сущности, когда у домена указаны используемые языки версий, чтобы подставить верную связку домена и языка
-        if (! $locale_id && $domainByLocale) {
+        if ($domainByLocale) {
             $domainsData = $this->getDomainsData();
             $domainsDataByAlias = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
             $editedDomainData = $domainsData[$domain_id];
