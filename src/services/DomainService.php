@@ -255,7 +255,19 @@ class DomainService extends Service
     {
         $items = $this->getDomainsData();
 
-        return $items[$id] ?? null;
+        $result = $items[$id] ?? null;
+
+        if(!isset($result['language_iso']) && isset($items[$id]['locale'])) {
+            $path = Yii::getAlias('@common') . '/config/locale/' . $items[$id]['locale'] . '/params.php';
+            if (file_exists($path)) {
+                $data = require $path;
+                if (is_array($data)) {
+                    $result = array_merge($result, $data);
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
