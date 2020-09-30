@@ -1080,11 +1080,11 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             return;
         }
 
-        $route = $controller->getRoute();
-        $prefix = str_replace('/', '_', $route);
-        $value = $route;
-//        $prefix = str_replace('-', '_', "{$controller->id}_{$controller->action->id}");
-//        $value = "{$controller->id}/{$controller->action->id}";
+//        $route = $controller->getRoute();
+//        $prefix = str_replace('/', '_', $route);
+//        $value = $route;
+        $prefix = str_replace('-', '_', "{$controller->id}_{$controller->action->id}");
+        $value = "{$controller->id}/{$controller->action->id}";
         $this->routeData = [
             'prefix' => $prefix,
             'value' => $value,
