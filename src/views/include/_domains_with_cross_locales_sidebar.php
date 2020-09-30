@@ -2,12 +2,16 @@
 use yii\helpers\Html;
 
 Yii::$app->getView()->viewHelper()->setSecondSidebarState(true);
-$allDomainsData = Yii::$app->domainService->getDomainsData();
-$allDomainsData = \yii\helpers\ArrayHelper::index($allDomainsData, 'alias');
+$allDomainsDataOriginal = Yii::$app->domainService->getDomainsData();
+$allDomainsData = \yii\helpers\ArrayHelper::index($allDomainsDataOriginal, 'alias');
 $languages = Yii::$app->domainService->getDomainsByLocales();
 $domainsData = Yii::$app->domainService->getModelDomains($originModel ?? null);
 if (! isset($locale_id)) {
-    $locale_id = $domainsData[$domain_id]['language_id'];
+    if (isset($domainsData[$domain_id]['language_id'])) {
+        $locale_id = $domainsData[$domain_id]['language_id'];
+    } else {
+        $locale_id = $allDomainsDataOriginal[$domain_id]['language_id'];
+    }
 }
 ?>
 <?php if(count($domainsData) > 0 && ! empty($languages)) :?>
