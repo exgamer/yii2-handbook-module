@@ -74,7 +74,7 @@ class DomainService extends Service
             }
         }
     }
-    
+
     /**
      * Возвращает карту доменов из параметров
      *
