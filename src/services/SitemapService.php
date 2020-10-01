@@ -91,9 +91,15 @@ class SitemapService extends Service
         }
 
         $urlParams = ArrayHelper::merge($controllerId, $queryParams);
-        $frontendUrlManager = UrlHelper::getFrontendUrlManager();
+        $frontendUrlManager = $this->getFrontendUrlManager();
 
         return $frontendUrlManager->createUrl($urlParams);
+    }
+
+    public function getFrontendUrlManager()
+    {
+
+        return UrlHelper::getFrontendUrlManager();
     }
 
     /**
