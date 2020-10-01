@@ -114,7 +114,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     /**
      * @var array
      */
-    private $routeData = [];
+    protected $routeData = [];
 
     /**
      * @var DynamicElementDto
@@ -1091,6 +1091,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
             'prefix' => $prefix,
             'value' => $value,
         ];
+
         if (property_exists($controller, 'actionParams')) {
             $this->routeData['params'] = $controller->actionParams;
         }
