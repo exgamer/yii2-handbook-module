@@ -106,12 +106,14 @@ trait SitemapModifyTrait
         return $this->updateById($current->id, $data);
     }
 
+
     /**
      * удалить карту саита
      *
      * @param ActiveRecord $model
      *
      * @return mixed
+     * @throws Exception
      */
     public function remove($model)
     {
@@ -121,14 +123,9 @@ trait SitemapModifyTrait
             throw new Exception("Entity type {$section} not found.");
         }
 
-        $current = $this->getOneByCondition([
+        return $this->deleteAllByCondition([
             'entity_type_id' => $entity_type->id,
             'entity_id' => $model->id,
         ]);
-        if (! $current){
-            return true;
-        }
-
-        return $this->delete($current);
     }
 }
