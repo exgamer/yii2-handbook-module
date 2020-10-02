@@ -2,6 +2,7 @@
 namespace concepture\yii2handbook\services\traits;
 
 use concepture\yii2handbook\forms\SitemapForm;
+use concepture\yii2logic\db\ActiveQuery;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
 use Exception;
@@ -83,10 +84,19 @@ trait SitemapModifyTrait
             throw new Exception("Entity type {$section} not found.");
         }
 
-        $current = $this->getOneByCondition([
-            'entity_type_id' => $entity_type->id,
-            'entity_id' => $model->id,
-        ]);
+        $current = $this->getOneByCondition(function (ActiveQuery $query) use ($entity_type, $model) {
+            if ($model->hasAttribute('domain_id')) {
+                $query->resetCondition();
+                $query->andWhere([
+                    'domain_id' => $model->domain_id,
+                ]);
+            }
+
+            $query->andWhere([
+                'entity_type_id' => $entity_type->id,
+                'entity_id' => $model->id,
+            ]);
+        });
 
         if (! $current){
             return $this->add($model, $controllerId, $urlParamAttrs);
@@ -103,7 +113,7 @@ trait SitemapModifyTrait
         $data = [];
         $data['location'] = $location;
 
-        return $this->updateById($current->id, $data);
+        return $this->updateByModel($current, $data);
     }
 
 
