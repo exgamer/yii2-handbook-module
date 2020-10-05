@@ -100,15 +100,27 @@ class EntityTypeActiveQuery extends Base
             foreach ($types as $id => $ids) {
                 $name = \Yii::$app->entityTypeService->catalogValue($id, 'id', 'table_name');
                 $names[$id] = $name;
-                /**
-                 * @TODO Настройку если модель лежит не тут (пока устраивает)
-                 */
                 $nameSpace = '\common\models\\';
                 $parts = explode('_', $name);
                 $parts = array_map(function($v){
                     return ucfirst($v);
                 }, $parts);
-                $modelClass = $nameSpace . implode('', $parts);
+                $className = implode('', $parts);
+                $modelClass = $nameSpace . $className;
+                /**
+                 * @TODO если не нашли класс о пробуем искать в папке common/models
+                 * добавить поиск по подпроектам frontend  backend
+                 */
+                if (! class_exists($modelClass)) {
+                    $path = $this->search_file(Yii::getAlias('@common/models'), $className.'.php');
+                    if ($path) {
+                        $path = str_replace(Yii::getAlias('@common/models') , '/common/models', $path);
+                        $path = str_replace('.php' , '', $path);
+                        $path = str_replace('/' , '\\', $path);
+                        $modelClass = $path;
+                    }
+                }
+
                 $q = $modelClass::find()->andWhere(['id' => $ids])->asArray($this->asArray)->indexBy('id');
                 /**
                  * Поддержка связей для связанных сущностей
