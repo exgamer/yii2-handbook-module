@@ -46,6 +46,7 @@ class SitemapService extends Service
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);
+        $form->origin_domain_id = $this->domainService()->getCurrentDomainId();
         parent::beforeCreate($form);
     }
 
@@ -54,7 +55,8 @@ class SitemapService extends Service
      */
     protected function extendQuery(ActiveQuery $query)
     {
-        $this->applyDomain($query);
+        $table = $this->getTableName();
+        $query->andWhere("{$table}.origin_domain_id = :domain_id", [':domain_id' => Yii::$app->domainService->getCurrentDomainId()]);
     }
 
     protected function beforeModelSave(Model $form, ActiveRecord $model, $is_new_record)
@@ -135,7 +137,7 @@ class SitemapService extends Service
         $sql = "SELECT COUNT(0) AS `count`, section, static_filename, static_filename_part
                 from sitemap
                 WHERE status = :STATUS AND is_deleted = :IS_DELETED
-                AND domain_id = :DOMAIN_ID OR domain_id IS NULL
+                AND origin_domain_id = :DOMAIN_ID OR domain_id IS NULL
                 GROUP BY section, static_filename, static_filename_part
                 ORDER BY section, static_filename_part
         ";
@@ -144,7 +146,6 @@ class SitemapService extends Service
             ':IS_DELETED' => IsDeletedEnum::NOT_DELETED,
             ':DOMAIN_ID' => Yii::$app->domainService->getCurrentDomainId()
         ];
-
 
         return $this->queryAll($sql , $params);
     }
