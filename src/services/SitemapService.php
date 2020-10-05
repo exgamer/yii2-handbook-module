@@ -24,13 +24,14 @@ use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
+use concepture\yii2handbook\services\interfaces\SitemapServiceInterface;
 
 /**
  * Class SitemapService
  * @package concepture\yii2handbook\services
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class SitemapService extends Service
+class SitemapService extends Service implements SitemapServiceInterface
 {
     use StatusTrait;
     use ServicesTrait;
