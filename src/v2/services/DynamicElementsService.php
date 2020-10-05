@@ -563,6 +563,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
                     ['unique_params_hash' => null]
                 ]);
             }
+
             $query->orderBy('general', 'route_hash');
         });
 

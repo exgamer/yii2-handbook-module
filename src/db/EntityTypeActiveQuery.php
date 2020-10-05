@@ -82,7 +82,13 @@ class EntityTypeActiveQuery extends Base
                     if($file == $fileName) return $folderName."/".$file;
                 }
                 // если папка, то рекурсивно вызываем search_file
-                if(is_dir($folderName."/".$file)) return $this->search_file($folderName."/".$file, $fileName);
+                if(is_dir($folderName."/".$file))
+                {
+                    $t = $this->search_file($folderName."/".$file, $fileName);
+                    if ($t !== null) {
+                        return $t;
+                    }
+                }
             }
         }
         // закрываем папку

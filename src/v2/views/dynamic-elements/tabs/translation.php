@@ -56,6 +56,9 @@ HTML;
             },
             'format' => 'raw'
         ],
+        [
+            'attribute' => 'category',
+        ],
     ],
 ]); ?>
 
