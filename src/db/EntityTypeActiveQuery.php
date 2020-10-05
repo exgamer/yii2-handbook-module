@@ -71,6 +71,24 @@ class EntityTypeActiveQuery extends Base
         return $relations;
     }
 
+    public function search_file($folderName, $fileName){
+        // открываем текущую папку
+        $dir = opendir($folderName);
+        // перебираем папку
+        while (($file = readdir($dir)) !== false){ // перебираем пока есть файлы
+            if($file != "." && $file != ".."){ // если это не папка
+                if(is_file($folderName."/".$file)){ // если файл проверяем имя
+                    // если имя файла нужное, то вернем путь до него
+                    if($file == $fileName) return $folderName."/".$file;
+                }
+                // если папка, то рекурсивно вызываем search_file
+                if(is_dir($folderName."/".$file)) return $this->search_file($folderName."/".$file, $fileName);
+            }
+        }
+        // закрываем папку
+        closedir($dir);
+    }
+
     public function findWith($with, &$models)
     {
         $relatedKey = 'relatedEntity';
