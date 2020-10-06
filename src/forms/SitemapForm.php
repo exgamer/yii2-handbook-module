@@ -14,6 +14,7 @@ use concepture\yii2logic\enum\StatusEnum;
 class SitemapForm extends BaseForm
 {
     public $domain_id;
+    public $origin_domain_id;
     public $entity_type_id;
     public $entity_id;
     public $static_filename;

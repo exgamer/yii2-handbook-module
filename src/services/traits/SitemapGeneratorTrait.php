@@ -38,7 +38,7 @@ trait SitemapGeneratorTrait
     {
         $this->outputSuccess('regenerate sitemap start');
         Sitemap::deleteAll([
-            'domain_id' => $this->domainService()->getCurrentDomainId(),
+            'origin_domain_id' => $this->domainService()->getCurrentDomainId(),
             'type'=> SitemapTypeEnum::DYNAMIC
         ]);
         $this->staticFileService()->clearSiteMaps();

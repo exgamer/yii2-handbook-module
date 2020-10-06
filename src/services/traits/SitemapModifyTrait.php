@@ -14,6 +14,28 @@ use Yii;
  */
 trait SitemapModifyTrait
 {
+    /**
+     * Возвращает запись для конкретной модели сущности
+     *
+     * @param $entity_type
+     * @param $model
+     * @return mixed
+     */
+    public function getCurrentSitemap($entity_type, $model)
+    {
+        return $this->getOneByCondition(function (ActiveQuery $query) use ($entity_type, $model) {
+            if ($model->hasAttribute('domain_id')) {
+                $query->andWhere([
+                    'domain_id' => $model->domain_id,
+                ]);
+            }
+
+            $query->andWhere([
+                'entity_type_id' => $entity_type->id,
+                'entity_id' => $model->id,
+            ]);
+        });
+    }
 
     /**
      * Добавить в карту саита ссылку
@@ -34,11 +56,7 @@ trait SitemapModifyTrait
             throw new Exception("Entity type {$section} not found.");
         }
 
-        $current = $this->getOneByCondition([
-            'entity_type_id' => $entity_type->id,
-            'entity_id' => $model->id,
-        ]);
-
+        $current = $this->getCurrentSitemap($entity_type, $model);
         if ($current){
             throw new Exception("sitemap with entity_type_id: {$entity_type->id} and entity_id: {$model->id} exists. Please Check");
         }
@@ -84,20 +102,7 @@ trait SitemapModifyTrait
             throw new Exception("Entity type {$section} not found.");
         }
 
-        $current = $this->getOneByCondition(function (ActiveQuery $query) use ($entity_type, $model) {
-            if ($model->hasAttribute('domain_id')) {
-                $query->resetCondition();
-                $query->andWhere([
-                    'domain_id' => $model->domain_id,
-                ]);
-            }
-
-            $query->andWhere([
-                'entity_type_id' => $entity_type->id,
-                'entity_id' => $model->id,
-            ]);
-        });
-
+        $current = $this->getCurrentSitemap($entity_type, $model);
         if (! $current){
             return $this->add($model, $controllerId, $urlParamAttrs);
         }

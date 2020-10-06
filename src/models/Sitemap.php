@@ -56,6 +56,7 @@ class Sitemap extends ActiveRecord
                 [
                     'status',
                     'domain_id',
+                    'origin_domain_id',
                     'entity_type_id',
                     'entity_id',
                     'type',
