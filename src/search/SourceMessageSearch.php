@@ -180,7 +180,7 @@ class SourceMessageSearch extends SourceMessage
             [
                 'translation' => Yii::t('common', 'Перевод'),
                 'is_empty' => Yii::t('common', 'Перевод не заполнен'),
-                'messageLanguage' => Yii::t('common', 'Язык'),
+                'messageLanguage' => Yii::t('common', 'Версия'),
             ]
         );
     }
