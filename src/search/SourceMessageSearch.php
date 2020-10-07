@@ -3,6 +3,7 @@
 namespace concepture\yii2handbook\search;
 
 use concepture\yii2handbook\enum\MessageCategoryEnum;
+use concepture\yii2handbook\models\Message;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -48,6 +49,16 @@ class SourceMessageSearch extends SourceMessage
     public $fillCount;
 
     /**
+     * @var string
+     */
+    public $messageLanguage;
+
+    /**
+     * @var
+     */
+    public $is_empty;
+
+    /**
      * @return array
      */
     public function rules()
@@ -58,6 +69,7 @@ class SourceMessageSearch extends SourceMessage
                     'message',
                     'translation',
                     'category',
+                    'messageLanguage'
                 ],
                 'string'
             ],
@@ -68,6 +80,12 @@ class SourceMessageSearch extends SourceMessage
                 'each',
                 'rule' => ['integer']
             ],
+            [
+                [
+                    'is_empty'
+                ],
+                'boolean'
+            ]
         ];
     }
 
@@ -78,6 +96,10 @@ class SourceMessageSearch extends SourceMessage
     {
         $this->messageCount = $this->messages;
         $count = count($this->messageCount);
+        if($this->messageLanguage) {
+            $count = 1;
+        }
+
         $fillCount = 0;
         foreach ($this->messageCount as $message) {
             if($message->language == 'ru-ru') {
@@ -100,20 +122,28 @@ class SourceMessageSearch extends SourceMessage
      */
     public function extendQuery(ActiveQuery $query)
     {
+        $sourceMessageTableName = static::tableName();
+        $messageTableName = Message::tableName();
         $query->innerJoinWith(['messages']);
-        $query->andFilterWhere(['like', static::tableName() . ".message", $this->message]);
-        $query->andFilterWhere(['like',  "message.translation", $this->translation]);
+        $query->andFilterWhere(['like', "{$sourceMessageTableName}.message", $this->message]);
+        $query->andFilterWhere(['like',  "{$messageTableName}.translation", $this->translation]);
+        $query->andFilterWhere([
+            "{$sourceMessageTableName}.id" => $this->ids,
+            "{$sourceMessageTableName}.category" =>$this->category,
+        ]);
         if (!\Yii::$app->user->can(AccessEnum::SUPERADMIN)) {
             $query->andFilterWhere(['category' => static::visibleCategories()]);
-            $query->andFilterWhere(['not like', static::tableName() . ".message", '@@']);
+            $query->andFilterWhere(['not like',  "{$sourceMessageTableName}.message", '@@']);
         }
 
-        $query->andFilterWhere(['like', static::tableName() . ".category", $this->category]);
         $query->groupBy(['message', 'category', 'id']);
-        $query->andFilterWhere([
-            static::tableName() . '.id' => $this->ids
-        ]);
-        $query->with(['messages']);
+        if($this->is_empty == 1) {
+            $query->andWhere("{$messageTableName}.translation = '' OR {$messageTableName}.translation is null");
+        }
+
+        if($this->messageLanguage) {
+            $query->andWhere(["{$messageTableName}.language" => [$this->messageLanguage]]);
+        }
     }
 
     /**
@@ -148,7 +178,9 @@ class SourceMessageSearch extends SourceMessage
         return ArrayHelper::merge(
             parent::attributeLabels(),
             [
-                'translation' => Yii::t('common', 'Перевод')
+                'translation' => Yii::t('common', 'Перевод'),
+                'is_empty' => Yii::t('common', 'Перевод не заполнен'),
+                'messageLanguage' => Yii::t('common', 'Язык'),
             ]
         );
     }
