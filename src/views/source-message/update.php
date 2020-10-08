@@ -109,14 +109,7 @@ $saveRedirectButton = Html::saveRedirectButton();
                             <?php if ($isPlural): ?>
                                 <div class="card alpha-success border-success" style="margin-left: 46px;">
                                     <div class="card-body">
-                                        <ul style="margin-bottom: 0">
-                                            <li>В поле для множественного числа нужно добавить токен {plural}</li>
-                                            <li>{plural} будет заменен на одно из заполненных полей в зависимости от числа</li>
-                                            <li>one — 21, 31, 41 и так далее;</li>
-                                            <li>few — от 2 до 4, от 22 до 24 и так далее;</li>
-                                            <li>many — 0, от 5 до 20, от 25 до 30 и так далее;</li>
-                                            <li>Решётка # заменяется на цифру (Например: # отзывов)</li>
-                                        </ul>
+                                        <?= $this->render('@yii2admin/widgets/formelements/plural/views/hint');?>
                                     </div>
                                 </div>
                             <?php endif; ?>
