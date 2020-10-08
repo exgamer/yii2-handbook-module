@@ -145,7 +145,6 @@ class DomainUrlManager extends YiiUrlManager
 
             $url = $this->getUrlFromCache($cacheKey, $route, $params);
             if ($url === false) {
-                /* @var $rule UrlRule */
                 foreach ($this->rules as $rule) {
                     if (in_array($rule, $this->_ruleCache[$cacheKey], true)) {
                         // avoid redundant calls of `UrlRule::createUrl()` for rules checked in `getUrlFromCache()`
@@ -163,11 +162,10 @@ class DomainUrlManager extends YiiUrlManager
                          * @TODO если в domainMap есть версия но нет паттерна в роутах тут выбьет ошибка
                          * и это так и должно быть не нужно тут ставить try/catch
                          */
-                        $rule->reinit($data['alias']);
+                        if( $route == $rule->route) {
+                            $rule->reinit($data['alias']);
+                        }
                     }
-                    /**
-                     *
-                     */
 
                     $url = $rule->createUrl($this, $route, $params);
                     if ($this->canBeCached($rule)) {
