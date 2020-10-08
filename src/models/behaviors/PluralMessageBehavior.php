@@ -81,16 +81,16 @@ class PluralMessageBehavior extends Behavior
                     $replaceString .= "{$type}{{$value}} ";
                 }
 
-                if (strpos($this->owner->{$target}, $this->token) === false) {
-                    $this->owner->addError($target, Yii::t('common', 'Необходимо указать токен {:token}', [
-                        ':token' => $this->token,
-                    ]));
-
-                    return;
+                if (strpos($this->owner->{$target}, $this->token) !== false) {
+                    $replaceString = trim($replaceString);
+                    $this->owner->{$target} = str_replace($this->token, "{n, plural, {$replaceString}}", $this->owner->{$target});
+                } else {
+                    if (! empty($this->owner->{$target})) {
+                        $this->owner->addError($target, Yii::t('common', 'Необходимо указать токен {:token}', [
+                            ':token' => $this->token,
+                        ]));
+                    }
                 }
-
-                $replaceString = trim($replaceString);
-                $this->owner->{$target} = str_replace($this->token, "{n, plural, {$replaceString}}", $this->owner->{$target});
             }
         }
     }
