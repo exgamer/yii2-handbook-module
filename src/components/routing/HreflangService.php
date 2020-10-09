@@ -2,6 +2,7 @@
 
 namespace concepture\yii2handbook\components\routing;
 
+use concepture\yii2handbook\components\multilanguage\MultiLanguageServiceTrait;
 use concepture\yii2logic\helpers\ClassHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -18,18 +19,17 @@ use concepture\yii2handbook\traits\ServicesTrait as HandbookServicesTrait;
  */
 class HreflangService extends Service
 {
-    use HandbookServicesTrait;
+    use HandbookServicesTrait,
+        MultiLanguageServiceTrait;
 
     /**
      * @var bool признак активности
      */
     private $_active = true;
-
     /**
      * @var array
      */
     private $_items = [];
-
     /**
      * @var array дополнительные параметры по доменам
      *
@@ -41,6 +41,10 @@ class HreflangService extends Service
      * ]
      */
     private $domainsRouteParams = [];
+    /**
+     * @var bool
+     */
+    private $isMultiLanguage = true;
 
     /**
      * Включение вывода элементов
@@ -56,6 +60,14 @@ class HreflangService extends Service
     public function disable()
     {
         $this->_active = false;
+    }
+
+    /**
+     * Отключение мультиязычности
+     */
+    public function disableMultiLanguage()
+    {
+        $this->isMultiLanguage = false;
     }
 
     /**
@@ -249,8 +261,25 @@ class HreflangService extends Service
                 }
 
                 $schema = $settings['schema'] ?? 'https';
-                $url = $urlManager->createUrl(ArrayHelper::merge([$route], $params));
-                $result[$settings['hreflang']] =  "{$schema}://{$domain}{$url}";
+                $languageHelper = $this->multiLanguageService()->helperClass;
+                $languageMap = $languageHelper::getLanguageMap();
+                if(! $this->isMultiLanguage || ($this->isMultiLanguage && ! $languageMap)) {
+                    $url = $urlManager->createUrl(ArrayHelper::merge([$route], $params));
+                    $result[$settings['hreflang']] =  "{$schema}://{$domain}{$url}";
+                } else {
+                    foreach ($languageMap as $languageParam => $iso) {
+                        unset($params['language']);
+                        list(,$countryIso) = @explode('-', $settings['hreflang']);
+                        list($languageIso,) = @explode('-', $iso);
+                        if($languageIso && $countryIso) {
+                            $params['language'] = $languageParam;
+                            $url = $this->multiLanguageService()->isolateCurrentLanguage(function() use($urlManager, $route, $params) {
+                                return $urlManager->createUrl(ArrayHelper::merge([$route], $params));
+                            });
+                            $result["{$languageIso}-{$countryIso}"] =  "{$schema}://{$domain}{$url}";
+                        }
+                    }
+                }
             }
         } catch (\Exception $e) {
 
