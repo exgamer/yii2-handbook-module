@@ -15,6 +15,7 @@ class EntityTypeForm extends Form
 {
     public $table_name;
     public $caption;
+    public $model_class;
     public $status = StatusEnum::ACTIVE;
     public $sort_module = 0;
 
