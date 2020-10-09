@@ -68,6 +68,7 @@ class EntityType extends ActiveRecord
                 [
                     'table_name',
                     'caption',
+                    'model_class',
                 ],
                 'string'
             ],
@@ -85,6 +86,7 @@ class EntityType extends ActiveRecord
         return [
             'id' => Yii::t('handbook','#'),
             'table_name' => Yii::t('handbook','Наименование таблицы'),
+            'model_class' => Yii::t('handbook','Класс модели'),
             'status' => Yii::t('handbook','Статус'),
             'caption' => Yii::t('handbook','Метка'),
             'sort_module' => Yii::t('handbook','Использование сущности в разделе сортировки'),
