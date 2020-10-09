@@ -2,9 +2,9 @@
 
 namespace concepture\yii2handbook\v2\forms;
 
-use yii\validators\UrlValidator;
 use concepture\yii2handbook\enum\SettingsTypeEnum;
 use kamaelkz\yii2admin\v1\forms\BaseForm;
+use concepture\yii2handbook\models\behaviors\PluralMessageBehavior;
 
 /**
  * Форма динамических элементов версия 2
@@ -28,6 +28,22 @@ class DynamicElementsForm extends BaseForm
     public $unique_params;
     public $unique_params_hash;
     public $hint;
+    public $originValue;
+    public $plurals = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        return [
+            'PluralMessageBehavior' => [
+                'class' => PluralMessageBehavior::class,
+                'originText' => 'originValue',
+                'pluralAttr' => 'plurals',
+            ],
+        ];
+    }
 
     /**
      * @inheritDoc
@@ -42,6 +58,13 @@ class DynamicElementsForm extends BaseForm
                     'type'
                 ],
                 'required'
+            ],
+            [
+                [
+                    'originValue',
+                    'plurals',
+                ],
+                'safe',
             ],
         ];
     }

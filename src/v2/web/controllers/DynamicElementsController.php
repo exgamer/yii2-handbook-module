@@ -163,6 +163,7 @@ class DynamicElementsController extends Controller
 
         $form = $service->getRelatedForm();
         $form->setAttributes($model->attributes, false);
+        $form->originValue = $model->value;
         if (method_exists($form, 'customizeForm')) {
             $form->customizeForm($model);
         }

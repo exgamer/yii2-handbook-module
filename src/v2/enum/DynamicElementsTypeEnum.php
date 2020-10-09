@@ -19,6 +19,7 @@ class DynamicElementsTypeEnum extends Enum
     const IMAGE_UPLOADER = 4;
     # todo: реализовать вывод в админке
     const TEXT_EDITOR_SIMPLI = 5;
+    const TEXT_PLURAL = 6;
 
     public static function labels()
     {
@@ -29,6 +30,7 @@ class DynamicElementsTypeEnum extends Enum
             self::TEXT_EDITOR_SIMPLI => Yii::t('yii2admin', "Текстовый редактор (упрощенный)"),
             self::CHECKBOX => Yii::t('yii2admin', "Чекбокс"),
             self::IMAGE_UPLOADER => Yii::t('yii2admin', "Загрузка изображений"),
+            self::TEXT_PLURAL => Yii::t('yii2admin', "Текст (Множественное число)"),
         ];
     }
 }

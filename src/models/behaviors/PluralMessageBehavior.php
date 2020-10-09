@@ -19,13 +19,21 @@ use yii\db\ActiveRecord;
  */
 class PluralMessageBehavior extends Behavior
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $token = '{plural}';
-    /** @var string */
+    /**
+     * @var string
+     */
     public $originText = null;
-    /** @var string */
+    /**
+     * @var string
+     */
     public $pluralAttr = null;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $excludedTypes = [];
 
     /**
@@ -77,7 +85,7 @@ class PluralMessageBehavior extends Behavior
                     $replaceString = trim($replaceString);
                     $this->owner->{$target} = str_replace($this->token, "{n, plural, {$replaceString}}", $this->owner->{$target});
                 } else {
-                    if (!empty($this->owner->{$target})) {
+                    if (! empty($this->owner->{$target})) {
                         $this->owner->addError($target, Yii::t('common', 'Необходимо указать токен {:token}', [
                             ':token' => $this->token,
                         ]));

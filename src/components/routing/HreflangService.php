@@ -12,7 +12,7 @@ use concepture\yii2logic\models\traits\v2\property\HasDomainPropertyTrait;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServicesTrait;
 
 /**
- * Сервис формирования альтарнативных адресов страниц по локалям
+ * Сервис формирования альтернативных адресов страниц по локалям
  *
  * @author kamaelkz <kamaelkz@yandex.kz>
  */
@@ -24,6 +24,11 @@ class HreflangService extends Service
      * @var bool признак активности
      */
     private $_active = true;
+
+    /**
+     * @var array
+     */
+    private $_items = [];
 
     /**
      * @var array дополнительные параметры по доменам
@@ -176,12 +181,26 @@ class HreflangService extends Service
     }
 
     /**
+     * Установка элементов для формирования тэгов
+     *
+     * @param array $items
+     */
+    public function setItems(array $items)
+    {
+        $this->_items = $items;
+    }
+
+    /**
      * Получение элементов для формирования тэгов
      *
      * @return $array
      */
-    private function getItems()
+    public function getItems()
     {
+        if($this->_items) {
+            return $this->_items;
+        }
+
         $domainMap = Yii::$app->params['yii2handbook']['domainMap'] ?? null;
         if(! $domainMap) {
             throw new HreflangServiceException('domainMap is not defined.');
@@ -241,7 +260,9 @@ class HreflangService extends Service
             $rule->reset();
         }
 
-        return $result;
+        $this->_items = $result;
+
+        return $this->_items;
     }
 }
 
