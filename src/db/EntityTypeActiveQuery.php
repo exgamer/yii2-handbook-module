@@ -107,6 +107,7 @@ class EntityTypeActiveQuery extends Base
                 }, $parts);
                 $className = implode('', $parts);
                 $modelClass = $nameSpace . $className;
+                // Проверяем указан ли класс модели для сущности
                 $class = \Yii::$app->entityTypeService->catalogValue($id, 'id', 'model_class');
                 if ($class) {
                     $modelClass = $class;
