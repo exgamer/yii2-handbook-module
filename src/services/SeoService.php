@@ -6,7 +6,6 @@ use Yii;
 use \yii\helpers\Url;
 use concepture\yii2logic\services\Service;
 use concepture\yii2handbook\traits\ServicesTrait as HandbookServiceTrait;
-use concepture\yii2logic\helpers\UrlHelper;
 
 /**
  * Class SeoService
@@ -16,6 +15,11 @@ use concepture\yii2logic\helpers\UrlHelper;
 class SeoService extends Service
 {
     use HandbookServiceTrait;
+
+    /**
+     * @var string
+     */
+    public $urlHelperClass = '\concepture\yii2logic\helpers\UrlHelper';
 
     /**
      * @return |\yii\web\View
@@ -59,7 +63,7 @@ class SeoService extends Service
             if (isset($params['page'])) {
                 $params[0] = \Yii::$app->controller->getRoute();
                 unset($params['page']);
-                $canonicalUrl = UrlHelper::getFrontendUrlManager()->createAbsoluteUrl($params);
+                $canonicalUrl = $this->urlHelperClass::getFrontendUrlManager()->createAbsoluteUrl($params);
             }
         } else {
             $canonicalUrl = Yii::$app->getUrlManager()->createAbsoluteUrl($route);
