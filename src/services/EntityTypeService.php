@@ -72,15 +72,35 @@ class EntityTypeService extends Service
     /**
      * Инициализация сущностей из массива названий таблиц
      *
+     * [
+     *      'post',
+     *      'category' => 'common\models\Category',
+     * ]
      * @param array $tables
+     *
      *
      * @return array
      */
     public function createFromArray(array $tables)
     {
         $result = [];
-        foreach ($tables as $table) {
-            $result[$table] = $this->getByTableName($table, true);
+        foreach ($tables as $key => $value) {
+            $tableName = null;
+            $modelClass = null;
+            if (filter_var($key, FILTER_VALIDATE_INT) !== false) {
+                $tableName = $value;
+            }else{
+                $tableName = $key;
+                $modelClass = $value;
+            }
+
+            $result[$tableName] = $this->getByTableName($tableName, true);
+            if ($modelClass) {
+                $model = $result[$tableName];
+                if (! $model->model_class) {
+                    $this->updateByModel($model, ['model_class' => $modelClass]);
+                }
+            }
         }
 
         return $result;
