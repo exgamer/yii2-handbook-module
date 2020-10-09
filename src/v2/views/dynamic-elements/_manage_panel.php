@@ -14,7 +14,7 @@
         </li>
         <li>
             <a>
-                <?= Html::checkbox(null,$interactiveMode, ['data-url' => Url::to(['/admin/handbook/dynamic-elements/interactive-mode'])]);?>
+                <?= Html::checkbox(null, $interactiveMode, ['data-url' => Url::to(['/admin/handbook/dynamic-elements/interactive-mode', 'domain_id' => Yii::$app->domainService->getCurrentDomainId()])]);?>
             </a>
         </li>
     </ul>
