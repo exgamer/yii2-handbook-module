@@ -42,6 +42,11 @@ class SitemapService extends Service implements SitemapServiceInterface
     use OutputTrait;
 
     /**
+     * @var string
+     */
+    public $urlHelperClass = '\concepture\yii2logic\helpers\UrlHelper';
+
+    /**
      * @inheritDoc
      */
     protected function beforeCreate(Model $form)
@@ -101,8 +106,9 @@ class SitemapService extends Service implements SitemapServiceInterface
 
     public function getFrontendUrlManager()
     {
+        $urlHelperClass = $this->urlHelperClass;
 
-        return UrlHelper::getFrontendUrlManager();
+        return $urlHelperClass::getFrontendUrlManager();
     }
 
     /**
