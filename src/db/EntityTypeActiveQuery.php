@@ -71,30 +71,6 @@ class EntityTypeActiveQuery extends Base
         return $relations;
     }
 
-    public function search_file($folderName, $fileName){
-        // открываем текущую папку
-        $dir = opendir($folderName);
-        // перебираем папку
-        while (($file = readdir($dir)) !== false){ // перебираем пока есть файлы
-            if($file != "." && $file != ".."){ // если это не папка
-                if(is_file($folderName."/".$file)){ // если файл проверяем имя
-                    // если имя файла нужное, то вернем путь до него
-                    if($file == $fileName) return $folderName."/".$file;
-                }
-                // если папка, то рекурсивно вызываем search_file
-                if(is_dir($folderName."/".$file))
-                {
-                    $t = $this->search_file($folderName."/".$file, $fileName);
-                    if ($t !== null) {
-                        return $t;
-                    }
-                }
-            }
-        }
-        // закрываем папку
-        closedir($dir);
-    }
-
     public function findWith($with, &$models)
     {
         $relatedKey = 'relatedEntity';
@@ -131,18 +107,9 @@ class EntityTypeActiveQuery extends Base
                 }, $parts);
                 $className = implode('', $parts);
                 $modelClass = $nameSpace . $className;
-                /**
-                 * @TODO если не нашли класс о пробуем искать в папке common/models
-                 * добавить поиск по подпроектам frontend  backend
-                 */
-                if (! class_exists($modelClass)) {
-                    $path = $this->search_file(Yii::getAlias('@common/models'), $className.'.php');
-                    if ($path) {
-                        $path = str_replace(Yii::getAlias('@common/models') , '/common/models', $path);
-                        $path = str_replace('.php' , '', $path);
-                        $path = str_replace('/' , '\\', $path);
-                        $modelClass = $path;
-                    }
+                $class = \Yii::$app->entityTypeService->catalogValue($id, 'id', 'model_class');
+                if ($class) {
+                    $modelClass = $class;
                 }
 
                 $q = $modelClass::find()->andWhere(['id' => $ids])->asArray($this->asArray)->indexBy('id');
