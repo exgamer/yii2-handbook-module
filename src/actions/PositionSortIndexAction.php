@@ -37,6 +37,11 @@ class PositionSortIndexAction extends Action
     public $labelColumn;
 
     /**
+     * @var array условия фильтрации по умолчанию
+     */
+    public $defaultCondition = [];
+
+    /**
      * Название дейстия
      *
      * @return string
@@ -85,21 +90,22 @@ class PositionSortIndexAction extends Action
         $this->extendSearch($entitySearchModel);
         $entitySearchModel->load(Yii::$app->request->queryParams);
         # если существует атрибут признак удаленной записи и значение пустое
-        if($entitySearchModel->hasAttribute('is_deleted') && null == $entitySearchModel->is_deleted) {
+        if ($entitySearchModel->hasAttribute('is_deleted') && null == $entitySearchModel->is_deleted) {
             $entitySearchModel->is_deleted = IsDeletedEnum::NOT_DELETED;
         }
+
         $tableName = trim($entityService->getTableName(), '{}');
         $entity_type = $this->getEntityTypeService()->getOneByCondition([
             'table_name' => $tableName,
             'sort_module' => true
         ]);
-        if(! $entity_type) {
+        if (! $entity_type) {
             throw new NotFoundHttpException('Entity type is not defined');
         }
 
         $entity_ids = [];
         $items = $this->getEntityTypePositionSortService()->getItemsAsArray($entity_type->id, $entity_type_position_id);
-        if($items) {
+        if ($items) {
             $entity_ids = ArrayHelper::getColumn($items, 'entity_id');
             $entities = $entityService->getAllByCondition(function(ActiveQuery $query) use($entity_ids) {
                 $query->asArray();
@@ -118,8 +124,18 @@ class PositionSortIndexAction extends Action
         ]);
         $itemsIds = ArrayHelper::getColumn($items, 'id');
         $sortDataProvider->setKeys($itemsIds);
+        if($this->defaultCondition) {
+            foreach ($this->defaultCondition as $attribute => $value) {
+                if(! $entitySearchModel->hasAttribute($attribute)) {
+                    continue;
+                }
+
+                $entitySearchModel->{$attribute} = $value;
+            }
+        }
+
         $entityDataProvider = $entityService->getDataProvider([], [], $entitySearchModel, null, function(ActiveQuery $query) use($entity_ids, $tableName) {
-            if(! $entity_ids) {
+            if (! $entity_ids) {
                 return;
             }
 
