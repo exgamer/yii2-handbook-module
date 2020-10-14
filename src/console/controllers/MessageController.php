@@ -22,10 +22,18 @@ use yii\console\controllers\MessageController as Base;
 abstract class MessageController extends Base
 {
     /**
+     * @var string
+     */
+    public $configFile;
+
+    /**
      * Initialization
      */
     public function init()
     {
+        if (!$this->configFile) {
+            $this->configFile = '@frontend/config/message.php';
+        }
         // Для сообщений используем соединение с базой продакшена
         // Компонент создается здесь, так как нигде больше использоваться не должен
         // Нужно добавить в .env
@@ -42,6 +50,64 @@ abstract class MessageController extends Base
             ],
         ]);
         parent::init();
+    }
+
+    /**
+     * Импорт новых сообщений в базу данных
+     *
+     * @param string $configFile
+     * @throws Exception
+     * @throws InvalidConfigException
+     */
+    public function actionImport($configFile = null )
+    {
+        if (!$configFile) {
+            $configFile = $this->configFile;
+        }
+
+        $this->initConfig($configFile);
+        $this->importToDb();
+    }
+
+    /**
+     * Экспорт переведенных сообщений из базы данных в .mo файл
+     *
+     * @param string $configFile
+     * @throws Exception
+     * @throws \yii\base\Exception
+     */
+    public function actionExport($configFile = null)
+    {
+        if (!$configFile) {
+            $configFile = $this->configFile;
+        }
+
+        $this->initConfig($configFile);
+        $this->exportFromDb();
+    }
+
+    /**
+     * Импорт в бд и экспорт из бд одновременно
+     *
+     * @param null $configFile
+     * @throws Exception
+     * @throws InvalidConfigException
+     * @throws \yii\base\Exception
+     */
+    public function actionExtract($configFile = null)
+    {
+        if (!$configFile) {
+            $configFile = $this->configFile;
+        }
+
+        $this->initConfig($configFile);
+
+        if ($this->config['format'] !== 'db') {
+            parent::actionExtract($configFile);
+        }
+
+        $this->importToDb();
+        $this->exportFromDb();
     }
 
     /**\
@@ -79,52 +145,6 @@ abstract class MessageController extends Base
         $this->stdout("\n");
 
         return $messages;
-    }
-
-    /**
-     * Импорт новых сообщений в базу данных
-     *
-     * @param string $configFile
-     * @throws Exception
-     * @throws InvalidConfigException
-     */
-    public function actionImport($configFile = '@frontend/config/message.php')
-    {
-        $this->initConfig($configFile);
-        $this->importToDb();
-    }
-
-    /**
-     * Экспорт переведенных сообщений из базы данных в .mo файл
-     *
-     * @param string $configFile
-     * @throws Exception
-     * @throws \yii\base\Exception
-     */
-    public function actionExport($configFile = '@frontend/config/message.php')
-    {
-        $this->initConfig($configFile);
-        $this->exportFromDb();
-    }
-
-    /**
-     * Импорт в бд и экспорт из бд одновременно
-     *
-     * @param null $configFile
-     * @throws Exception
-     * @throws InvalidConfigException
-     * @throws \yii\base\Exception
-     */
-    public function actionExtract($configFile = '@frontend/config/message.php')
-    {
-        $this->initConfig($configFile);
-
-        if (!$this->config['format'] === 'db') {
-            parent::actionExtract($configFile);
-        }
-
-        $this->importToDb();
-        $this->exportFromDb();
     }
 
     /**
