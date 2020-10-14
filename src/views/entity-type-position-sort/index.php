@@ -130,7 +130,7 @@ $this->viewHelper()->pushPageHeader(null, Yii::t('yii2admin','Добавить �
                                         ['/handbook/entity-type-position-sort/delete', 'id' => $data['id']],
                                         [
                                             'class' => 'admin-action list-icons-item',
-                                            'title' => Yii::t('backend', 'Удалить'),
+                                            'title' => Yii::t('yii2admin', 'Удалить'),
                                             'data-pjax-id' => 'list-pjax',
                                             'data-pjax-url' => Url::current([], true),
                                             'data-swal' => Yii::t('yii2admin' , 'Удалить'),

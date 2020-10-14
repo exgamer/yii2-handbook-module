@@ -46,8 +46,8 @@ class Message extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'message' => Yii::t('message', 'Язык'),
-            'category' => Yii::t('message', 'Перевод'),
+            'message' => Yii::t('common', 'Язык'),
+            'category' => Yii::t('common', 'Перевод'),
         ];
     }
 }
