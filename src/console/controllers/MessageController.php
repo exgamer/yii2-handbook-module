@@ -19,7 +19,7 @@ use yii\console\controllers\MessageController as Base;
  * Class MessageController
  * @package console\controllers
  */
-class MessageController extends Base
+abstract class MessageController extends Base
 {
     /**
      * Initialization
