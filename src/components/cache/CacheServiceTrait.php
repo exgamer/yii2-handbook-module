@@ -13,7 +13,7 @@ trait CacheServiceTrait
     /**
      * @return CacheService
      */
-    protected function getCacheService()
+    protected function cacheService()
     {
         $service = CacheService::COMPONENT_NAME;
         if(! Yii::$app->has($service)) {

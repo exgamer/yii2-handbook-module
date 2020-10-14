@@ -102,7 +102,7 @@ abstract class CacheWidget extends Widget
         $result = null;
         $cache_key = $this->getCacheKey() . $this->getOptionsHash();
         if($this->isCacheOption() && $cache) {
-            $result = $this->getCacheService()->get($cache_key);
+            $result = $this->cacheService()->get($cache_key);
         }
 
         if(! $result) {
@@ -126,9 +126,9 @@ abstract class CacheWidget extends Widget
                     }
                 }
 
-                $this->getCacheService()->tags($tags);
-                $this->getCacheService()->callback(CacheService::CALLBACK_TYPE_WIDGET, static::class, 'run', $this->options);
-                $this->getCacheService()->set($cache_key, $result, $this->getCacheTtlOption());
+                $this->cacheService()->tags($tags);
+                $this->cacheService()->callback(CacheService::CALLBACK_TYPE_WIDGET, static::class, 'run', $this->options);
+                $this->cacheService()->set($cache_key, $result, $this->getCacheTtlOption());
             }
         }
 

@@ -1,9 +1,11 @@
 <?php
 
-namespace concepture\yii2handbook\components\cache;
+namespace concepture\yii2handbook\v2\components\cache;
 
 use Yii;
-use concepture\yii2handbook\components\queue\beanstalkd\worker\BaseWorker;
+use concepture\yii2handbook\components\cache\CacheService;
+use \concepture\yii2handbook\components\cache\CacheServiceTrait;
+use concepture\yii2handbook\v2\components\queue\beanstalkd\worker\BaseWorker;
 
 /**
  * Воркер для сброса кэша
@@ -28,11 +30,11 @@ class CacheWorker extends BaseWorker
         try {
             foreach($data as $row) {
                 if(isset($row['tag'])) {
-                    $this->getCacheService()->removeByTag($row['tag']);
+                    $this->cacheService()->removeByTag($row['tag']);
                 }
 
                 if(isset($row['key'])) {
-                    $this->getCacheService()->remove($row['key']);
+                    $this->cacheService()->remove($row['key']);
                 }
             }
         } catch (\Exception $e) {

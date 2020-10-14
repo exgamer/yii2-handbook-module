@@ -28,11 +28,11 @@ class CacheWorker extends BaseWorker
         try {
             foreach($data as $row) {
                 if(isset($row['tag'])) {
-                    $this->getCacheService()->removeByTag($row['tag']);
+                    $this->cacheService()->removeByTag($row['tag']);
                 }
 
                 if(isset($row['key'])) {
-                    $this->getCacheService()->remove($row['key']);
+                    $this->cacheService()->remove($row['key']);
                 }
             }
         } catch (\Exception $e) {

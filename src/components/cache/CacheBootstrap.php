@@ -67,13 +67,13 @@ abstract class CacheBootstrap implements BootstrapInterface
     {
         if(sizeof($this->buffer['tag'])){
             foreach($this->buffer['tag'] as $tag){
-                $this->getCacheService()->removeByTagQueue($tag);
+                $this->cacheService()->removeByTagQueue($tag);
             }
         }
 
         if(sizeof($this->buffer['key'])){
             foreach($this->buffer['key'] as $key){
-                $this->getCacheService()->removeByKey($key);
+                $this->cacheService()->removeByKey($key);
             }
         }
 
