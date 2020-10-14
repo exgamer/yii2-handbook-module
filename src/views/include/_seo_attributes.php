@@ -1,5 +1,5 @@
 <legend class="font-weight-semibold text-uppercase font-size-sm">
-    <?= Yii::t('yii2handbook', 'SEO') ;?>
+    SEO
 </legend>
 <div class="row">
     <?php if(! isset($except['seo_name'])) :?>
