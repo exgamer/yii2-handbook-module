@@ -25,7 +25,7 @@ class SourceMessageController extends BaseController
     /**
      * @return MessageService
      */
-    private function getMessageService()
+    protected function getMessageService()
     {
         return Yii::$app->messageService;
     }
@@ -123,7 +123,6 @@ class SourceMessageController extends BaseController
             $sourceMessage = $item->sourceMessage;
         }
 
-        // TODO
         $form->originText = $sourceMessage->message;
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             $this->getMessageService()->updateMultiple($form);
