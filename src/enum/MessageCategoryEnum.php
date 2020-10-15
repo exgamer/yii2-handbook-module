@@ -12,9 +12,10 @@ use concepture\yii2logic\enum\Enum;
 class MessageCategoryEnum extends Enum
 {
     const FRONTEND = 'frontend';
-//    const ADMIN = 'yii2admin';
-    const COMMON = 'common';
     const GENERAL = 'general';
+    const ADMIN = 'yii2admin';
+    const DE = 'de';
+    const COMMON = 'common';
 
     /**
      * @inheritDoc
@@ -23,9 +24,10 @@ class MessageCategoryEnum extends Enum
     {
         return [
             self::FRONTEND => self::FRONTEND,
-//            self::ADMIN => self::ADMIN,
+            self::ADMIN => self::ADMIN,
             self::COMMON => self::COMMON,
             self::GENERAL => self::GENERAL,
+            self::DE => self::DE,
         ];
     }
 }

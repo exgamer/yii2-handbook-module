@@ -2,7 +2,6 @@
 
 namespace concepture\yii2handbook\search;
 
-use concepture\yii2handbook\enum\MessageCategoryEnum;
 use concepture\yii2handbook\models\Message;
 use Yii;
 use yii\db\ActiveQuery;
