@@ -118,12 +118,20 @@ class SourceMessageSearch extends SourceMessage
     }
 
     /**
+     * @return string
+     */
+    protected function getMessageTableName()
+    {
+        return Message::tableName();
+    }
+
+    /**
      * @inheritDoc
      */
     public function extendQuery(ActiveQuery $query)
     {
         $sourceMessageTableName = static::tableName();
-        $messageTableName = Message::tableName();
+        $messageTableName = $this->getMessageTableName();
         $query->innerJoinWith(['messages']);
         $query->andFilterWhere(['like', "{$sourceMessageTableName}.message", $this->message]);
         $query->andFilterWhere(['like',  "{$messageTableName}.translation", $this->translation]);

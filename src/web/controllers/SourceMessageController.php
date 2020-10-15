@@ -11,7 +11,6 @@ use concepture\yii2handbook\traits\ServicesTrait;
 use concepture\yii2handbook\services\MessageService;
 use kamaelkz\yii2admin\v1\controllers\BaseController;
 use concepture\yii2handbook\forms\MessageMultipleForm;
-use concepture\yii2handbook\search\SourceMessageSearch;
 use concepture\yii2logic\db\ActiveQuery as CoreActiveQuery;
 
 /**
@@ -29,6 +28,11 @@ class SourceMessageController extends BaseController
     private function getMessageService()
     {
         return Yii::$app->messageService;
+    }
+
+    public function getService()
+    {
+        return Yii::$app->sourceMessageService;
     }
 
     /**
@@ -49,12 +53,12 @@ class SourceMessageController extends BaseController
      */
     public function actionIndex()
     {
-        $searchClass = SourceMessageSearch::class;
+        $searchClass = $this->getService()->getRelatedSearchModelClass();
         $searchModel = Yii::createObject($searchClass);
         $searchModel->load(Yii::$app->request->queryParams);
         $dataProvider =  $this->getService()->getDataProvider([], [], $searchModel);
 
-        return $this->render('index', [
+        return $this->render('@concepture/yii2handbook/views/source-message/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -137,7 +141,7 @@ class SourceMessageController extends BaseController
             ->getDataProvider([], $config, $search, '', $condition)
             ->getModels();
 
-        return $this->render('update', [
+        return $this->render('@concepture/yii2handbook/views/source-message/update', [
             'items' => $items,
             'model' => $form,
             'sourceMessage' => $sourceMessage,

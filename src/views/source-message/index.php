@@ -19,6 +19,7 @@ $this->pushBreadcrumbs($this->title);
         'searchParams' => [
             'model' => $searchModel
         ],
+        'searchView' => '@concepture/yii2handbook/views/source-message/_search',
         'columns' => [
             [
                 'attribute' => 'message',
