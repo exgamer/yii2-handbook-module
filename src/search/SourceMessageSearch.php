@@ -134,9 +134,9 @@ class SourceMessageSearch extends SourceMessage
         $query->innerJoinWith(['messages']);
         $query->andFilterWhere(['like', "{$sourceMessageTableName}.message", $this->message]);
         $query->andFilterWhere(['like',  "{$messageTableName}.translation", $this->translation]);
+        $query->andFilterWhere(['like',  "{$sourceMessageTableName}.category", $this->category]);
         $query->andFilterWhere([
             "{$sourceMessageTableName}.id" => $this->ids,
-            "{$sourceMessageTableName}.category" =>$this->category,
         ]);
         if (!\Yii::$app->user->can(AccessEnum::SUPERADMIN)) {
             $query->andFilterWhere(['not like',  "{$sourceMessageTableName}.message", '@@']);
