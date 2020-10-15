@@ -140,7 +140,6 @@ class SourceMessageSearch extends SourceMessage
             "{$sourceMessageTableName}.category" =>$this->category,
         ]);
         if (!\Yii::$app->user->can(AccessEnum::SUPERADMIN)) {
-            $query->andFilterWhere(['category' => static::visibleCategories()]);
             $query->andFilterWhere(['not like',  "{$sourceMessageTableName}.message", '@@']);
         }
 
@@ -152,19 +151,6 @@ class SourceMessageSearch extends SourceMessage
         if($this->messageLanguage) {
             $query->andWhere(["{$messageTableName}.language" => [$this->messageLanguage]]);
         }
-    }
-
-    /**
-     * Видимые категории переводов для всех
-     *
-     * @return array
-     */
-    public static function visibleCategories()
-    {
-        return [
-            MessageCategoryEnum::FRONTEND,
-            MessageCategoryEnum::GENERAL
-        ];
     }
 
     /**
