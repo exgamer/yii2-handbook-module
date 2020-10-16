@@ -160,12 +160,9 @@ abstract class MessageController extends Base
             $messages = array_merge_recursive($messages, $this->extractMessages($file, $this->config['translator'], $this->config['ignoreCategories']));
         }
 
-        $catalog = isset($this->config['catalog']) ? $this->config['catalog'] : 'messages';
-
-        /** @var Connection $db */
-        $db = Instance::ensure($this->config['db'], Connection::className());
-        $sourceMessageTable = isset($this->config['sourceMessageTable']) ? $this->config['sourceMessageTable'] : '{{%source_message}}';
-        $messageTable = isset($this->config['messageTable']) ? $this->config['messageTable'] : '{{%message}}';
+        $db = Instance::ensure($this->config['db'], Connection::class);
+        $sourceMessageTable = isset($this->config['sourceMessageTable']) ? $this->config['sourceMessageTable'] : $this->sourceMessageTable;
+        $messageTable = isset($this->config['messageTable']) ? $this->config['messageTable'] : $this->messageTable;
         $this->saveMessagesToDb(
             $messages,
             $db,
@@ -202,10 +199,11 @@ abstract class MessageController extends Base
     {
         /** @var Connection $db */
         $db = Instance::ensure($this->config['db'], Connection::className());
-
+        $sourceMessageTable = isset($this->config['sourceMessageTable']) ? $this->config['sourceMessageTable'] : $this->sourceMessageTable;
+        $messageTable = isset($this->config['messageTable']) ? $this->config['messageTable'] : $this->messageTable;
         $catalog = isset($this->config['catalog']) ? $this->config['catalog'] : 'messages';
         $mainQuery = (new Query())->select(['message' => 't1.message', 'category' => 't1.category', 'language' => 't2.language', 'translation' => 't2.translation'])
-            ->from(['t1' => $this->sourceMessageTable])->innerJoin(['t2' => $this->messageTable], 't1.id = t2.id');
+            ->from(['t1' => $sourceMessageTable])->innerJoin(['t2' => $messageTable], 't1.id = t2.id');
 
         $langMessages = [];
         foreach ($mainQuery->batch(100, $db) as $existingMessage) {
