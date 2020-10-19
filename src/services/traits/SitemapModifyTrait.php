@@ -138,9 +138,15 @@ trait SitemapModifyTrait
             throw new Exception("Entity type {$section} not found.");
         }
 
-        return $this->deleteAllByCondition([
+        $condition = [
             'entity_type_id' => $entity_type->id,
             'entity_id' => $model->id,
-        ]);
+        ];
+
+        if ($model->hasAttribute('domain_id')) {
+            $condition['domain_id'] = $model->domain_id;
+        }
+
+        return $this->deleteAllByCondition($condition);
     }
 }
