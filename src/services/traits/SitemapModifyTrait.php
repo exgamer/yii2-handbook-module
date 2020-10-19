@@ -144,7 +144,7 @@ trait SitemapModifyTrait
         ];
 
         if ($model->hasAttribute('domain_id')) {
-            $condition['domain_id'] = $model->domain_id;
+            $condition['origin_domain_id'] = $model->domain_id;
         }
 
         return $this->deleteAllByCondition($condition);
