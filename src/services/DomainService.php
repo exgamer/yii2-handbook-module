@@ -300,8 +300,8 @@ class DomainService extends Service
 
         $result = $items[$id] ?? null;
 
-        if(!isset($result['language_iso']) && isset($items[$id]['locale'])) {
-            $path = Yii::getAlias('@common') . '/config/locale/' . $items[$id]['locale'] . '/params.php';
+        if(!isset($result['language_iso']) && isset($items[$id]['country'])) {
+            $path = Yii::getAlias('@common') . '/config/locale/' . $items[$id]['country'] . '/params.php';
             if (file_exists($path)) {
                 $data = require $path;
                 if (is_array($data)) {
