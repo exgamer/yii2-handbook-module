@@ -46,13 +46,35 @@ class SitemapService extends Service implements SitemapServiceInterface
      */
     public $urlHelperClass = '\concepture\yii2logic\helpers\UrlHelper';
 
+    public $originDomainId;
+
+    /**
+     * @return integer
+     */
+    public function getOriginDomainId()
+    {
+        if (! $this->originDomainId) {
+            $this->originDomainId = $this->domainService()->getCurrentDomainId();
+        }
+
+        return $this->originDomainId;
+    }
+
+    /**
+     * @param integer|null $originDomainId
+     */
+    public function setOriginDomainId($originDomainId)
+    {
+        $this->originDomainId = $originDomainId;
+    }
+
     /**
      * @inheritDoc
      */
     protected function beforeCreate(Model $form)
     {
         $this->setCurrentDomain($form);
-        $form->origin_domain_id = $this->domainService()->getCurrentDomainId();
+        $form->origin_domain_id = $this->getOriginDomainId();
         parent::beforeCreate($form);
     }
 
