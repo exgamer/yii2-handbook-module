@@ -230,7 +230,7 @@ trait SitemapGeneratorTrait
      */
     public function generate($scheme = 'https')
     {
-        Yii::info('Sitemap generate start...', 'sitemap_generator');
+        Yii::warning('Sitemap generate start...', 'sitemap_generator');
         $this->prepare();
         /**
          *  получаем всю карту сайта из базы (только те урлы у которых уже указан файл)
@@ -289,7 +289,7 @@ trait SitemapGeneratorTrait
 
         $this->generateIndexFile($scheme);
 
-        Yii::info('Sitemap generate end...', 'sitemap_generator');
+        Yii::warning('Sitemap generate end...', 'sitemap_generator');
     }
 
     /**
