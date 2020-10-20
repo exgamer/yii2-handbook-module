@@ -7,7 +7,9 @@ use concepture\yii2handbook\enum\SitemapTypeEnum;
 use concepture\yii2handbook\enum\StaticFileTypeEnum;
 use concepture\yii2handbook\forms\StaticFileForm;
 use concepture\yii2handbook\models\Sitemap;
+use concepture\yii2handbook\services\datahandlers\EntitySaveDataHandler;
 use concepture\yii2handbook\services\interfaces\SitemapServiceInterface;
+use concepture\yii2logic\dataprocessor\DataProcessor;
 use concepture\yii2logic\enum\IsDeletedEnum;
 use concepture\yii2logic\enum\StatusEnum;
 use concepture\yii2logic\helpers\ClassHelper;
@@ -16,6 +18,8 @@ use concepture\yii2logic\models\traits\HasLocalizationTrait;
 use concepture\yii2logic\models\traits\v2\property\HasDomainPropertyTrait;
 use concepture\yii2logic\models\traits\v2\property\HasLocalePropertyTrait;
 use Exception;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -34,7 +38,7 @@ trait SitemapGeneratorTrait
      * @param string $scheme
      * @throws Exception
      */
-    public function regenerate($scheme = 'https')
+    public function regenerate($scheme = 'https', $entity_name = null)
     {
         $this->outputSuccess('regenerate sitemap start');
         Sitemap::deleteAll([
@@ -43,7 +47,13 @@ trait SitemapGeneratorTrait
         ]);
         $this->staticFileService()->clearSiteMaps();
         $entities = $this->entityTypeService()->catalog('id', 'table_name');
+        $domainData = $this->domainService()->getCurrentDomainData();
+        $alias = $domainData['alias'];
         foreach ($entities as $entity){
+            if ($entity_name && $entity_name != $entity) {
+                continue;
+            }
+
             $service = $this->getServiceByEntityTable($entity);
             if (! $service){
                 continue;
@@ -55,29 +65,31 @@ trait SitemapGeneratorTrait
                 continue;
             }
             $this->outputSuccess('regenerate sitemap for ' . $entity);
-            /**
-             * @todo тут надо заменить выборку всего на использование  concepture\yii2logic\dataprocessor\DataProcessor
-             * иначе на больших данных умрет
-             */
-            $models = $service->getAllbyCondition(function(ActiveQuery $query) use ($service){
-                $query->active();
-                $query->notDeleted();
-            });
+            $process = new Process(
+                'php yii handbook/sitemap/re-generate-entity ' . $entity  . ' --alias=' . $alias
+            );
 
-            if (empty($models)){
-                continue;
-            }
-
-            $count = count($models);
-            Console::startProgress(0, $count);
-            foreach ($models as $k => $model){
-                $service->updateById($model->id, [], '', false);
-                Console::updateProgress($k + 1 , $count);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
             }
         }
 
         $this->generate($scheme);
         $this->outputSuccess('regenerate sitemap done');
+    }
+
+    public function regenerateEntity($entity_name)
+    {
+        $service = $this->getServiceByEntityTable($entity_name);
+        $config = [
+            'dataHandlerClass' => [
+                'class' => EntitySaveDataHandler::class,
+                'service' => $service
+            ],
+            'pageSize' => 500
+        ];
+        DataProcessor::exec($config);
     }
 
     /**
