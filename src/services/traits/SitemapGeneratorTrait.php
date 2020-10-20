@@ -38,7 +38,7 @@ trait SitemapGeneratorTrait
      * @param string $scheme
      * @throws Exception
      */
-    public function regenerate($scheme = 'https', $entity_name = null)
+    public function regenerate($scheme = 'https')
     {
         $this->outputSuccess('regenerate sitemap start');
         Sitemap::deleteAll([
@@ -69,9 +69,12 @@ trait SitemapGeneratorTrait
                 'php yii handbook/sitemap/re-generate-entity ' . $entity  . ' --alias=' . $alias
             );
 
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
+            try {
+                $process->mustRun(function ($type, $buffer) {
+                    echo $buffer;
+                });
+            } catch (ProcessFailedException $exception) {
+                echo $exception->getMessage();
             }
         }
 
