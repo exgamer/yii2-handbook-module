@@ -50,10 +50,6 @@ trait SitemapGeneratorTrait
         $domainData = $this->domainService()->getCurrentDomainData();
         $alias = $domainData['alias'];
         foreach ($entities as $entity){
-            if ($entity_name && $entity_name != $entity) {
-                continue;
-            }
-
             $service = $this->getServiceByEntityTable($entity);
             if (! $service){
                 continue;
