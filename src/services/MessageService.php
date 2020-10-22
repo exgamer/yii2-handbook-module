@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\services;
 
 use concepture\yii2logic\services\Service;
 use concepture\yii2handbook\forms\MessageMultipleForm;
+use Yii;
 
 /**
  * Сервис для работы с переводами по локале
@@ -29,7 +30,19 @@ class MessageService extends Service
                 continue;
             }
 
-            $data[] = [$form->ids[$index], $form->languages[$index], $value];
+            $language = $form->languages[$index];
+            if(strpos($language, '-') !== false) {
+                list($languageIso, $countryIso) = explode('-', $language);
+            }
+
+            $countryId = Yii::$app->countryService->catalogKey($countryIso, 'id', 'iso');
+            // вырезаем все переводы для стран к которым нет доступа
+            if (! Yii::$app->user->hasDomainAccessByCountry($countryId)) {
+                $index++;
+                continue;
+            }
+
+            $data[] = [$form->ids[$index], $language, $value];
             $index++;
         }
 
