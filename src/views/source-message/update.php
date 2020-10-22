@@ -62,10 +62,10 @@ $saveRedirectButton = Html::saveRedirectButton();
                     <?php foreach (array_keys($itemsByLanguage) as $lang): ?>
                         <li class="nav-item">
                             <?php
-                                $iso = $lang;
-                                if(strpos($lang, '-') !== false) {
-                                    list($iso,) = explode('-', $lang);
-                                }
+                            $iso = $lang;
+                            if(strpos($lang, '-') !== false) {
+                                list($iso,) = explode('-', $lang);
+                            }
                             ?>
                             <?= Html::a(
                                 $languages[$iso]->caption,
@@ -114,6 +114,7 @@ $saveRedirectButton = Html::saveRedirectButton();
                                 </div>
                             <?php endif; ?>
                             <?php $i = 0; ?>
+
                             <?php foreach ($items as $key => $item) :?>
                                 <div id="<?= $item->language;?>" class="col-lg-12 col-md-12 col-sm-12">
                                     <?php
@@ -148,8 +149,8 @@ $saveRedirectButton = Html::saveRedirectButton();
                                     }
                                     ?>
                                     <?php
-                                        $formName = $model->formName();
-                                        $inputId = Inflector::underscore($formName . "_{$item->language}");
+                                    $formName = $model->formName();
+                                    $inputId = Inflector::underscore($formName . "_{$item->language}");
                                     ?>
                                     <div class="translate-inputs">
                                         <div style="margin-left: 46px">
@@ -161,15 +162,23 @@ $saveRedirectButton = Html::saveRedirectButton();
                                             <span class="input-group-prepend">
                                                 <?= $copyBtn;?>
                                             </span>
-                                        <?= Html::textInput(
+                                            <?php
+                                            $disabled = false;
+                                            if (! \Yii::$app->user->hasDomainAccessByCountry($countries[$itemLang]->id ?? null)) {
+                                                $disabled = true;
+                                            }
+                                            ?>
+
+                                            <?= Html::textInput(
                                                 "{$formName}[$item->language]",
                                                 ! $isPlural ? $item->translation : preg_replace('/{n, plural, \S\w*{.*}/', '{plural}', $item->translation),
                                                 [
                                                     'id' => $inputId,
-                                                    'class' => 'form-control'
+                                                    'class' => 'form-control',
+                                                    'disabled' => $disabled
                                                 ]
                                             );
-                                        ?>
+                                            ?>
                                         </div>
                                         <?= $form->field($model, 'ids[]', ['template' => '{input}'])->hiddenInput(['value' => $item->id]);?>
                                         <?= $form->field($model, 'languages[]', ['template' => '{input}'])->hiddenInput(['value' => $item->language]);?>
@@ -182,7 +191,8 @@ $saveRedirectButton = Html::saveRedirectButton();
                                                     'pluralAttr' => 'plurals',
                                                     'targetAttr' => $item->language,
                                                     'token' => '{plural}',
-                                                    'declination_format' => $languages[($languageIso ?? $lang)]->declination_format ?? DeclinationFormatEnum::FULL
+                                                    'declination_format' => $languages[($languageIso ?? $lang)]->declination_format ?? DeclinationFormatEnum::FULL,
+                                                    'disabled' => $disabled
                                                 ]); ?>
                                             </div>
                                         <?php endif; ?>
