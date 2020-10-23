@@ -5,6 +5,8 @@ namespace concepture\yii2handbook\v2\services;
 use concepture\yii2handbook\components\i18n\TranslationHelper;
 use concepture\yii2handbook\v2\search\DynamicElementsSearch;
 use concepture\yii2logic\enum\AccessEnum;
+use concepture\yii2logic\services\traits\PropertyModifyTrait;
+use concepture\yii2logic\services\traits\PropertyReadTrait;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -55,7 +57,9 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     use ReadSupportTrait;
     use ModifySupportTrait;
     use CoreReadSupportTrait;
-
+    use PropertyReadTrait;
+    use PropertyModifyTrait;
+    
     /**
      * @var array
      */
