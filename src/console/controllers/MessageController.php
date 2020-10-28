@@ -2,6 +2,8 @@
 
 namespace concepture\yii2handbook\console\controllers;
 
+use concepture\yii2handbook\components\i18n\SourceMessageCopyHandler;
+use Yii;
 use yii\db\Query;
 use yii\di\Instance;
 use yii\db\Connection;
@@ -14,6 +16,7 @@ use common\helpers\AppHelper;
 use yii\base\InvalidConfigException;
 use Symfony\Component\Process\Process;
 use yii\console\controllers\MessageController as Base;
+use concepture\yii2logic\console\traits\OutputTrait;
 
 /**
  * Class MessageController
@@ -21,6 +24,8 @@ use yii\console\controllers\MessageController as Base;
  */
 abstract class MessageController extends Base
 {
+    use OutputTrait;
+
     /**
      * @var string
      */
@@ -108,6 +113,44 @@ abstract class MessageController extends Base
 
         $this->importToDb();
         $this->exportFromDb();
+    }
+
+    /**
+     * Копирование исходных сообщений + переводов из одного словаря в другой
+     *
+     * @param string $from
+     * @param string $to
+     * @param null|string $configFile
+     *
+     * @throws Exception
+     */
+    public function actionCopy($from, $to, $configFile = null)
+    {
+        if (!$configFile) {
+            $configFile = $this->configFile;
+        }
+
+        $this->initConfig($configFile);
+        $sourceMessages = $this->config['copySourceMessages'] ?? [];
+
+        if(! $sourceMessages) {
+            return $this->outputDone('Copy Source Messages is empty.');
+        }
+
+        $handler = Yii::createObject([
+            'class' => SourceMessageCopyHandler::class,
+            'db' => $this->config['db'] ?? 'db',
+            'sourceMessageTable' => ($this->config['sourceMessageTable'] ?? $this->sourceMessageTable),
+            'messageTable' => ($this->config['messageTable'] ?? $this->messageTable),
+        ]);
+        try {
+            $messages = $handler($from, $to, $sourceMessages);
+            foreach ($messages as $message) {
+                $this->outputSuccess($message);
+            }
+        } catch (\Exception $e) {
+            return $this->outputDone($e->getMessage());
+        }
     }
 
     /**\
