@@ -47,6 +47,11 @@ class HreflangService extends Service
     private $isMultiLanguage = true;
 
     /**
+     * @var array
+     */
+    private $onlyDomains = [];
+
+    /**
      * Включение вывода элементов
      */
     public function enable()
@@ -84,6 +89,14 @@ class HreflangService extends Service
     public function getDomainsRouteParams()
     {
         return $this->domainsRouteParams;
+    }
+
+    /**
+     * @param $aliaes
+     */
+    public function setOnlyDomains($aliaes)
+    {
+        $this->onlyDomains = $aliaes;
     }
 
     /**
@@ -238,7 +251,11 @@ class HreflangService extends Service
                     continue;
                 }
 
-                if(! isset($settings['enabled']) && $settings['enabled'] !== true) {
+                if(! isset($settings['enabled']) || $settings['enabled'] !== true) {
+                    continue;
+                }
+                # конекртные домены
+                if($this->onlyDomains && ! in_array($settings['alias'], $this->onlyDomains)) {
                     continue;
                 }
                 # установка переданных параметров для формирования урла
