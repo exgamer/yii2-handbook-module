@@ -59,7 +59,7 @@ class DynamicElementsService extends Service implements DynamicElementsEventInte
     use CoreReadSupportTrait;
     use PropertyReadTrait;
     use PropertyModifyTrait;
-    
+
     /**
      * @var array
      */

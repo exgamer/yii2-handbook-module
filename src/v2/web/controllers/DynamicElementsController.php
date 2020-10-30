@@ -116,7 +116,7 @@ class DynamicElementsController extends Controller
     {
         $actions = parent::actions();
 
-        unset($actions['index'], $actions['update'], $actions['view']);
+        unset($actions['index'], $actions['update']);
 
         return array_merge($actions,[
             AuditDynamicElementsAction::actionName() => AuditDynamicElementsAction::class,
