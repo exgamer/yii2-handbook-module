@@ -55,6 +55,17 @@ class DynamicElements extends ActiveRecord
     /**
      * @inheritDoc
      */
+    public static function excludedPropertyDefaultValues()
+    {
+        $propertyModelClass = static::getPropertyModelClass();
+        $propModel = new $propertyModelClass();
+
+        return $propModel->attributes();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public static function tableName()
     {
         return 'dynamic_elements_v2';
