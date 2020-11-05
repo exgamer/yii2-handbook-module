@@ -43,9 +43,9 @@ if ( empty($languages)) {
                             <?php $active = ($domain_id == $id ? 'active' : "");?>
                             <?php $url['domain_id'] = $id;?>
 
-                            <?php $disabled = false;?>
+                            <?php $disabled = '';?>
                             <?php if (isset($data['languages']) && ! empty($data['languages'])) : ?>
-                                <?php $disabled = true;?>
+                                <?php $disabled = 'disabled';?>
                             <?php endif;?>
 
                             <li class="nav-item">
