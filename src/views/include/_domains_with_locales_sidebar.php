@@ -42,47 +42,54 @@ if ( empty($languages)) {
                             ?>
                             <?php $active = ($domain_id == $id ? 'active' : "");?>
                             <?php $url['domain_id'] = $id;?>
+
+                            <?php $disabled = false;?>
                             <?php if (isset($data['languages']) && ! empty($data['languages'])) : ?>
+                                <?php $disabled = true;?>
+                            <?php endif;?>
+
+                            <li class="nav-item">
+                                <?= Html::a(
+                                    '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
+                                    $url,
+                                    [
+                                        'class' => "nav-link {$disabled}",
+                                    ]
+                                ) ?>
+                            </li>
+
+                            <?php
+                            $langs = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) use ($data) {
+                                $iso = $data['languages'] ?? [];
+                                $query->andWhere(['locale' => $iso]);
+                                $query->orderBy('sort ASC, id ASC');
+                            });
+                            ?>
+
+                            <?php foreach ($langs as $lang) :?>
+                                <?php $url['locale_id'] = $lang['id'];?>
+                                <?php
+                                $active = "";
+                                if ($locale_id == $lang['id'] && $id == $domain_id ) {
+                                    $active = "active";
+                                }
+
+                                ?>
+
                                 <li class="nav-item">
                                     <?= Html::a(
-                                        '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
+                                        $lang['caption'],
                                         $url,
                                         [
-                                            'class' => "nav-link disabled",
+                                            'class' => "nav-link {$active}",
                                         ]
                                     ) ?>
                                 </li>
 
-                                <?php
-                                $langs = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) use ($data) {
-                                    $iso = $data['languages'] ?? [];
-                                    $query->andWhere(['locale' => $iso]);
-                                    $query->orderBy('sort ASC, id ASC');
-                                });
-                                ?>
+                            <?php endforeach;?>
 
-                                <?php foreach ($langs as $lang) :?>
-                                    <?php $url['locale_id'] = $lang['id'];?>
-                                    <?php
-                                    $active = "";
-                                    if ($locale_id == $lang['id'] && $id == $domain_id ) {
-                                        $active = "active";
-                                    }
 
-                                    ?>
 
-                                    <li class="nav-item">
-                                        <?= Html::a(
-                                            $lang['caption'],
-                                            $url,
-                                            [
-                                                'class' => "nav-link {$active}",
-                                            ]
-                                        ) ?>
-                                    </li>
-
-                                <?php endforeach;?>
-                            <?php endif;?>
                         <?php endforeach;?>
                     </ul>
                 </div>
