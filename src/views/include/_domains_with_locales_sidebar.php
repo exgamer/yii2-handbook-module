@@ -53,7 +53,7 @@ if ( empty($languages)) {
                                     '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
                                     $url,
                                     [
-                                        'class' => "nav-link {$disabled}",
+                                        'class' => "nav-link {$disabled} " . (!$disabled?'active' : ''),
                                     ]
                                 ) ?>
                             </li>
@@ -87,9 +87,6 @@ if ( empty($languages)) {
                                 </li>
 
                             <?php endforeach;?>
-
-
-
                         <?php endforeach;?>
                     </ul>
                 </div>
