@@ -78,7 +78,7 @@ if ( empty($languages)) {
 
                                 <li class="nav-item">
                                     <?= Html::a(
-                                        $lang['caption'],
+                                        "<span class='ml-lg-3'>" . $lang['caption'] . "</span>",
                                         $url,
                                         [
                                             'class' => "nav-link {$active}",
