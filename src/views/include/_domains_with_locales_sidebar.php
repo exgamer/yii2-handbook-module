@@ -53,7 +53,7 @@ if ( empty($languages)) {
                                     '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
                                     $url,
                                     [
-                                        'class' => "nav-link {$disabled}",
+                                        'class' => "nav-link {$disabled} {$active}",
                                     ]
                                 ) ?>
                             </li>
