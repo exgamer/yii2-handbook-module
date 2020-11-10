@@ -471,14 +471,18 @@ class DomainService extends Service
         });
         foreach ($domainsData as $data) {
             if (! isset($data['languages'])) {
-                continue;
+                $languages = [ $data['alias'] => $data['language']];
+            }else{
+                $languages = $data['languages'];
             }
 
-            $languages = $data['languages'];
+
             foreach ($languages as $dAlias => $lang) {
                 $language_id = $locales[$lang]['id'] ?? null;
                 $language_caption = $locales[$lang]['caption'] ?? null;
+
                 $used_domain_id = $domainsData[$dAlias]['domain_id'] ?? null;
+
                 $domain_id = $data['domain_id'] ?? null;
                 $result[$language_id]['used_domain_id'] = $used_domain_id;
                 $result[$language_id]['language_caption'] = $language_caption;
@@ -492,18 +496,7 @@ class DomainService extends Service
             }
         }
 
-        $currentDomainData = $this->getCurrentDomainData();
-        if (! isset($currentDomainData['languages'])) {
-            return [];
-        }
-
-        $languages = $currentDomainData['languages'];
-        $res = [];
-        foreach ($languages as $lang) {
-            $res[$locales[$lang]['id']] = $result[$locales[$lang]['id']];
-        }
-
-        return $res;
+        return $result;
     }
 
     /**
