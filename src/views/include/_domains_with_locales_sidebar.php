@@ -8,16 +8,16 @@ if (! isset($locale_id)) {
 }
 
 $languages = Yii::$app->domainService->getDomainsByLocales();
-// Если в domain-map не указаны используемые языки, выводим стандартный саидбар
-if ( empty($languages)) {
-    echo $this->render('@concepture/yii2handbook/views/include/_domains_sidebar', [
-        'domain_id' => $domain_id,
-        'locale_id' => $locale_id,
-        'url' => $url,
-        'originModel' => $originModel,
-    ]);
-    return;
-}
+//// Если в domain-map не указаны используемые языки, выводим стандартный саидбар
+//if ( empty($languages)) {
+//    echo $this->render('@concepture/yii2handbook/views/include/_domains_sidebar', [
+//        'domain_id' => $domain_id,
+//        'locale_id' => $locale_id,
+//        'url' => $url,
+//        'originModel' => $originModel,
+//    ]);
+//    return;
+//}
 ?>
 <?php if(count($domainsData) > 0) :?>
     <div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
