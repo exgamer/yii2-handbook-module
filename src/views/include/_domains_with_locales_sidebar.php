@@ -85,7 +85,7 @@ if ( empty($languages)) {
                                         ]
                                     ) ?>
                                 </li>
-
+                                <?php unset($url['locale_id']); ?>
                             <?php endforeach;?>
 
 
