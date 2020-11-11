@@ -78,6 +78,10 @@ class LocaleService extends Service
     public function getApplicationLocaleId()
     {
         $locale = Yii::$app->language;
+        $a = explode('-', $locale);
+        if (count($a)>1) {
+            $locale = $a[0];
+        }
 
         return $this->catalogValue($locale, 'locale', 'id');
     }
