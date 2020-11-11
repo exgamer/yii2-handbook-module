@@ -10,7 +10,7 @@ use concepture\yii2logic\db\HasPropertyActiveQuery;
  * @package concepture\yii2logic\actors\db
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
  */
-class LocaleBasedPropertyQueryActor extends QueryActor
+class ApplicationLocaleBasedPropertyQueryActor extends QueryActor
 {
     public function run()
     {
