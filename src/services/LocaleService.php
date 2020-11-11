@@ -71,6 +71,18 @@ class LocaleService extends Service
     }
 
     /**
+     * Возвращает id локали приложения
+     *
+     * @return mixed
+     */
+    public function getApplicationLocaleId()
+    {
+        $locale = Yii::$app->language;
+
+        return $this->catalogValue($locale, 'locale', 'id');
+    }
+
+    /**
      * Ограничевает выборку локалей по языкам из домен мапы
      *
      * @return array
