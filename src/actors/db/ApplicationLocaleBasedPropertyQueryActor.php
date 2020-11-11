@@ -15,7 +15,10 @@ class ApplicationLocaleBasedPropertyQueryActor extends QueryActor
     public function run()
     {
         if ($this->query instanceof HasPropertyActiveQuery) {
-            $this->query->applyPropertyUniqueValue(['locale_id' => Yii::$app->localeService->getApplicationLocaleId()]);
+            $model = Yii::createObject($this->query->modelClass);
+            if ($model->hasAttribute('locale_id')) {
+                $this->query->applyPropertyUniqueValue(['locale_id' => Yii::$app->localeService->getApplicationLocaleId()]);
+            }
         }
     }
 }
