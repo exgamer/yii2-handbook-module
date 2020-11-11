@@ -6,6 +6,9 @@ use Yii;
 use concepture\yii2logic\db\HasPropertyActiveQuery;
 
 /**
+ * Класс для глобальной модификации запросов к мультиязычным сущностям с property
+ * дл выдачи результата на языке приложения
+ *
  * Class LocaleBasedPropertyQueryActor
  * @package concepture\yii2logic\actors\db
  * @author Olzhas Kulzhambekov <exgamer@live.ru>
