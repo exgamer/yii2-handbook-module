@@ -4,6 +4,7 @@ namespace concepture\yii2handbook\components\routing;
 
 use concepture\yii2handbook\components\multilanguage\MultiLanguageServiceTrait;
 use concepture\yii2logic\helpers\ClassHelper;
+use concepture\yii2logic\models\interfaces\HasDomainPropertyInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -139,7 +140,8 @@ class HreflangService extends Service
     public function setDomainParamsByModelProps(ActiveRecord $model, array $attributes)
     {
         $traits = ClassHelper::getTraits($model);
-        if (in_array(HasDomainPropertyTrait::class, $traits)) {
+        if (in_array(HasDomainPropertyTrait::class, $traits) ||
+            $model instanceof HasDomainPropertyInterface) {
             $domainsData = $this->domainService()->getEnabledDomainData();
             $props = $model->getProperties()->all();
             if($props) {
