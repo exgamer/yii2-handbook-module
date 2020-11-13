@@ -43,6 +43,9 @@ class DomainService extends Service
 
 
     /**
+     * Используется для сущностей справочников где основным критерием является locale_id
+     * в этом случае если domain_id не соответствует указанному locale_id то будет подставлен domain_id согласно locale_id
+     *
      * Возвращает массив с Id домена и локали
      * Используется в моделях для метода  uniqueFieldValue() для получения корректных данных по domain_id и locale_id с учетом languages в domain map
      */
