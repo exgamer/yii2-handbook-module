@@ -5,6 +5,11 @@ Yii::$app->getView()->viewHelper()->setSecondSidebarState(true);
 $domainsData = Yii::$app->domainService->getModelDomains($originModel ?? null);
 //Запоминаем переданный $url
 $passedUrl = $url;
+
+$isAjax = false;
+if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
+    $isAjax = true;
+}
 ?>
 <?php if(count($domainsData) > 1) :?>
     <div class="sidebar bg-transparent sidebar-secondary sidebar-component-left border-0 shadow-0 sidebar-expand-lg sidebar-expand-md" style="">
@@ -48,14 +53,26 @@ $passedUrl = $url;
                                         ]
                                     ) ?>
                                 <?php else:?>
-                                    <?= Html::a(
-                                        '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
-                                        '#',
-                                        [
-                                            'class' => ' magic-modal-control nav-link {$active}',
-                                            'data-url' => \yii\helpers\Url::to($url),
-                                            'data-modal-size' => 'modal-lg'
-                                        ]);?>
+<!--                                    Если запрос был ajax то делаем просто ссылку-->
+                                    <?php if ($isAjax):?>
+                                        <?= Html::a(
+                                            '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
+                                            $url,
+                                            [
+                                                'class' => 'nav-link {$active}',
+                                            ]);?>
+                                    <?php else:?>
+                                        <!--  Если запрос был не ajax то показываем в модалке-->
+                                        <?= Html::a(
+                                            '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
+                                            '#',
+                                            [
+                                                'class' => ' magic-modal-control nav-link {$active}',
+                                                'data-url' => \yii\helpers\Url::to($url),
+                                                'data-modal-size' => 'modal-lg'
+                                            ]);?>
+                                    <?php endif;?>
+
                                 <?php endif;?>
                             </li>
                         <?php endforeach;?>
