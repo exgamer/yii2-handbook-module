@@ -410,6 +410,19 @@ class DomainService extends Service
         return $cookies->getValue($this->cookieName);
     }
 
+
+    /**
+     * Возвращает текущий альяс домена
+     *
+     * @return mixed|string
+     */
+    public function getCurrentDomainAlias()
+    {
+        $data = $this->getCurrentDomainData();
+
+        return $data['alias'] ?? null;
+    }
+    
     /**
      * Возвращает текущий язык домена
      *
