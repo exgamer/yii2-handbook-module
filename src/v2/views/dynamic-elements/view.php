@@ -1,11 +1,8 @@
 <?php
 
-use concepture\yii2handbook\v2\enum\DynamicElementsTypeEnum;
-use concepture\yii2handbook\v2\models\DynamicElements;
 use kamaelkz\yii2admin\v1\widgets\formelements\activeform\ActiveForm;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use concepture\yii2handbook\converters\LocaleConverter;
 use kamaelkz\yii2admin\v1\widgets\formelements\Pjax;
 use yii\helpers\Url;
 
