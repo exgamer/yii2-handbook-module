@@ -29,6 +29,8 @@ class DynamicElementsController extends Controller
 {
     use HandbookServicesTrait;
 
+    public $domain = true;
+
     /**
      * @inheritDoc
      */
