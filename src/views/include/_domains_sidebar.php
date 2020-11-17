@@ -53,13 +53,13 @@ if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
                                         ]
                                     ) ?>
                                 <?php else:?>
-<!--                                    Если запрос был ajax то делаем просто ссылку-->
+                                    <!--                                    Если запрос был ajax то делаем просто ссылку-->
                                     <?php if ($isAjax):?>
                                         <?= Html::a(
                                             '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
                                             $url,
                                             [
-                                                'class' => 'nav-link {$active}',
+                                                'class' => "nav-link {$active}",
                                             ]);?>
                                     <?php else:?>
                                         <!--  Если запрос был не ajax то показываем в модалке-->
@@ -67,7 +67,7 @@ if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
                                             '<span class="icon flag-' . $data['country'] . ' flag"></span>'. $data['country_caption']. " (" . $data['country'] . ")",
                                             '#',
                                             [
-                                                'class' => ' magic-modal-control nav-link {$active}',
+                                                'class' => " magic-modal-control nav-link {$active}",
                                                 'data-url' => \yii\helpers\Url::to($url),
                                                 'data-modal-size' => 'modal-lg'
                                             ]);?>
