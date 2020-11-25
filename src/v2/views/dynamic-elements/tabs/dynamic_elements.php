@@ -52,6 +52,7 @@ HTML;
             'headerOptions' => [
                 'style' => 'width:60%',
             ],
+            'format' => 'raw'
         ],
         [
             'attribute' => 'general',
