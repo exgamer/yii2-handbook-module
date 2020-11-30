@@ -471,6 +471,10 @@ class DomainService extends Service
 
         foreach ($domainsData as $data) {
             if (! isset($data['languages'])) {
+                if (! isset($data['language_iso'])) {
+                    throw new Exception("language_iso is not defined in domain map for  " . $data['alias']);
+                }
+
                 $languageIso = $data['language_iso'];
                 $languageCodeArray = explode('-', $languageIso);
                 if (count($languageCodeArray) != 2) {
