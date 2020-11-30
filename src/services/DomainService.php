@@ -422,7 +422,7 @@ class DomainService extends Service
 
         return $data['alias'] ?? null;
     }
-    
+
     /**
      * Возвращает текущий язык домена
      *
@@ -453,6 +453,61 @@ class DomainService extends Service
 
 
     /**
+     * Возвращает массив языков по доменам
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function getLanguagesByDomains()
+    {
+        $result = [];
+        $domainsData = $this->getDomainsData();
+        $domainsData = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
+        $domainsDataByCountry = \yii\helpers\ArrayHelper::index($domainsData, 'country');
+        $locales = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) {
+            $query->orderBy('sort ASC, id ASC');
+            $query->indexBy('locale');
+        });
+
+        foreach ($domainsData as $data) {
+            if (! isset($data['languages'])) {
+                $languageIso = $data['language_iso'];
+                $languageCodeArray = explode('-', $languageIso);
+                if (count($languageCodeArray) != 2) {
+                    throw new Exception("icorrect language iso code " . $languageIso);
+                }
+
+                $countryIso = $languageCodeArray[1];
+                $domainAlias = $domainsDataByCountry[$countryIso]['alias'] ?? null;
+                $languages = [ $domainAlias => $languageCodeArray[0]];
+            }else{
+                $languages = $data['languages'];
+            }
+
+            foreach ($languages as $dAlias => $lang) {
+                $language_id = $locales[$lang]['id'] ?? null;
+                $language_caption = $locales[$lang]['caption'] ?? null;
+                $used_domain_id = $domainsData[$dAlias]['domain_id'] ?? null;
+                $domain_id = $data['domain_id'] ?? null;
+                $result[$language_id][$used_domain_id]['used_domain_id'] = $used_domain_id;
+                $result[$language_id][$used_domain_id]['language_caption'] = $language_caption;
+                $result[$language_id][$used_domain_id]['used_domain_id'] = $used_domain_id;
+                $result[$language_id][$used_domain_id]['language_country_iso'] = $domainsData[$dAlias]['country'] ?? null;
+                $result[$language_id][$used_domain_id]['on_domains'][] = [
+                    'domain_id' => $domain_id,
+                    'country_image' => $data['country_image'],
+                    'country' => $data['country'],
+                    'country_caption' => $data['country_caption'],
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @deprecated не использовать
+     *
      * Возвращает массив доменов сгруппированных по языкам
      * [
      *      locale_id_1 => [
