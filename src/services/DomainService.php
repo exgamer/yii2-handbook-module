@@ -86,7 +86,7 @@ class DomainService extends Service
             $languageIso = $editedDomainData['language_iso'];
             $languageCodeArray = explode('-', $languageIso);
             if (count($languageCodeArray) != 2) {
-                throw new Exception("icorrect language iso code " . $languageIso);
+                throw new Exception("incorrect language iso code " . $languageIso);
             }
 
             $countryIso = $languageCodeArray[1];
