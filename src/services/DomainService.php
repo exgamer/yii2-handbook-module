@@ -47,7 +47,7 @@ class DomainService extends Service
      * в этом случае если domain_id не соответствует указанному locale_id то будет подставлен domain_id согласно locale_id
      *
      * Возвращает массив с Id домена и локали
-     * Используется в моделях для метода  uniqueFieldValue() для получения корректных данных по domain_id и locale_id с учетом languages в domain map
+     * Используется в моделях для метода  uniqueFieldValue() для получения корректных данных по domain_id и locale_id с учетом languages или language_iso в domain map
      */
     public function getResolvedCurrentDomainAndLocale()
     {
@@ -63,8 +63,9 @@ class DomainService extends Service
         }
 
         $domainsData = $this->getDomainsData();
-        $domainsDataByAlias = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
+        $domainsDataByAlias = ArrayHelper::index($domainsData, 'alias');
         $editedDomainData = $domainsData[$domain_id];
+        // если у домена указаны  используемые языки
         if (isset($editedDomainData['languages']) && ! empty($editedDomainData['languages'])) {
             foreach ($editedDomainData['languages'] as $domain => $language) {
                 $data = $domainsDataByAlias[$domain];
@@ -75,6 +76,22 @@ class DomainService extends Service
                     break;
                 }
             }
+        }else{
+            // если языки не указаны возвращаем данные из language_iso
+            $domainsDataByCountry = ArrayHelper::index($domainsData, 'country');
+            if (! isset($editedDomainData['language_iso'])) {
+                throw new Exception("language_iso is not defined in domain map for  " . $editedDomainData['alias']);
+            }
+
+            $languageIso = $editedDomainData['language_iso'];
+            $languageCodeArray = explode('-', $languageIso);
+            if (count($languageCodeArray) != 2) {
+                throw new Exception("icorrect language iso code " . $languageIso);
+            }
+
+            $countryIso = $languageCodeArray[1];
+            $domainAlias = $domainsDataByCountry[$countryIso]['alias'] ?? null;
+            $domain_id = $domainsDataByAlias[$domainAlias]['domain_id'] ?? null;
         }
 
         return [
@@ -108,7 +125,7 @@ class DomainService extends Service
         //Для случая создания сущности, когда у домена указаны используемые языки версий, чтобы подставить верную связку домена и языка
         if ($domainByLocale) {
             $domainsData = $this->getDomainsData();
-            $domainsDataByAlias = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
+            $domainsDataByAlias = ArrayHelper::index($domainsData, 'alias');
             $editedDomainData = $domainsData[$domain_id];
             if (isset($editedDomainData['languages']) && ! empty($editedDomainData['languages'])) {
                 foreach ($editedDomainData['languages'] as $domain => $language) {
@@ -462,8 +479,8 @@ class DomainService extends Service
     {
         $result = [];
         $domainsData = $this->getDomainsData();
-        $domainsData = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
-        $domainsDataByCountry = \yii\helpers\ArrayHelper::index($domainsData, 'country');
+        $domainsData = ArrayHelper::index($domainsData, 'alias');
+        $domainsDataByCountry = ArrayHelper::index($domainsData, 'country');
         $locales = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) {
             $query->orderBy('sort ASC, id ASC');
             $query->indexBy('locale');
@@ -539,7 +556,7 @@ class DomainService extends Service
     {
         $result = [];
         $domainsData = $this->getDomainsData();
-        $domainsData = \yii\helpers\ArrayHelper::index($domainsData, 'alias');
+        $domainsData = ArrayHelper::index($domainsData, 'alias');
         $locales = Yii::$app->localeService->getAllByCondition(function (\concepture\yii2logic\db\ActiveQuery $query) {
             $query->orderBy('sort ASC, id ASC');
             $query->indexBy('locale');
