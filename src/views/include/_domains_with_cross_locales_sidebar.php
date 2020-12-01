@@ -57,6 +57,7 @@ if (! isset($locale_id)) {
                                         $url,
                                         [
                                             'class' => "nav-link d-flex align-items-center {$active}",
+                                            'data-pjax' => 0
                                         ]
                                     )
                                     ?>
