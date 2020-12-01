@@ -111,11 +111,13 @@ class DomainService extends Service
      */
     public function resolveLocaleId(&$domain_id, &$locale_id, $domainByLocale = false)
     {
+        // если переданы оба параметра возвращаем как есть
         if ($domain_id && $locale_id) {
 
             return;
         }
 
+        // есил не выставлен параметр то подставляем язык от домена
         if (! $domainByLocale) {
             $locale_id = $this->getDomainLocaleId($domain_id);
 
