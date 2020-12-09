@@ -11,7 +11,7 @@ class Bootstrap implements BootstrapInterface
     public function bootstrap($app)
     {
         //загружаем компоненты
-        $components  = require_once __DIR__ . '/config/component.php';
+        $components  = require __DIR__ . '/config/component.php';
         ApplicationHelper::setComponents($components);
     }
 }
