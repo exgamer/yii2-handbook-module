@@ -35,7 +35,7 @@ if (! isset($locale_id)) {
                                     continue;
                                 }
                                 ?>
-                                <?php $url['domain_id'] = $language_domain_id;?>
+                                <?php $url['domain_id'] = $domain_id;?>
                                 <?php $url['edited_domain_id'] = $language_domain_id;?>
                                 <?php $url['locale_id'] = $language_id;?>
                                 <?php
