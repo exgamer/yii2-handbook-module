@@ -137,13 +137,19 @@ class HreflangService extends Service
      *
      * @throws HreflangServiceException
      */
-    public function setDomainParamsByModelProps(ActiveRecord $model, array $attributes)
+    public function setDomainParamsByModelProps(ActiveRecord $model, array $attributes, \Closure $condition = null)
     {
         $traits = ClassHelper::getTraits($model);
         if (in_array(HasDomainPropertyTrait::class, $traits) ||
-            $model instanceof HasDomainPropertyInterface) {
+            $model instanceof HasDomainPropertyInterface
+        ) {
             $domainsData = $this->domainService()->getEnabledDomainData();
-            $props = $model->getProperties()->all();
+            $query = $model->getProperties();
+            if($condition) {
+                call_user_func_array($condition, [$query]);
+            }
+
+            $props = $query->indexBy('domain_id')->all();
             if($props) {
                 $params = [];
                 foreach ($props as $domain_id => $property) {
