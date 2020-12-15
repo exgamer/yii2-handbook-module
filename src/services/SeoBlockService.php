@@ -3,7 +3,6 @@
 namespace concepture\yii2handbook\services;
 
 use Yii;
-use yii\helpers\Url;
 use yii\db\ActiveQuery;
 use concepture\yii2logic\services\interfaces\UpdateColumnInterface;
 use concepture\yii2logic\services\traits\StatusTrait;
