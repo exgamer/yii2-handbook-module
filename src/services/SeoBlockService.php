@@ -2,6 +2,8 @@
 
 namespace concepture\yii2handbook\services;
 
+use Yii;
+use yii\helpers\Url;
 use yii\db\ActiveQuery;
 use concepture\yii2logic\services\interfaces\UpdateColumnInterface;
 use concepture\yii2logic\services\traits\StatusTrait;
@@ -63,8 +65,9 @@ class SeoBlockService extends \concepture\yii2logic\services\Service implements 
     public function getItems()
     {
         // todo: потом сделать что бы урл можно было указывать
-        //$url = Url::current();
-        $url = '/';
+        $generalUrl = '/';
+        $currentUrl = trim(Yii::$app->getRequest()->getPathInfo(), '/');
+        $url = [$generalUrl, $currentUrl];
         $result = [];
         $models = $this->getAllByCondition(function(ActiveQuery $query) use ($url) {
             $query->select(['position', 'content']);

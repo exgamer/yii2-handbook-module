@@ -11,6 +11,7 @@ use concepture\yii2logic\enum\StatusEnum;
  */
 class SeoBlockForm extends \kamaelkz\yii2admin\v1\forms\BaseForm
 {
+    public $url;
 	public $caption; 
 	public $position; 
 	public $sort = 0; 

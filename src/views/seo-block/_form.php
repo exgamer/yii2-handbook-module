@@ -19,10 +19,10 @@ $saveButton = Html::saveButton();
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
                         <?= $form->field($model, 'caption')->textInput(['maxlength' => true]) ?>
                     </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
                         <?= $form
                             ->field($model, 'position')
                             ->dropDownList(\concepture\yii2handbook\enum\SeoBlockPositionEnum::arrayList(), [
@@ -31,7 +31,10 @@ $saveButton = Html::saveButton();
                             ]);
                         ?>
                     </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <?= $form->field($model, 'url')->textInput() ?>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
                         <?= $form->field($model, 'sort')->textInput() ?>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">

@@ -76,6 +76,13 @@ class SeoBlock extends \concepture\yii2logic\models\ActiveRecord
                 'unique',
                 'targetAttribute' => ['caption', 'domain_id', 'status'],
             ],
+            [
+                'url',
+                'filter',
+                'filter' => function ($value) {
+                    return trim($value, '/');
+                }
+            ],
         ];
     }
 
@@ -92,6 +99,7 @@ class SeoBlock extends \concepture\yii2logic\models\ActiveRecord
             'is_deleted' => Yii::t('handbook', 'Удален'),
             'content' => Yii::t('handbook', 'Контент'),
             'status' => Yii::t('handbook', 'Статус'),
+            'url' => Yii::t('handbook', 'Относительная ссылка'),
         ];
     }
 }
